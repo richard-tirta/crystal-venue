@@ -1,0 +1,37 @@
+{
+  "name": "crystal-venue-association",
+  "version": "1",
+  "description": "Website for Crystal Venue Association",
+  "main": "app.js",
+  "author": "Richard Widjaja",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm dist",
+    "start": "parcel watch src/*.html",
+    "build-prod": "parcel build src/*.html",
+    "build": "parcel build src/*.html"
+  },
+  "dependencies": {
+    "browserslist": "^4.14.7",
+    "express": "^4.17.1",
+    "express-validator": "^5.3.1",
+    "node-fetch": "^2.6.0",
+    "parcel": "1.12.3",
+    "posthtml": "^0.15.1",
+    "posthtml-img-autosize": "^0.1.4",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "7.13.8",
+    "@babel/preset-react": "^7.9.4",
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.20.0",
+    "posthtml-modules": "^0.7.4",
+    "prettier": "^2.0.5",
+    "sass": "^1.27.0"
+  }
+}

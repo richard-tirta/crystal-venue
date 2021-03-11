@@ -1,0 +1,62 @@
+//========= UI ELEMENTS==========//
+
+$asset-base-path: './../images/';
+
+@mixin background-icon($imageName){
+	background-image: url($asset-base-path + '/' + $imageName);
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-size: 100% 100%;
+	display: block;
+	overflow: hidden;
+	text-indent: -9999px;
+}
+
+
+@mixin background($imageName){
+	background-image: url($asset-base-path + '/' + $imageName);
+	background-repeat: no-repeat;
+	background-position: 50% 0;
+	background-size: 100% 100%;
+	display: block;
+	overflow: hidden;
+}
+
+ul {
+	padding: 0;
+}
+
+li {
+	list-style: none;
+	margin: 10px 0;
+}
+
+// Snippet for background mixin use
+// Image path is already set in Gruntfile.js so you just need to put image name.
+
+// .your-image {
+// 	@include background-icon('your-image.jpg');
+// 	width: 200px;
+// 	height: 200px;
+// }
+
+/* .logo-sutterfield {
+	@include transition-quad;
+	@include background-icon('logo-sutterfield.png');
+	width: 388px;
+	height: 130px;
+	@include xsmall {
+		//width: 149px;
+		//height: 50px;
+		margin: 0 auto;
+	}
+	@include medium {
+		width: 300px;
+		height: 101px;
+	}
+	@include large {
+		width: 388px;
+		height: 130px;
+	}
+} */
+

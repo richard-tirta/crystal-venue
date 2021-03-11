@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8">
+		<title>Crystal Venue Association</title>
+
+		<meta name="description" content="Venue and Event Listing for Crystal Data Center">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<meta property="og:url" content="https://www.crystalvenue.herokuapp.com">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="Crystal Venue Association Listing">
+		<meta property="og:site_name" content="crystalvenue.herokuapp.comm">
+		<meta property="og:description" content="Venue and Event Listing for Crystal Data Center">
+		<!-- <meta property="og:image" content="https://www.sutterfields.com/assets/images/logo-sutterfields.png" /> -->
+
+		<!-- <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/images/favicon/apple-touch-icon-144x144.png" />
+		<link rel="apple-touch-icon-precomposed" sizes="152x152" href="assets/images/favicon/apple-touch-icon-152x152.png" />
+		<link rel="icon" type="image/png" href="assets/images/favicon/favicon-32x32.png" sizes="32x32" />
+		<link rel="icon" type="image/png" href="assets/images/favicon/favicon-16x16.png" sizes="16x16" /> -->
+		<meta name="application-name" content="Crystal Venue Association Listing">
+		<meta name="msapplication-TileColor" content="#F5F1E1">
+		<meta name="msapplication-TileImage" content="ba34fd159b4d72bbfa0cf92843d976f1">
+	</head>
+    <body>
+        <div id="app"></div>
+		
+        <script src="d0c0fc1cb6332f8d27ea90d7770b4d36"></script>
+    
+    </body>
+</html>

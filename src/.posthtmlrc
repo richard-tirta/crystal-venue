@@ -1,0 +1,10 @@
+{
+	"plugins": {
+	  "posthtml-img-autosize": {
+		"root": "./images"
+	  },
+	  "posthtml-modules": {
+		"root": "./src"
+	  }
+	}
+  }
