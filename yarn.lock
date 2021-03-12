@@ -2396,6 +2396,11 @@ diffie-hellman@^5.0.0:
     miller-rabin "^4.0.0"
     randombytes "^2.0.0"
 
+discord-oauth2@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/discord-oauth2/-/discord-oauth2-2.6.0.tgz#d362b386e77a3eb3135772307a253514e0dc48be"
+  integrity sha512-9lEt1Rp9rruFPiVQOPbe2rKJXB40fO2u9Ozjz3n/TlVYnIxCTeohVkNI/c5AoLFDZcSxFc2MtDTf9iG0X7BkRg==
+
 doctrine@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-2.1.0.tgz#5cd01fc101621b42c4cd7f5d1a66243716d3f39d"
