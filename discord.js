@@ -74,27 +74,21 @@ exports.init = function (req, res) {
 
 							if (dbCache.length < 1) {
 								dbCache.push(userData)
-								res.cookie(
-									'userId', userData.id, {
-									maxAge: 24 * 60 * 60,
-									httpOnly: true
-								});
 							} else {
 								dbCache.find(function (profile, index) {
 									if (parseInt(profile.id) == parseInt(userData.id)) {
 										return;
 									} else {
 										dbCache.push(userData);
-
-										res.cookie(
-											'userId', userData.id, {
-											maxAge: 24 * 60 * 60,
-											httpOnly: true
-										});
-
 									}
 								});
 							}
+							res.cookie(
+								'userId', userData.id, {
+								maxAge: 24 * 60 * 60 * 60,
+								httpOnly: true
+							});
+							console.log('HELLOOOOO');
 							res.redirect('/profile.html');
 						});
 					}
@@ -102,46 +96,52 @@ exports.init = function (req, res) {
 				.catch(err => console.log(err));
 		}
 
-		if (getAppCookies(req, res)) {
-			res.redirect('/profile.html');
-		} else {
-			if (req.query.code) {
-				const data = {
-					client_id: DISCORD_CLIENT_ID,
-					client_secret: DISCORD_CLIENT_SECRET,
-					grant_type: "authorization_code",
-					code: req.query.code,
-					redirect_uri: "http://localhost:3000/profile",
-					scope: "identify guilds"
-				};
+		if (req.query.code) {
+			const data = {
+				client_id: DISCORD_CLIENT_ID,
+				client_secret: DISCORD_CLIENT_SECRET,
+				grant_type: "authorization_code",
+				code: req.query.code,
+				redirect_uri: "http://localhost:3000/profile",
+				scope: "identify guilds"
+			};
 
-				fetch('https://discord.com/api/oauth2/token', {
-					method: 'POST',
-					body: new URLSearchParams(data),
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded;'
+			fetch('https://discord.com/api/oauth2/token', {
+				method: 'POST',
+				body: new URLSearchParams(data),
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded;'
+				}
+
+			})
+				.then(
+					function (response) {
+						response.json().then(function (data) {
+							getUser(data.access_token, data.token_type);
+						});
 					}
+				)
+				.catch(err => console.log(err));
 
-				})
-					.then(
-						function (response) {
-							response.json().then(function (data) {
-								getUser(data.access_token, data.token_type);
-							});
-						}
-					)
-					.catch(err => console.log(err));
-
-			} else {
-				res.redirect('https://discord.com/api/oauth2/authorize?client_id=819420216583913532&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fprofile&response_type=code&scope=identify%20guilds');
-			}
+		} else {
+			res.redirect('https://discord.com/api/oauth2/authorize?client_id=819420216583913532&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fprofile&response_type=code&scope=identify%20guilds');
 		}
 	});
 
 	app.get('/discord', (req, res) => {
-		const userId = getAppCookies(req, res)['userId'];
-		userInfo = dbCache.find(user => parseInt(user.id) == userId);
-		res.send(userInfo);
+		let gotCookie = false;
+		console.log('hmmmm', req.headers.cookie);
+		if (req.headers.cookie) {
+			if (getAppCookies(req, res)['userId']) {
+				gotCookie = true;
+			}
+		}
+		console.log('hmmmm2', gotCookie, getAppCookies(req, res));
+		if (gotCookie) {
+			const userId = getAppCookies(req, res)['userId'];
+			userInfo = dbCache.find(user => parseInt(user.id) == userId);
+			res.send(userInfo);
+		}
 	});
 
 }

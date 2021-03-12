@@ -32,18 +32,18 @@ h1, h2, h3, h4, h5 {
 }
 
 h1 {
-	font-size: em(20);
-	letter-spacing: 0.09em;
-	font-weight: normal;
+	font-size: em(24);
+	letter-spacing: 0.05em;
+	font-weight: 800;
 	line-height: 1.2;
 	@include medium {
-		font-size: em(24);
+		font-size: em(30);
 	}
 }
 
 h2 {
+	color: #c4c4c4;
 	font-size: em(20);
-	letter-spacing: 0.08em;
 	line-height: 1.2;
 	@include medium {
 		font-size: em(22);
@@ -51,17 +51,22 @@ h2 {
 }
 
 h3 {
+	color: #c4c4c4;
 	font-size: em(19);
-	font-weight: bold;
+	font-weight: 800;
 	letter-spacing: 0.01em;
 	margin-bottom: 14px;
 }
 
 h4 {
-	font-size: em(22);
-	font-weight: normal;
-	line-height: 1.1;
+	color: #c4c4c4;
+	font-size: em(16);
+	font-weight: 800;
+	line-height: 1.2;
 	margin: 5px 0;
+	a {
+		color: #c4c4c4;
+	}
 }
 
 h5 {

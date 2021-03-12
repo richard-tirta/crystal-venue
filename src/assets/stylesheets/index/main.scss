@@ -1,0 +1,29 @@
+
+
+.main-container {
+	margin-right: auto;
+	margin-left: auto;
+	max-width: 1024px;
+	width: 100%;
+}
+
+#profile {
+    .profile-section {
+        margin-bottom: 100px;
+        margin-top: 16px;
+    }
+    .profile-container {
+        display: flex;
+        margin-top: 16px;
+    }
+    .profile-pic {
+        border-radius: 50%;
+        margin-right: 30px;
+    }
+    .profile-name span {
+        color: #797979;
+    }
+    .venue-container {
+        margin-top: 30px;
+    }
+}

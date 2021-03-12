@@ -1,5 +1,6 @@
 
 import React from "react";
+import VenueForm from "./VenueForm";
 import VenueLocation from './form_component/VenueLocation'
 import ErrorBoundary from './ErrorBoundary'
 
@@ -14,6 +15,7 @@ class ProfileForm extends React.Component {
             discriminator: undefined,
             avatar: undefined,
             isMember: false,
+            isAddVenue: false,
         };
 
     }
@@ -21,9 +23,7 @@ class ProfileForm extends React.Component {
     componentDidMount() {
         const urlParams = new URLSearchParams(window.location.search);
         const myParam = urlParams.get('code');
-
-        console.log('HMMMM');
-
+        console.log('yes?');
         fetch('/discord')
             .then(response => response.json())
             .then(
@@ -40,24 +40,38 @@ class ProfileForm extends React.Component {
                 },
                 (error) => {
                     console.log('error');
+                    window.location.replace("/");
                 }
-        )
+            )
+    }
+
+    toggleAddVenue(e) {
+        e.preventDefault();
+        this.setState({
+            isAddVenue: !this.state.isAddVenue
+        });
     }
 
     render() {
-        //const avatar = isLoaded ? <img src={"https://cdn.discordapp.com/avatars/" + this.state.id + "/" + this.state.avatar + ".png"} /> : null;
+
+        const noVenue = (<h4>
+            No Venue is listed under your profile.<br />
+            <a href="#" onClick={(e) => this.toggleAddVenue(e)}>List a Venue &raquo;</a>
+        </h4>);
+
         return (
             <section className="profile-section">
-                <h2>Personal Information:</h2>
+                <h3>Personal Information:</h3>
                 <div className="profile-container">
+                    <img className="profile-pic" src={"https://cdn.discordapp.com/avatars/" + this.state.userid + "/" + this.state.avatar + ".png"} />
                     <div>
-                        <img src={"https://cdn.discordapp.com/avatars/" + this.state.userid + "/" + this.state.avatar + ".png"} />
+                        <h3 className="profile-name">{this.state.username}<span>#{this.state.discriminator}</span></h3>
+                        <p>Role: {this.state.isMember ? 'Member' : 'Guest'}</p>
                     </div>
-                    <div>
-                        <h3>{this.state.username}<span>{this.state.discriminator}</span></h3>
-                        <p>Birthday</p>
-                        <p>Role: { this.state.isMember ? 'Member' : 'Guest'}</p>
-                    </div>
+                </div>
+                <div class="venue-container">
+                    <h3>Venue Admin:</h3>
+                    {this.state.isAddVenue ? <VenueForm/> : noVenue}
                 </div>
             </section>
         );
