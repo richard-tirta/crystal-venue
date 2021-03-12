@@ -8,7 +8,12 @@ class ProfileForm extends React.Component {
         super(props);
 
         this.state = {
-
+            isLoaded: false,
+            userid: undefined,
+            username: undefined,
+            discriminator: undefined,
+            avatar: undefined,
+            isMember: false,
         };
 
     }
@@ -16,12 +21,6 @@ class ProfileForm extends React.Component {
     componentDidMount() {
         const urlParams = new URLSearchParams(window.location.search);
         const myParam = urlParams.get('code');
-        const fragment = new URLSearchParams(window.location.hash.slice(1));
-        const accessToken = fragment.get("access_token");
-        const tokenType = fragment.get("token_type");
-        const DISCORD_CLIENT_ID = '819420216583913532';
-        const DISCORD_CLIENT_SECRET = 'whvp1V0pnXoMsm6O1zFqAQ4l8IDvBMB5';
-        console.log(myParam, accessToken, tokenType);
 
         if (myParam) {
             fetch('/discord?code=' + myParam)
@@ -29,45 +28,39 @@ class ProfileForm extends React.Component {
                 .then(
                     (result) => {
                         console.log(result);
+                        this.setState({
+                            isLoaded: true,
+                            userid: result[0].id,
+                            username: result[0].username,
+                            discriminator: result[0].discriminator,
+                            avatar: result[0].avatar,
+                            isMember: result[1].isMember,
+                        });
                     },
                     (error) => {
                         console.log('error');
                     }
             )
-
-            //https://discord.com/api/oauth2/authorize?client_id=819420216583913532&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fprofile&response_type=code&scope=identify%20guilds
-
-            // {
-            //     headers: new Headers({
-            //         client_id: DISCORD_CLIENT_ID,
-            //         client_secret: DISCORD_CLIENT_SECRET,
-            //         code: myParam,
-            //         scope: "identify guilds",
-            //         grantType: "authorization_code",
-            //         redirectUri: "https:localhost:3000/profile"
-            //     })
-            // }
-
-            // fetch('https://discord.com/api/oauth2/token', {
-            //     headers: {
-            //         client_id: DISCORD_CLIENT_ID,
-            //         client_secret: DISCORD_CLIENT_SECRET,
-            //         code: myParam,
-            //         scope: "identify guilds",
-            //         grantType: "authorization_code",
-            //         redirectUri: "https:localhost:3000/profile"
-            //     }
-            //     })
-            //     .then(response => response.json()) 
-            //     .then(json => console.log(json))
-            //     .catch(err => console.log(err));
-
         }
     }
 
     render() {
-        return (<div>
-        </div>);
+        //const avatar = isLoaded ? <img src={"https://cdn.discordapp.com/avatars/" + this.state.id + "/" + this.state.avatar + ".png"} /> : null;
+        return (
+            <section className="profile-section">
+                <h2>Personal Information:</h2>
+                <div className="profile-container">
+                    <div>
+                        <img src={"https://cdn.discordapp.com/avatars/" + this.state.userid + "/" + this.state.avatar + ".png"} />
+                    </div>
+                    <div>
+                        <h3>{this.state.username}<span>{this.state.discriminator}</span></h3>
+                        <p>Birthday</p>
+                        <p>Role: { this.state.isMember ? 'Member' : 'Guest'}</p>
+                    </div>
+                </div>
+            </section>
+        );
     };
 
 }
