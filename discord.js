@@ -3,43 +3,50 @@ exports.init = function (req, res) {
 
 	const app = require('./app.js');
 	const fetch = require('node-fetch');
+	const cookieParser = require("cookie-parser");
+	const bodyParser = require('body-parser');
+	const cors = require('cors');
+
 	const DISCORD_CLIENT_ID = '819420216583913532';
 	const DISCORD_CLIENT_SECRET = 'whvp1V0pnXoMsm6O1zFqAQ4l8IDvBMB5';
+
+	let dbCache = [];
+
+	app.use(cookieParser());
+	app.use(bodyParser.json())
+	app.use(cors())
 	
-	//797508055960256554
-		//811993757196353536
-		//797546078034853910
-		// id: '797508055960256554',
-		// name: 'Eagle Dragon Leather Bar',
-		//id: '758143077701124137',
-		// name: 'Crystal Venue Association',
+	// id: '797508055960256554',
+	// name: 'Eagle Dragon Leather Bar',
+	//id: '758143077701124137',
+	// name: 'Crystal Venue Association',
 
-	app.get('/discord', function (req, res) {
-		let userData = [];
-		let data = {
-			client_id: DISCORD_CLIENT_ID,
-			client_secret: DISCORD_CLIENT_SECRET,
-			grant_type: "authorization_code",
-			code: req.query.code,
-			redirect_uri: "http://localhost:3000/profile.html",
-			scope: "identify guilds"
-		};
+	const getAppCookies = (req) => {
+		const rawCookies = req.headers.cookie.split('; ');
+		const parsedCookies = {};
+		rawCookies.forEach(rawCookie=>{
+		const parsedCookie = rawCookie.split('=');
+		 parsedCookies[parsedCookie[0]] = parsedCookie[1];
+		});
+		return parsedCookies;
+	};
+
+	app.get('/profile', function (req, res) {
+		// res.status(200).send({ success: true })
+		let userData = undefined;
 		let isMember = false;
-		
 
-		function getUser(token, token_type) {
-			
+		async function getUser(token, token_type) {
+
 			fetch('https://discord.com/api/users/@me', {
 				headers: {
 					authorization: `${token_type} ${token}`,
 				}
-				
 			})
 				.then(
 					function (response) {
 						response.json().then(function (data) {
-							userData.push(data);
-							console.log('fetch completed for userData', data);
+							userData = data;
 						});
 					}
 				)
@@ -54,27 +61,61 @@ exports.init = function (req, res) {
 				.then(
 					function (response) {
 						response.json().then(function (guildData) {
-							for (let i = 0; i < guildData.length; i++) {
-								guildData[i].id == 797508055960256554 ? isMember = true : null;
-								console.log('checking if user is Eagle Dragon member', isMember);
+							guildData.find(function (guild, index) {
+								if (parseInt(guild.id) == 797508055960256554) {
+									isMember = true;
+								}
+							});
+							userData.isMember = isMember;
+
+							if (dbCache.length < 1) {
+								dbCache.push(userData)
+								res.cookie(
+									'userId', userData.id, {
+									maxAge: 24 * 60 * 60,
+									httpOnly: true
+								});
+							} else {
+								dbCache.find(function (profile, index) {
+									if (parseInt(profile.id) == parseInt(userData.id)) {
+										return;
+									} else {
+										dbCache.push(userData);
+
+										res.cookie(
+											'userId', userData.id, {
+											maxAge: 24 * 60 * 60,
+											httpOnly: true
+										});
+										
+									}
+								});
 							}
-					
-							//userData.push({'isMember' : isMember});
-							//res.send(userData);
+							res.redirect('/profile.html');
 						});
 					}
 				)
 				.catch(err => console.log(err));
 		}
 
-		fetch('https://discord.com/api/oauth2/token', {
-			method: 'POST',
-			body: new URLSearchParams(data),
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded;'
-			}
-				
-		})
+		if (req.query.code) {
+			const data = {
+				client_id: DISCORD_CLIENT_ID,
+				client_secret: DISCORD_CLIENT_SECRET,
+				grant_type: "authorization_code",
+				code: req.query.code,
+				redirect_uri: "http://localhost:3000/profile",
+				scope: "identify guilds"
+			};
+
+			fetch('https://discord.com/api/oauth2/token', {
+				method: 'POST',
+				body: new URLSearchParams(data),
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded;'
+				}
+					
+			})
 			.then(
 				function (response) {
 					response.json().then(function (data) {
@@ -82,7 +123,17 @@ exports.init = function (req, res) {
 					});
 				}
 			)
-			.catch(err => console.log(err));
+				.catch(err => console.log(err));
+			
+		} else {
+			res.redirect('https://discord.com/api/oauth2/authorize?client_id=819420216583913532&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fprofile&response_type=code&scope=identify%20guilds');
+		}		
+	});
+
+	app.get('/discord', (req, res) => {
+		const userId = getAppCookies(req, res)['userId'];
+		userInfo = dbCache.find(user => parseInt(user.id) == userId);
+		res.send(userInfo);
 	});
 	
 }

@@ -1,4 +1,5 @@
 const express = require("express");
+var path = require("path");
 const discord = require('./discord');
 
 const app = express();
@@ -15,13 +16,13 @@ var server = app.listen(port, function () {
 app.use(express.static(__dirname + '/dist/'));
 
 
-app.get('/venue', function (req, res) {
-	res.redirect('/venue.html');
+app.get('/', function (req, res) {
+	console.log('/ requested', req.query.code);
 	// res.status(200).send({ success: true })
 });
 
-app.get('/profile', function (req, res) {
-	res.redirect('/profile.html');
+app.get('/venue', function (req, res) {
+	res.redirect('/venue.html');
 	// res.status(200).send({ success: true })
 });
 

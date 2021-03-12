@@ -22,26 +22,26 @@ class ProfileForm extends React.Component {
         const urlParams = new URLSearchParams(window.location.search);
         const myParam = urlParams.get('code');
 
-        if (myParam) {
-            fetch('/discord?code=' + myParam)
-                .then(response => response.json())
-                .then(
-                    (result) => {
-                        console.log(result);
-                        this.setState({
-                            isLoaded: true,
-                            userid: result[0].id,
-                            username: result[0].username,
-                            discriminator: result[0].discriminator,
-                            avatar: result[0].avatar,
-                            isMember: result[1].isMember,
-                        });
-                    },
-                    (error) => {
-                        console.log('error');
-                    }
-            )
-        }
+        console.log('HMMMM');
+
+        fetch('/discord')
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    console.log(result);
+                    this.setState({
+                        isLoaded: true,
+                        userid: result.id,
+                        username: result.username,
+                        discriminator: result.discriminator,
+                        avatar: result.avatar,
+                        isMember: result.isMember,
+                    });
+                },
+                (error) => {
+                    console.log('error');
+                }
+        )
     }
 
     render() {
