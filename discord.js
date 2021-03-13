@@ -6,6 +6,7 @@ exports.init = function (req, res) {
 	const cookieParser = require("cookie-parser");
 	const bodyParser = require('body-parser');
 	const cors = require('cors');
+	const { body, validationResult } = require('express-validator');
 
 	const DISCORD_CLIENT_ID = '819420216583913532';
 	const DISCORD_CLIENT_SECRET = 'whvp1V0pnXoMsm6O1zFqAQ4l8IDvBMB5';
@@ -14,7 +15,8 @@ exports.init = function (req, res) {
 
 	app.use(cookieParser());
 	app.use(bodyParser.json())
-	app.use(cors())
+	app.use(bodyParser.urlencoded({ extended: true }));
+	app.use(cors());
 
 	// id: '797508055960256554',
 	// name: 'Eagle Dragon Leather Bar',
@@ -145,6 +147,72 @@ exports.init = function (req, res) {
 			res.status(400);
 			res.send('No Cookie found');
 		}
+	});
+
+	app.post('/addVenue', [
+		body('userId')
+			.escape()
+			.not()
+			.isString(),
+		body('venueName')
+			.escape()
+			.isString(),
+		body('venueDescription')
+			.escape()
+			.isString(),
+		body('venueWorld')
+			.escape()
+			.isString(),
+		body('venueLocation')
+			.escape()
+			.isString(),
+		body('venueWard')
+			.escape()
+			.not()
+			.isString(),
+		body('venuePlot')
+			.escape()
+			.not()
+			.isString(),
+		body('venueWebsite')
+			.escape()
+			.isString(),
+		body('venueType1')
+			.escape()
+			.isString(),
+		body('venueType2')
+			.escape()
+			.isString(),
+		body('venueType3')
+			.escape()
+			.isString(),
+		body('isMature')
+			.escape()
+			.isBoolean()
+	], function (req, res) {
+		console.log('addVenue POST received', req.body);
+			
+			const userIndex = dbCache.findIndex(user => parseInt(user.id) == req.body.userId);
+			const venueObject = {
+				venueName: req.body.venueName,
+				venueDescription: req.body.venueDescription,
+				venueWorld: req.body.venueWorld,
+				venueLocation: req.body.venueLocation,
+				venueWard: req.body.venueWard,
+				venuePlot: req.body.venuePlot,
+				venueWebsite: req.body.venueWebsite,
+				venueType1: req.body.venueType1,
+				venueType2: req.body.venueType2,
+				venueType3: req.body.venueType3,
+				isMature: req.body.isMature,
+			}
+			
+			console.log('USER', userIndex);
+			dbCache[userIndex].venue = venueObject;
+			console.log('new dbCache', dbCache);
+
+		res.status(200).send({ success: true })
+		
 	});
 
 }

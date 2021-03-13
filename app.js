@@ -1,5 +1,5 @@
 const express = require("express");
-var path = require("path");
+const path = require("path");
 const discord = require('./discord');
 
 const app = express();

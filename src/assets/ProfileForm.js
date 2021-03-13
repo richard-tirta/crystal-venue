@@ -74,7 +74,7 @@ class ProfileForm extends React.Component {
                 </div>
                 <div class="venue-container">
                     <h3>Venue Admin:</h3>
-                    {this.state.isAddVenue ? <VenueForm/> : noVenue}
+                    {this.state.isAddVenue ? <VenueForm userId={this.state.userid} /> : noVenue}
                 </div>
             </section>
         );

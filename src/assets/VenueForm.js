@@ -19,6 +19,7 @@ class VenueForm extends React.Component {
             venueType2: 'no type2',
             venueType3: 'no type3',
             isMature: false,
+            isFormSubmitted: false,
             errors: {
                 venueWard: '',
                 venuePlot: '',
@@ -58,6 +59,7 @@ class VenueForm extends React.Component {
         }
     
         const data = JSON.stringify({
+            userId: this.props.userId,
             venueName: this.state.venueName,
             venueDescription: this.state.venueDescription,
             venueWorld: this.state.venueWorld,
@@ -73,29 +75,27 @@ class VenueForm extends React.Component {
 
         console.log('WE ARE READY TO SHIP', data);
     
-        // fetch('/interest', {
-        //   headers: {
-        //       'Content-Type': 'application/json'
-        //   },
-        //   method: 'POST',
-        //   body: data
-        // })
-        //   .then(response => response.json())
-        //   .then(
-        //     (result) => {
-        //       this.setState({
-        //         isFormSubmitted: true,
-        //       });
-        //       fbq('track', 'Lead');
-        //             ga('send', 'event', 'Gallery', 'Interest', 'Submitted');
-        //     },
-        //     (error) => {
-        //       this.setState({
-        //         isFormSubmitted: false,
-        //         error
-        //       });
-        //     }
-        //   )
+        fetch('/addVenue', {
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          method: 'POST',
+          body: data
+        })
+          .then(response => response.json())
+          .then(
+            (result) => {
+              this.setState({
+                isFormSubmitted: true,
+              });
+            },
+            (error) => {
+              this.setState({
+                isFormSubmitted: false,
+                error
+              });
+            }
+          )
       }
     
     render() {
