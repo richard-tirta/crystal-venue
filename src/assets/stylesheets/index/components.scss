@@ -71,6 +71,7 @@ select {
 	padding: 6px;
 	min-height: 30px;
 	min-width: 300px;
+	width: 100%;
 }
 
 label {
@@ -79,7 +80,11 @@ label {
 
 form {
 	display: flex;
-	justify-content: space-between;
+	justify-content: flex-start;
+}
+
+.form-column {
+	margin-right: 140px;
 }
 
 .form-checkbox {
@@ -106,10 +111,18 @@ form {
 	margin-top: 30px;
 	margin-bottom: 30px;
 	margin-bottom: 16px;
-	padding: 6px;
+	padding: 8px 6px 4px 6px;
 	min-height: 30px;
-	min-width: 300px;
+	min-width: 280px;
+	text-align: center;
 	&:hover {
 		background: #797979;
 	}
+}
+
+.form-error {
+	color: #E70000;
+	font-size: 14px;
+	font-weight: 800;
+	line-height: 1.5;
 }

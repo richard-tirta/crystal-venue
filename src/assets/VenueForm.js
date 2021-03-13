@@ -3,19 +3,113 @@ import React from "react";
 class VenueForm extends React.Component {
     constructor(props) {
         super(props);
+
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = {
+            venueName: 'no name',
+            venueDescription: 'no description',
+            venueWorld: 'no world',
+            venueLocation: 'no location',
+            venueWard: 'no ward',
+            venuePlot: 'no plot',
+            venueWebsite: 'no website',
+            venueType1: 'no type1',
+            venueType2: 'no type2',
+            venueType3: 'no type3',
+            isMature: false,
+            errors: {
+                venueWard: '',
+                venuePlot: '',
+            }
+        }
     }
+
+    handleInputChange(event) {
+        const target = event.target;
+        const name = target.name;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        let errors = this.state.errors;
+        switch (name) {
+            case 'venueWard':
+                errors.venueWard = isNaN(value) || parseInt(value) > 24 || parseInt(value) < 1
+                    ? 'Invalid Ward. There are currently only 24 Wards'
+                    : '';
+            case 'venuePlot':
+                errors.venuePlot = isNaN(value) || parseInt(value) > 60 || parseInt(value) < 1
+                    ? 'Invalid Plot. There are currently only 60 Plots'
+                    : '';
+        } 
+
+        this.setState({
+            [name]: value,
+            errors,
+        });
+    }
+
+    handleSubmit(event) {
+        console.log('HELLO');
+        event.preventDefault();
+        let errors = this.state.errors;
+
+        if (errors.venueWard || errors.venuePlot) {
+            return;
+        }
+    
+        const data = JSON.stringify({
+            venueName: this.state.venueName,
+            venueDescription: this.state.venueDescription,
+            venueWorld: this.state.venueWorld,
+            venueLocation: this.state.venueLocation,
+            venueWard: this.state.venueWard,
+            venuePlot: this.state.venuePlot,
+            venueWebsite: this.state.venueWebsite,
+            venueType1: this.state.venueType1,
+            venueType2: this.state.venueType2,
+            venueType3: this.state.venueType3,
+            isMature: this.state.isMature,
+        });
+
+        console.log('WE ARE READY TO SHIP', data);
+    
+        // fetch('/interest', {
+        //   headers: {
+        //       'Content-Type': 'application/json'
+        //   },
+        //   method: 'POST',
+        //   body: data
+        // })
+        //   .then(response => response.json())
+        //   .then(
+        //     (result) => {
+        //       this.setState({
+        //         isFormSubmitted: true,
+        //       });
+        //       fbq('track', 'Lead');
+        //             ga('send', 'event', 'Gallery', 'Interest', 'Submitted');
+        //     },
+        //     (error) => {
+        //       this.setState({
+        //         isFormSubmitted: false,
+        //         error
+        //       });
+        //     }
+        //   )
+      }
+    
     render() {
         return (
             <div>
                 <form>
                     <div className="form-column">
-                        <label for="mature">Venue Name*</label>
-                        <input type="text" id="venue-form_name" className="form-input" name="venue-name" minLength="3" maxLength="50" placeholder="Venue Name" required />
-                        <label for="mature">Venue Description*</label>
-                        <textarea id="venue-form_description" rows="3" cols="50" minLength="10" className="form_textarea" placeholder="Venue Description" required />
+                        <label for="venueName">Venue Name*</label>
+                        <input type="text" id="venue-form_name" className="form-input" name="venueName" minLength="3" maxLength="50" placeholder="Venue Name" required onChange={this.handleInputChange}  />
+                        <label for="venueDescription">Venue Description*</label>
+                        <textarea id="venue-form_description" name="venueDescription" rows="3" cols="50" minLength="10" className="form_textarea" placeholder="Venue Description" onChange={this.handleInputChange} required />
 
-                        <label for="mature">Venue World*</label>
-                        <select name="world" id="venue-form_world" required>
+                        <label for="venueWorld">Venue World*</label>
+                        <select name="venueWorld" id="venue-form_world" onChange={this.handleInputChange} required>
                             <option value="">--Select World--</option>
                             <option value="Balmung">Balmung</option>
                             <option value="Brynhild">Brynhild</option>
@@ -27,8 +121,8 @@ class VenueForm extends React.Component {
                             <option value="Zalera">Zalera</option>
                         </select>
 
-                        <label for="mature">Venue Location*</label>
-                        <select name="location" id="venue-form_location" required>
+                        <label for="venueLocation">Venue Location*</label>
+                        <select name="venueLocation" id="venue-form_location" onChange={this.handleInputChange}  required>
                             <option value="">--Select Location--</option>
                             <option value="Lavender Bed">Lavender Bed</option>
                             <option value="Goblet">Goblet</option>
@@ -36,19 +130,21 @@ class VenueForm extends React.Component {
                             <option value="Shirogane">Shirogane</option>
                         </select>
 
-                        <label for="mature">Venue Ward*</label>
-                        <input type="text" id="venue-form_ward" className="form-input" name="venue-ward" minLength="1" maxLength="2" placeholder="Ward" required />
-
-                        <label for="mature">Venue Plot*</label>
-                        <input type="text" id="venue-form_plot" className="form-input" name="venue-plot" minLength="1" maxLength="2" placeholder="Plot" required />
+                        <label for="venueWard">Venue Ward*</label>
+                        {this.state.errors.venueWard.length > 0 && <span className='form-error'>{this.state.errors.venueWard}</span>}
+                        <input type="text" id="venue-form_ward" className="form-input" name="venueWard" minLength="1" maxLength="2" placeholder="Ward" required onChange={this.handleInputChange} />
+                        
+                        <label for="venuePlot">Venue Plot*</label>
+                        {this.state.errors.venuePlot.length > 0 && <span className='form-error'>{this.state.errors.venuePlot}</span>}
+                        <input type="text" id="venue-form_plot" className="form-input" name="venuePlot" minLength="1" maxLength="2" placeholder="Plot" required onChange={this.handleInputChange} />
                     </div>
                     <div className="form-column">
-                        <label for="mature">Venue Website</label>
-                        <input type="text" id="venue-form_url" className="form_input" name="url"
-                            minLength="4" maxLength="50" placeholder="Venue Website" className="form_input" />
+                        <label for="venueWebsite">Venue Website</label>
+                        <input type="text" id="venue-form_url" className="form_input" name="venueWebsite"
+                            minLength="4" maxLength="50" placeholder="Venue Website" className="form_input"  onChange={this.handleInputChange} />
 
-                        <label for="mature">Venue Main Type*</label>
-                        <select name="type1" id="venue-form_type1" required>
+                        <label for="venueType1">Venue Main Type*</label>
+                        <select name="venueType1" id="venue-form_type1" onChange={this.handleInputChange}  required>
                             <option value="">--Select Venue Main Type--</option>
                             <option value="Music Performance">Music Performance</option>
                             <option value="Full Bar">Full Bar</option>
@@ -58,8 +154,8 @@ class VenueForm extends React.Component {
                             <option value="Lgbtq">LBTQ+ Owned</option>
                         </select>
 
-                        <label for="mature">Venue Second Type</label>
-                        <select name="type1" id="venue-form_type2">
+                        <label for="venueType2">Venue Second Type</label>
+                        <select name="venueType2" onChange={this.handleInputChange}  id="venue-form_type2">
                             <option value="">--Select Venue Main Type--</option>
                             <option value="Music Performance">Music Performance</option>
                             <option value="Full Bar">Full Bar</option>
@@ -69,8 +165,8 @@ class VenueForm extends React.Component {
                             <option value="Lgbtq">LBTQ+ Owned</option>
                         </select>
 
-                        <label for="mature">Venue Third Type</label>
-                        <select name="type1" id="venue-form_type3">
+                        <label for="venueType3">Venue Third Type</label>
+                        <select name="venueType3" onChange={this.handleInputChange} id="venue-form_type3">
                             <option value="">--Select Venue Main Type--</option>
                             <option value="Music Performance">Music Performance</option>
                             <option value="Full Bar">Full Bar</option>
@@ -81,15 +177,15 @@ class VenueForm extends React.Component {
                         </select>
 
                         <div className="form-checkbox-container">
-                            <label for="mature">Mature (18+)</label>
-                            <input className="form-checkbox" type="checkbox" id="mature" name="mature" />
+                            <label for="isMature">Mature (18+)</label>
+                            <input className="form-checkbox" type="checkbox" id="mature" name="isMature" onChange={this.handleInputChange}  />
                         </div>
 
-                        <button type="submit" id="submit-cta"
+                        <a href="#" id="submit-cta"
                             className="form-submit"
-                            value="Venue Sent">
+                            onClick={this.handleSubmit}>
                             Submit
-                        </button>
+                        </a>
 
                     </div>
                 </form>

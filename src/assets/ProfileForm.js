@@ -21,12 +21,14 @@ class ProfileForm extends React.Component {
     }
 
     componentDidMount() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const myParam = urlParams.get('code');
-        console.log('yes?');
+        console.log('ProfileForm componentDidMount');
         fetch('/discord')
-            .then(response => response.json())
-            .then(
+            .then(response => {
+                if (response.status !== 200) {
+                    console.log('Looks like there was a problem. Status Code: ' +
+                        response.status);
+                }
+                response.json().then(
                 (result) => {
                     console.log(result);
                     this.setState({
@@ -43,6 +45,7 @@ class ProfileForm extends React.Component {
                     window.location.replace("/");
                 }
             )
+        })
     }
 
     toggleAddVenue(e) {

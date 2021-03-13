@@ -141,6 +141,9 @@ exports.init = function (req, res) {
 			const userId = getAppCookies(req, res)['userId'];
 			userInfo = dbCache.find(user => parseInt(user.id) == userId);
 			res.send(userInfo);
+		} else {
+			res.status(400);
+			res.send('No Cookie found');
 		}
 	});
 
