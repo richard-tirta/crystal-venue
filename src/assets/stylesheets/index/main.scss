@@ -47,9 +47,24 @@
                 margin-top: 8px;
             }
         }
+        .venue-desc_type {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .venue-desc_aetheryte {
+            color: #CCCCCC;
+            font-size: 14px;
+            font-weight: 800;
+            margin-top: 16px;
+        }
     }
     .venue-image {
+        border-top-right-radius: 2%;
+        border-bottom-right-radius: 2%;
         width: 65%;
+        height: 100%;
+        padding-top: 45%;
+        background-size: cover;
         img {
             border-top-right-radius: 2%;
             border-bottom-right-radius: 2%;

@@ -21,6 +21,7 @@
     "graphql": "^15.5.0",
     "node-fetch": "^2.6.0",
     "parcel": "1.12.3",
+    "pg": "^8.5.1",
     "posthtml": "^0.15.1",
     "posthtml-img-autosize": "^0.1.4",
     "react": "^17.0.1",

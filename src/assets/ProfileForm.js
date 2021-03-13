@@ -24,6 +24,7 @@ class ProfileForm extends React.Component {
                 venueLocation: undefined,
                 venueWard: undefined,
                 venuePlot: undefined,
+                venueAetheryte: undefined,
                 venueWebsite: undefined,
                 venueType1: undefined,
                 venueType2: undefined,
@@ -45,32 +46,35 @@ class ProfileForm extends React.Component {
                 response.json().then(
                     (result) => {
                         console.log(result);
+                        const resultData = result[0];
                         let venue = this.state.venue;
-                        let haveVenue = false;
 
-                        if (result.venue) {
-                            haveVenue = true;
-                            venue.venueName = result.venue.venueName;
-                            venue.venueDescription = result.venue.venueDescription;
-                            venue.venueWorld = result.venue.venueWorld;
-                            venue.venueLocation = result.venue.venueLocation;
-                            venue.venueWard = result.venue.venueWard;
-                            venue.venuePlot = result.venue.venuePlot;
-                            venue.venueWebsite = result.venue.venueWebsite;
-                            venue.venueType1 = result.venue.venueType1;
-                            venue.venueType2 = result.venue.venueType2;
-                            venue.venueType3 = result.venue.venueType3;
-                            venue.isMature = result.venue.isMature;
+                        if (resultData.havevenue) {
+                            console.log('whyy', resultData.venue[0]);
+                            venue.venueName = resultData.venue[0].name;
+                            venue.venueDescription = resultData.venue[0].description;
+                            venue.venueWorld = resultData.venue[0].world;
+                            venue.venueLocation = resultData.venue[0].location;
+                            venue.venueWard = resultData.venue[0].ward;
+                            venue.venuePlot = resultData.venue[0].plot;
+                            venue.venueAetheryte = resultData.venue[0].aetheryte;
+                            venue.venueWebsite = resultData.venue[0].website;
+                            venue.venueType1 = resultData.venue[0].type1;
+                            venue.venueType2 = resultData.venue[0].type2;
+                            venue.venueType3 = resultData.venue[0].type3;
+                            venue.isMature = resultData.venue[0].ismature;
                         }
+
+                        console.log('hmmm', resultData);
 
                         this.setState({
                             isLoaded: true,
-                            userid: result.id,
-                            username: result.username,
-                            discriminator: result.discriminator,
-                            avatar: result.avatar,
-                            isMember: result.isMember,
-                            haveVenue: haveVenue,
+                            userid: resultData.userid,
+                            username: resultData.username,
+                            discriminator: resultData.discriminator,
+                            avatar: resultData.avatar,
+                            isMember: resultData.ismember,
+                            haveVenue: resultData.havevenue,
                             venue,
                         });
                     },

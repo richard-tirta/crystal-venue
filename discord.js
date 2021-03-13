@@ -1,21 +1,32 @@
+const { json } = require('express');
 
 exports.init = function (req, res) {
 
+	const express = require('express');
 	const app = require('./app.js');
 	const fetch = require('node-fetch');
 	const cookieParser = require("cookie-parser");
-	const bodyParser = require('body-parser');
+	//const bodyParser = require('body-parser');
 	const cors = require('cors');
 	const { body, validationResult } = require('express-validator');
+	const Pool = require('pg').Pool
+
+	const pool = new Pool({
+		user: 'me',
+		host: 'localhost',
+		database: 'cva',
+		password: 'password',
+		port: 5432,
+	})
 
 	const DISCORD_CLIENT_ID = '819420216583913532';
 	const DISCORD_CLIENT_SECRET = 'whvp1V0pnXoMsm6O1zFqAQ4l8IDvBMB5';
 
-	let dbCache = [];
-
 	app.use(cookieParser());
-	app.use(bodyParser.json())
-	app.use(bodyParser.urlencoded({ extended: true }));
+	// app.use(bodyParser.json())
+	// app.use(bodyParser.urlencoded({ extended: true }));
+	app.use(express.urlencoded({ extended: true }));
+	app.use(express.json());
 	app.use(cors());
 
 	// id: '797508055960256554',
@@ -36,6 +47,72 @@ exports.init = function (req, res) {
 			return undefined;
 		}
 	};
+
+	const getUserByUserId = (userId) => {
+		const query = 'SELECT * FROM users WHERE userid = $1';
+
+		return new Promise(function (resolve, reject) {
+			pool.query(query, [userId], (err, response) => {
+				if (err) {
+					console.log('getUserByUserId error', err)
+					reject(0);
+				} else {
+					resolve(response.rows);
+				}
+			})
+		});
+	}
+
+	const getVenueByUserId = (userId) => {
+		const query = 'SELECT * FROM venues WHERE userid = $1';
+
+		return new Promise(function (resolve, reject) {
+			pool.query(query, [userId], (err, response) => {
+				if (err) {
+					console.log('getVenueByUserId error', err)
+					reject(0);
+				} else {
+					resolve(response.rows);
+				}
+			})
+		});
+	}
+
+
+	const addNewUserToDb = (data) => {
+		console.log('GOING TO ADD NEW USER TO DB', data);
+		const { id, username, discriminator, avatar, isMember, haveVenue } = data
+
+		pool.query('INSERT INTO users (userid, username, discriminator, avatar, isMember, haveVenue ) VALUES ($1, $2, $3, $4, $5, $6)', [id, username, discriminator, avatar, isMember, haveVenue], (error, results) => {
+			if (error) {
+				throw error
+			}
+			console.log('User added');
+		})
+	}
+
+	const addNewVenueToDb = (data) => {
+		console.log('GOING TO ADD NEW VENUE TO DB', data);
+		const { userId, venueName, venueDescription, venueWorld, venueLocation, venueWard, venuePlot, venueAetheryte, venueWebsite, venueType1, venueType2, venueType3, isMature } = data
+
+		pool.query('INSERT INTO venues (userid, name, description, world, location, ward, plot, aetheryte, website, type1, type2, type3, ismature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [userId, venueName, venueDescription, venueWorld, venueLocation, venueWard, venuePlot, venueAetheryte, venueWebsite, venueType1, venueType2, venueType3, isMature], (error, results) => {
+			if (error) {
+				throw error
+			}
+			console.log('Venue added');
+		})
+
+		pool.query(
+			'UPDATE users SET haveVenue = true WHERE userid = $1',
+			[data.userId],
+			(error, results) => {
+				if (error) {
+					throw error
+				}
+				console.log('Users updated to have venue');
+			}
+		)
+	}
 
 	app.get('/profile', function (req, res) {
 		// res.status(200).send({ success: true })
@@ -74,24 +151,18 @@ exports.init = function (req, res) {
 							});
 							userData.isMember = isMember;
 
-							if (dbCache.length < 1) {
-								dbCache.push(userData)
-							} else {
-								dbCache.find(function (profile, index) {
-									if (parseInt(profile.id) == parseInt(userData.id)) {
-										return;
-									} else {
-										dbCache.push(userData);
-									}
+							getUserByUserId(userData.id).then((response) => {
+								if (response.length < 1) {
+									userData.haveVenue = false;
+									addNewUserToDb(userData);
+								}
+								res.cookie(
+									'userId', userData.id, {
+									maxAge: 24 * 60 * 60 * 60,
+									httpOnly: true
 								});
-							}
-							res.cookie(
-								'userId', userData.id, {
-								maxAge: 24 * 60 * 60 * 60,
-								httpOnly: true
-							});
-							console.log('HELLOOOOO');
-							res.redirect('/profile.html');
+								res.redirect('/profile.html');
+							})
 						});
 					}
 				)
@@ -132,17 +203,27 @@ exports.init = function (req, res) {
 
 	app.get('/discord', (req, res) => {
 		let gotCookie = false;
-		console.log('hmmmm', req.headers.cookie);
+		let userData = undefined;
+		//console.log('hmmmm', req.headers.cookie);
 		if (req.headers.cookie) {
 			if (getAppCookies(req, res)['userId']) {
 				gotCookie = true;
 			}
 		}
-		console.log('hmmmm2', gotCookie, getAppCookies(req, res));
+		//console.log('hmmmm2', gotCookie, getAppCookies(req, res));
 		if (gotCookie) {
 			const userId = getAppCookies(req, res)['userId'];
-			userInfo = dbCache.find(user => parseInt(user.id) == userId);
-			res.send(userInfo);
+			getUserByUserId(userId).then((response) => {
+				console.log('hmmm', response[0].havevenue);
+				if (response[0].havevenue) {
+					getVenueByUserId(userId).then((venue) => {
+						response[0].venue = venue;
+						res.send(response);
+					})
+				} else {
+					res.send(response);
+				}	
+			})
 		} else {
 			res.status(400);
 			res.send('No Cookie found');
@@ -174,6 +255,9 @@ exports.init = function (req, res) {
 			.escape()
 			.not()
 			.isString(),
+		body('venueAetheryte')
+			.escape()
+			.isString(),
 		body('venueWebsite')
 			.escape()
 			.isString(),
@@ -191,24 +275,25 @@ exports.init = function (req, res) {
 			.isBoolean()
 	], function (req, res) {
 		console.log('addVenue POST received', req.body);
-			
-			const userIndex = dbCache.findIndex(user => parseInt(user.id) == req.body.userId);
-			const venueObject = {
-				venueName: req.body.venueName,
-				venueDescription: req.body.venueDescription,
-				venueWorld: req.body.venueWorld,
-				venueLocation: req.body.venueLocation,
-				venueWard: req.body.venueWard,
-				venuePlot: req.body.venuePlot,
-				venueWebsite: req.body.venueWebsite,
-				venueType1: req.body.venueType1,
-				venueType2: req.body.venueType2,
-				venueType3: req.body.venueType3,
-				isMature: req.body.isMature,
-			}
-			dbCache[userIndex].venue = venueObject;
+
+		const venueObject = {
+			userId: req.body.userId,
+			venueName: req.body.venueName,
+			venueDescription: req.body.venueDescription,
+			venueWorld: req.body.venueWorld,
+			venueLocation: req.body.venueLocation,
+			venueWard: req.body.venueWard,
+			venuePlot: req.body.venuePlot,
+			venueAetheryte: req.body.venueAetheryte,
+			venueWebsite: req.body.venueWebsite,
+			venueType1: req.body.venueType1,
+			venueType2: req.body.venueType2,
+			venueType3: req.body.venueType3,
+			isMature: req.body.isMature,
+		}
+		addNewVenueToDb(venueObject);
 		res.status(200).send({ success: true })
-		
+
 	});
 
 }
