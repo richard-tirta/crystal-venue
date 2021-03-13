@@ -1,7 +1,7 @@
 
 import React from "react";
 import VenueForm from "./VenueForm";
-import VenueLocation from './form_component/VenueLocation'
+import VenueModule from "./VenueModule";
 import ErrorBoundary from './ErrorBoundary'
 
 class ProfileForm extends React.Component {
@@ -16,6 +16,20 @@ class ProfileForm extends React.Component {
             avatar: undefined,
             isMember: false,
             isAddVenue: false,
+            haveVenue: false,
+            venue: {
+                venueName: undefined,
+                venueDescription: undefined,
+                venueWorld: undefined,
+                venueLocation: undefined,
+                venueWard: undefined,
+                venuePlot: undefined,
+                venueWebsite: undefined,
+                venueType1: undefined,
+                venueType2: undefined,
+                venueType3: undefined,
+                isMature: false,
+            }
         };
 
     }
@@ -29,23 +43,43 @@ class ProfileForm extends React.Component {
                         response.status);
                 }
                 response.json().then(
-                (result) => {
-                    console.log(result);
-                    this.setState({
-                        isLoaded: true,
-                        userid: result.id,
-                        username: result.username,
-                        discriminator: result.discriminator,
-                        avatar: result.avatar,
-                        isMember: result.isMember,
-                    });
-                },
-                (error) => {
-                    console.log('error');
-                    window.location.replace("/");
-                }
-            )
-        })
+                    (result) => {
+                        console.log(result);
+                        let venue = this.state.venue;
+                        let haveVenue = false;
+
+                        if (result.venue) {
+                            haveVenue = true;
+                            venue.venueName = result.venue.venueName;
+                            venue.venueDescription = result.venue.venueDescription;
+                            venue.venueWorld = result.venue.venueWorld;
+                            venue.venueLocation = result.venue.venueLocation;
+                            venue.venueWard = result.venue.venueWard;
+                            venue.venuePlot = result.venue.venuePlot;
+                            venue.venueWebsite = result.venue.venueWebsite;
+                            venue.venueType1 = result.venue.venueType1;
+                            venue.venueType2 = result.venue.venueType2;
+                            venue.venueType3 = result.venue.venueType3;
+                            venue.isMature = result.venue.isMature;
+                        }
+
+                        this.setState({
+                            isLoaded: true,
+                            userid: result.id,
+                            username: result.username,
+                            discriminator: result.discriminator,
+                            avatar: result.avatar,
+                            isMember: result.isMember,
+                            haveVenue: haveVenue,
+                            venue,
+                        });
+                    },
+                    (error) => {
+                        console.log('error');
+                        window.location.replace("/");
+                    }
+                )
+            })
     }
 
     toggleAddVenue(e) {
@@ -57,8 +91,8 @@ class ProfileForm extends React.Component {
 
     render() {
 
-        const noVenue = (<h4>
-            No Venue is listed under your profile.<br />
+        const venueStatus = (<h4>
+            {this.state.haveVenue ? "No Venue is listed under your profile." : null }<br />
             <a href="#" onClick={(e) => this.toggleAddVenue(e)}>List a Venue &raquo;</a>
         </h4>);
 
@@ -74,7 +108,8 @@ class ProfileForm extends React.Component {
                 </div>
                 <div class="venue-container">
                     <h3>Venue Admin:</h3>
-                    {this.state.isAddVenue ? <VenueForm userId={this.state.userid} /> : noVenue}
+                    {this.state.haveVenue ? <VenueModule venue={this.state.venue} /> : null}
+                    {this.state.isAddVenue ? <VenueForm userId={this.state.userid} isAddVenue={this.state.isAddVenue} /> : venueStatus}
                 </div>
             </section>
         );

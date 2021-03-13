@@ -206,11 +206,7 @@ exports.init = function (req, res) {
 				venueType3: req.body.venueType3,
 				isMature: req.body.isMature,
 			}
-			
-			console.log('USER', userIndex);
 			dbCache[userIndex].venue = venueObject;
-			console.log('new dbCache', dbCache);
-
 		res.status(200).send({ success: true })
 		
 	});
