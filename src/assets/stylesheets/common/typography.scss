@@ -95,10 +95,10 @@ p {
 
 a {
 	// font-size: em(18);
-	color: white;
+	color:rgb(230,230,230);
 	text-decoration: none;
 	&:hover {
-		font-weight: 700;
+		color: rgb(250,250,250);
 		text-decoration: underline;
 	}
 }

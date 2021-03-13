@@ -1,6 +1,7 @@
 
 import { data } from "browserslist";
 import React from "react";
+import sampleImage from "./images/sample/eagle-dragon.jpg";
 
 class VenueModule extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class VenueModule extends React.Component {
                 <div className="venue-description">
                     <div className="venue-desc_about">
                         <h3>{venue.venueName}</h3>
-                        <p>{venue.venueDescription}</p>
+                        <p dangerouslySetInnerHTML={{__html: venue.venueDescription}}/>
                         <a href={"https://" + venue.venueWebsite}>{venue.venueWebsite} &raquo;</a>
                     </div>
                     <div className="venue-desc_location">
@@ -22,7 +23,7 @@ class VenueModule extends React.Component {
                     </div>
                 </div>
                 <div className="venue-image">
-                    IMAGE
+                    <img src={sampleImage}/>
                 </div>
             </div>
         );

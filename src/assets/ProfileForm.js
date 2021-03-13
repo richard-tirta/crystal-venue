@@ -91,10 +91,16 @@ class ProfileForm extends React.Component {
 
     render() {
 
-        const venueStatus = (<h4>
-            {this.state.haveVenue ? "No Venue is listed under your profile." : null }<br />
-            <a href="#" onClick={(e) => this.toggleAddVenue(e)}>List a Venue &raquo;</a>
-        </h4>);
+        const venueStatus = !this.state.haveVenue
+            ? (
+                <h4>
+                    No Venue is listed under your profile."<br />
+                    <a href="#" onClick={(e) => this.toggleAddVenue(e)}>List a Venue &raquo;</a>
+                </h4>
+            )
+            : (
+                <a href="#">Add an Event &raquo;</a>
+            );
 
         return (
             <section className="profile-section">

@@ -27,3 +27,33 @@
         margin-top: 30px;
     }
 }
+
+.venue-module{
+    display: flex;
+    margin-bottom: 30px;
+    min-height: 260px;
+    .venue-description {
+        background: #373737;
+        border-top-left-radius: 2%;
+        border-bottom-left-radius: 2%;
+        display: flex;
+        flex-direction: column;
+        padding: 24px;
+        justify-content: space-between;
+        width: 35%;
+        .venue-desc_about {
+            a {
+                display: block;
+                margin-top: 8px;
+            }
+        }
+    }
+    .venue-image {
+        width: 65%;
+        img {
+            border-top-right-radius: 2%;
+            border-bottom-right-radius: 2%;
+            width: 100%;
+        }
+    }
+}
