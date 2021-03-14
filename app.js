@@ -33,7 +33,6 @@ app.get('/about', function (req, res) {
 
 discord.init();
 
-
 //The 404 Route (ALWAYS Keep this as the last route)
 app.use(function (req, res, next) {
 	res.status(404).redirect('/404.html');

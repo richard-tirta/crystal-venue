@@ -18,6 +18,7 @@ class ProfileForm extends React.Component {
             isAddVenue: false,
             haveVenue: false,
             venue: {
+                id: undefined,
                 venueName: undefined,
                 venueDescription: undefined,
                 venueWorld: undefined,
@@ -30,6 +31,7 @@ class ProfileForm extends React.Component {
                 venueType2: undefined,
                 venueType3: undefined,
                 isMature: false,
+                image: undefined,
             }
         };
 
@@ -50,7 +52,8 @@ class ProfileForm extends React.Component {
                         let venue = this.state.venue;
 
                         if (resultData.havevenue) {
-                            console.log('whyy', resultData.venue[0]);
+                            //console.log('venue Data', resultData.venue[0]);
+                            venue.id = resultData.venue[0].id;
                             venue.venueName = resultData.venue[0].name;
                             venue.venueDescription = resultData.venue[0].description;
                             venue.venueWorld = resultData.venue[0].world;
@@ -63,6 +66,7 @@ class ProfileForm extends React.Component {
                             venue.venueType2 = resultData.venue[0].type2;
                             venue.venueType3 = resultData.venue[0].type3;
                             venue.isMature = resultData.venue[0].ismature;
+                            venue.image = resultData.venue[0].image;
                         }
 
                         console.log('hmmm', resultData);
@@ -118,7 +122,7 @@ class ProfileForm extends React.Component {
                 </div>
                 <div class="venue-container">
                     <h3>Venue Admin:</h3>
-                    {this.state.haveVenue ? <VenueModule venue={this.state.venue} /> : null}
+                    {this.state.haveVenue ? <VenueModule userId={this.state.userid} venue={this.state.venue} /> : null}
                     {this.state.isAddVenue ? <VenueForm userId={this.state.userid} isAddVenue={this.state.isAddVenue} /> : venueStatus}
                 </div>
             </section>

@@ -2,14 +2,17 @@ const { json } = require('express');
 
 exports.init = function (req, res) {
 
-	const express = require('express');
-	const app = require('./app.js');
-	const fetch = require('node-fetch');
-	const cookieParser = require("cookie-parser");
-	//const bodyParser = require('body-parser');
-	const cors = require('cors');
 	const { body, validationResult } = require('express-validator');
-	const Pool = require('pg').Pool
+	const app = require('./app.js');
+	const AWS = require('aws-sdk');
+	const cookieParser = require("cookie-parser");
+	const cors = require('cors');
+	const express = require('express');
+	const fs = require('fs');
+	const fetch = require('node-fetch');
+	const fileType = require('file-type');
+	const multiparty = require('multiparty');
+	const Pool = require('pg').Pool;
 
 	const pool = new Pool({
 		user: 'me',
@@ -22,17 +25,17 @@ exports.init = function (req, res) {
 	const DISCORD_CLIENT_ID = '819420216583913532';
 	const DISCORD_CLIENT_SECRET = 'whvp1V0pnXoMsm6O1zFqAQ4l8IDvBMB5';
 
+	AWS.config.update({
+		accessKeyId: 'AKIA4BRRINS3O5CFOTEU',
+		secretAccessKey: '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',
+	});
+
 	app.use(cookieParser());
-	// app.use(bodyParser.json())
-	// app.use(bodyParser.urlencoded({ extended: true }));
 	app.use(express.urlencoded({ extended: true }));
 	app.use(express.json());
 	app.use(cors());
 
-	// id: '797508055960256554',
-	// name: 'Eagle Dragon Leather Bar',
-	//id: '758143077701124137',
-	// name: 'Crystal Venue Association',
+	const s3 = new AWS.S3();
 
 	const getAppCookies = (req) => {
 		if (req.headers.cookie) {
@@ -114,6 +117,17 @@ exports.init = function (req, res) {
 		)
 	}
 
+	const uploadFile = (buffer, name, type) => {
+		const params = {
+			ACL: 'public-read',
+			Body: buffer,
+			Bucket: 'crystal-venue-association',
+			ContentType: type.mime,
+			Key: `${name}.${type.ext}`,
+		};
+		return s3.upload(params).promise();
+	};
+
 	app.get('/profile', function (req, res) {
 		// res.status(200).send({ success: true })
 		let userData = undefined;
@@ -145,6 +159,12 @@ exports.init = function (req, res) {
 					function (response) {
 						response.json().then(function (guildData) {
 							guildData.find(function (guild, index) {
+
+								// id: '797508055960256554',
+								// name: 'Eagle Dragon Leather Bar',
+								//id: '758143077701124137',
+								// name: 'Crystal Venue Association',
+
 								if (parseInt(guild.id) == 797508055960256554) {
 									isMember = true;
 								}
@@ -222,7 +242,7 @@ exports.init = function (req, res) {
 					})
 				} else {
 					res.send(response);
-				}	
+				}
 			})
 		} else {
 			res.status(400);
@@ -294,6 +314,45 @@ exports.init = function (req, res) {
 		addNewVenueToDb(venueObject);
 		res.status(200).send({ success: true })
 
+	});
+
+	app.post('/upload', (request, response) => {
+		const form = new multiparty.Form();
+		form.parse(request, async (error, fields, files) => {
+			console.log('hmmmmm', fields, files);
+			if (error) {
+				return response.status(500).send(error);
+			};
+			try {
+				const path = files.file[0].path;
+				console.log('going to send to aws');
+				const buffer = fs.readFileSync(path);
+				const type = await fileType.fromBuffer(buffer);
+				console.log('going to send to aws2');
+				const fileName = `venueImage/${Date.now().toString()}`;
+				const data = await uploadFile(buffer, fileName, type);
+
+				const venueId = parseInt(fields.id);
+
+				console.log('hello upload success', data, data.Location);
+
+				pool.query(
+					'UPDATE venues SET image = $1 WHERE id = $2',
+					[data.Location, venueId],
+					(error, results) => {
+						if (error) {
+							throw error
+						}
+						console.log('Users venue is updated with new image');
+					}
+				)
+
+				return response.status(200).send(data);
+			} catch (err) {
+				console.log('hello upload fail', err)
+				return response.status(500).send(err);
+			}
+		});
 	});
 
 }
