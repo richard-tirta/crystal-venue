@@ -7,13 +7,22 @@ class VenueModule extends React.Component {
     constructor(props) {
         super(props);
 
+        this.handleImageEditBtn = this.handleImageEditBtn.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state = {
+            showImageUpload: false,
             file: undefined,
             isImageUploaded: false,
         }
+    }
+
+    handleImageEditBtn(event) {
+        event.preventDefault();
+        this.setState({
+            showImageUpload: !this.state.showImageUpload,
+        })
     }
 
     handleFileChange(event) {
@@ -59,6 +68,14 @@ class VenueModule extends React.Component {
     render() {
         const venue = this.props.venue;
         const venueImage = venue.image ? venue.image : sampleImage;
+
+        const imageUploadEl = (
+            <form onSubmit={this.handleSubmit} className="image-upload-form">
+                <label>Upload Image</label>
+                <input type="file" onChange={this.handleFileChange} />
+                <button type="submit" className="form-submit" >Upload</button>
+            </form>
+        );
         return (
             <div>
                 <div className="venue-module">
@@ -73,20 +90,18 @@ class VenueModule extends React.Component {
                         <div className="venue-desc_location">
                             <h4>{venue.venueWorld} | {venue.venueLocation} | Ward {venue.venueWard} | Plot {venue.venuePlot}</h4>
                             <p class="venue-desc_aetheryte">
-                                Nearby Aetheryte Shard:<br />
+                                <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
                                 {venue.venueAetheryte}
                             </p>
                         </div>
                     </div>
-                    <div className="venue-image" style={{ backgroundImage: `url(${venueImage})` }}>
-                        <a href="#">Edit picture</a>
+                    <div className="venue-image">
+                        {this.state.showImageUpload ? imageUploadEl : null }
+                        <img src={venueImage}/>
+                        <a href="#" className="edit-venue-button" onClick={this.handleImageEditBtn}>Edit Venue Pic &raquo;</a>
                     </div>
                 </div>
-                <form onSubmit={this.handleSubmit}>
-                    <label>Upload Image</label>
-                    <input type="file" onChange={this.handleFileChange}  />
-                    <button type="submit" className="form-submit" >Upload</button>
-                </form>
+                
             </div>
         );
     };

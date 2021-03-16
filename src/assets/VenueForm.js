@@ -111,7 +111,7 @@ class VenueForm extends React.Component {
                             <label for="venueName">Venue Name*</label>
                             <input type="text" id="venue-form_name" className="form-input" name="venueName" minLength="3" maxLength="50" placeholder="Venue Name" required onChange={this.handleInputChange} />
                             <label for="venueDescription">Venue Description*</label>
-                            <textarea id="venue-form_description" name="venueDescription" rows="3" cols="50" minLength="10" className="form_textarea" placeholder="Venue Description" onChange={this.handleInputChange} required />
+                            <textarea id="venue-form_description" name="venueDescription" rows="3" cols="50" minLength="10" maxLength="280" className="form_textarea" placeholder="Venue Description" onChange={this.handleInputChange} required />
 
                             <label for="venueWebsite">Venue Website</label>
                             <input type="text" id="venue-form_url" className="form_input" name="venueWebsite"

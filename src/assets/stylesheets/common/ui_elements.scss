@@ -60,3 +60,10 @@ li {
 	}
 } */
 
+.icon-aetheryte {
+	@include background-icon('aetheryte.png');
+	height: 30px;
+	margin-right: 6px;
+	width: 20px;
+}
+
