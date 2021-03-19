@@ -21,14 +21,17 @@
     "express-validator": "^6.10.0",
     "file-type": "^16.3.0",
     "graphql": "^15.5.0",
+    "luxon": "^1.26.0",
     "multiparty": "^4.2.2",
     "node-fetch": "^2.6.0",
     "parcel": "1.12.3",
     "pg": "^8.5.1",
     "posthtml": "^0.15.1",
     "posthtml-img-autosize": "^0.1.4",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "prop-types": "^15.7.2",
+    "react": "^16.9.0 || ^17",
+    "react-datepicker": "^3.6.0",
+    "react-dom": "^16.9.0 || ^17"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

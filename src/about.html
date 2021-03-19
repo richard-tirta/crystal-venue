@@ -24,8 +24,24 @@
 		<!-- <meta name="msapplication-TileImage" content="assets/images/favicon/mstile-144x144.png" /> -->
 	</head>
     <body>
-        <div id="app"></div>
+
+		<header id="header">
+			<div class="logo-container">
+				<a id="logo-cva" href="/index.html" class="logo-cva">
+					<img alt="Crytal Venue Association" src="assets/images/cva_logo2.png">
+				</a>
+			</div>
+			<div class="nav-container">
+				<a href="/profile">Login</a>
+				<nav>
+					<a href="/" id="nav-event">Events</a>
+					<a href="/venue.html" id="nav-venue">Venues</a>
+					<span id="nav-about" class="selected">About</span>
+				</nav>
+			</div>
+		</header>
+		<div id="app"></div>
 		
-    
+		<script src="./assets/about.js"></script>
     </body>
 </html>

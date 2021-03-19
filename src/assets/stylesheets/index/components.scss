@@ -74,6 +74,13 @@ select {
 	width: 100%;
 }
 
+.form-time {
+	display: flex;
+	select {
+		min-width: 150px;
+	}
+}
+
 label {
 	display: block;;
 }

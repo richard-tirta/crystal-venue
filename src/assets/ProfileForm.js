@@ -2,7 +2,9 @@
 import React from "react";
 import VenueForm from "./VenueForm";
 import VenueModule from "./VenueModule";
-import ErrorBoundary from './ErrorBoundary'
+import EventForm from "./EventForm";
+import { DateTime } from "luxon";
+import ErrorBoundary from './ErrorBoundary';
 
 class ProfileForm extends React.Component {
     constructor(props) {
@@ -114,16 +116,24 @@ class ProfileForm extends React.Component {
             <section className="profile-section">
                 <h3>Personal Information:</h3>
                 <div className="profile-container">
-                    <img className="profile-pic" src={"https://cdn.discordapp.com/avatars/" + this.state.userid + "/" + this.state.avatar + ".png"} />
+                    {
+                        this.state.userid
+                            ? <img className="profile-pic" src={"https://cdn.discordapp.com/avatars/" + this.state.userid + "/" + this.state.avatar + ".png"} />
+                            : null
+                    }
                     <div>
                         <h3 className="profile-name">{this.state.username}<span>#{this.state.discriminator}</span></h3>
                         <p>Role: {this.state.isMember ? 'Member' : 'Guest'}</p>
                     </div>
                 </div>
-                <div class="venue-container">
+                <div className="venue-container">
                     <h3>Venue Admin:</h3>
                     {this.state.haveVenue ? <VenueModule userId={this.state.userid} venue={this.state.venue} /> : null}
                     {this.state.isAddVenue ? <VenueForm userId={this.state.userid} isAddVenue={this.state.isAddVenue} /> : venueStatus}
+                </div>
+                <div className="event-container">
+                    <h3>Event Admin:</h3>
+                    <EventForm userId={this.state.userid}/>
                 </div>
             </section>
         );

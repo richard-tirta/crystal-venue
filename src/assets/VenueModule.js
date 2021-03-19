@@ -84,12 +84,12 @@ class VenueModule extends React.Component {
                             <h3>{venue.venueName}</h3>
                             <p dangerouslySetInnerHTML={{ __html: venue.venueDescription }} />
                             <a href={"https://" + venue.venueWebsite}>{venue.venueWebsite} &raquo;</a>
-                            <p class="venue-desc_type">{venue.venueType1} | {venue.venueType2} | {venue.venueType3}
+                            <p className="venue-desc_type">{venue.venueType1} | {venue.venueType2} | {venue.venueType3}
                             </p>
                         </div>
                         <div className="venue-desc_location">
                             <h4>{venue.venueWorld} | {venue.venueLocation} | Ward {venue.venueWard} | Plot {venue.venuePlot}</h4>
-                            <p class="venue-desc_aetheryte">
+                            <p className="venue-desc_aetheryte">
                                 <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
                                 {venue.venueAetheryte}
                             </p>
