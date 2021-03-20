@@ -207,8 +207,7 @@ exports.init = function (req, res) {
 		if (gotCookie) {
 			const userId = getAppCookies(req, res)['userId'];
 			getUserByUserId(userId).then((response) => {
-				// gotta fix this as in database havevenue is string instead boolean
-				if (response[0].havevenue == 'true') {
+				if (response[0].havevenue) {
 					//console.log('user have venue, fetching venue');
 					getVenueByUserId(userId).then((venue) => {
 						response[0].venue = venue;
