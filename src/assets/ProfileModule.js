@@ -106,7 +106,7 @@ class ProfileModule extends React.Component {
 
     render() {
 
-        const venueStatus = !this.state.haveVenue
+        const venueStatus = this.state.haveVenue !== 'true'
             ? (
                 <h4>
                     No Venue is listed under your profile."<br />
@@ -131,14 +131,14 @@ class ProfileModule extends React.Component {
                 </div>
                 <div className="venue-container">
                     <h3>Venue Admin:</h3>
-                    {this.state.haveVenue ? <VenueModule userId={this.state.userid} venue={this.state.venue} /> : null}
+                    {this.state.haveVenue == 'true' ? <VenueModule userId={this.state.userid} venue={this.state.venue} /> : null}
                     {this.state.isAddVenue ? <VenueForm userId={this.state.userid} isAddVenue={this.state.isAddVenue} /> : venueStatus}
                 </div>
                 <div className="event-container">
                     <h3>Event Admin:</h3>
-                    {this.state.haveVenue ? <EventsModule userId={this.state.userid} venue={this.state.venue} events={this.state.events} /> : venueStatus}
+                    {this.state.haveVenue == 'true' ? <EventsModule userId={this.state.userid} venue={this.state.venue} events={this.state.events} /> : venueStatus}
                     <p><strong>Add an Event</strong></p>
-                    {this.state.haveVenue ? <EventForm userId={this.state.userid} /> : venueStatus}
+                    {this.state.haveVenue == 'true' ? <EventForm userId={this.state.userid} /> : venueStatus}
                 </div>
             </section>
         );
