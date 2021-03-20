@@ -13,15 +13,17 @@ exports.init = function (req, res) {
 
 	doteenv.config();
 
+	let pool = null;
+
 	if (process.env.DATABASE_URL) {
-		const pool = new Pool({
+		pool = new Pool({
 			connectionString: process.env.DATABASE_URL,
 			ssl: {
 				rejectUnauthorized: false
 			}
 		})
 	} else {
-		const pool = new Pool({
+		pool = new Pool({
 			user: process.env.DB_USER,
 			host: process.env.DB_HOST,
 			database: process.env.DB_DATABASE,
