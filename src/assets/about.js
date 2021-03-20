@@ -1,9 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ProfileForm from "./ProfileForm";
-import ToDoTest from "./ToDoTest";
-import ToDoTest2 from "./ToDoTest2";
-import Login2 from "./Login2";
+import ToDoTest from "./playground/ToDoTest";
+import ToDoTest2 from "./playground/ToDoTest2";
+import Login2 from "./playground/Login2";
 
 import "./stylesheets/all.scss";
 

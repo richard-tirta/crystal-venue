@@ -6,7 +6,7 @@ import EventForm from "./EventForm";
 import ErrorBoundary from './ErrorBoundary';
 import EventsModule from "./EventsModule";
 
-class ProfileForm extends React.Component {
+class ProfileModule extends React.Component {
     constructor(props) {
         super(props);
 
@@ -42,7 +42,7 @@ class ProfileForm extends React.Component {
     }
 
     componentDidMount() {
-        console.log('ProfileForm componentDidMount');
+        console.log('ProfileModule componentDidMount');
         fetch('/discord')
             .then(response => {
                 if (response.status !== 200) {
@@ -147,4 +147,4 @@ class ProfileForm extends React.Component {
 }
 
 
-export default ProfileForm;
+export default ProfileModule;

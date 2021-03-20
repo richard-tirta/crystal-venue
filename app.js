@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const discord = require('./discord');
+const profile = require('./profile');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,7 +31,7 @@ app.get('/about', function (req, res) {
 	// res.status(200).send({ success: true })
 });
 
-discord.init();
+profile.init();
 
 //The 404 Route (ALWAYS Keep this as the last route)
 app.use(function (req, res, next) {
