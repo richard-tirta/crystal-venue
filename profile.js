@@ -13,13 +13,22 @@ exports.init = function (req, res) {
 
 	doteenv.config();
 
-	const pool = new Pool({
-		user: process.env.DB_USER,
-		host: process.env.DB_HOST,
-		database: process.env.DB_DATABASE,
-		password: process.env.DB_PASSWORD,
-		port: process.env.DB_PORT,
-	})
+	if (process.env.DATABASE_URL) {
+		const pool = new Pool({
+			connectionString: process.env.DATABASE_URL,
+			ssl: {
+				rejectUnauthorized: false
+			}
+		})
+	} else {
+		const pool = new Pool({
+			user: process.env.DB_USER,
+			host: process.env.DB_HOST,
+			database: process.env.DB_DATABASE,
+			password: process.env.DB_PASSWORD,
+			port: process.env.DB_PORT,
+		})
+	}
 
 	const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 	const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
