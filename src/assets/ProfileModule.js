@@ -55,8 +55,8 @@ class ProfileModule extends React.Component {
                         const resultData = result[0];
                         let venue = this.state.venue;
                         let events = this.state.events;
-
-                        if (resultData.havevenue) {
+                        // gotta fix this as in database havevenue is string instead boolean
+                        if (resultData.havevenue == 'true') {
                             venue.id = resultData.venue[0].id;
                             venue.venueName = resultData.venue[0].name;
                             venue.venueDescription = resultData.venue[0].description;
