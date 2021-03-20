@@ -1,6 +1,9 @@
 const express = require("express");
 const path = require("path");
 const profile = require('./profile');
+const venueAdmin = require('./venueAdmin');
+const eventAdmin = require('./eventAdmin');
+const upload = require('./upload');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -32,6 +35,9 @@ app.get('/about', function (req, res) {
 });
 
 profile.init();
+venueAdmin.init();
+eventAdmin.init();
+upload.init();
 
 //The 404 Route (ALWAYS Keep this as the last route)
 app.use(function (req, res, next) {

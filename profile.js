@@ -4,14 +4,10 @@ exports.init = function (req, res) {
 
 	const { body, validationResult } = require('express-validator');
 	const app = require('./app.js');
-	const AWS = require('aws-sdk');
 	const cookieParser = require("cookie-parser");
 	const cors = require('cors');
 	const express = require('express');
-	const fs = require('fs');
 	const fetch = require('node-fetch');
-	const fileType = require('file-type');
-	const multiparty = require('multiparty');
 	const Pool = require('pg').Pool;
 
 	const pool = new Pool({
@@ -25,17 +21,10 @@ exports.init = function (req, res) {
 	const DISCORD_CLIENT_ID = '819420216583913532';
 	const DISCORD_CLIENT_SECRET = 'whvp1V0pnXoMsm6O1zFqAQ4l8IDvBMB5';
 
-	AWS.config.update({
-		accessKeyId: 'AKIA4BRRINS3O5CFOTEU',
-		secretAccessKey: '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',
-	});
-
 	app.use(cookieParser());
 	app.use(express.urlencoded({ extended: true }));
 	app.use(express.json());
 	app.use(cors());
-
-	const s3 = new AWS.S3();
 
 	const getAppCookies = (req) => {
 		if (req.headers.cookie) {
@@ -96,7 +85,6 @@ exports.init = function (req, res) {
 		});
 	}
 
-
 	const addNewUserToDb = (data) => {
 		console.log('GOING TO ADD NEW USER TO DB', data);
 		const { id, username, discriminator, avatar, isMember, haveVenue } = data
@@ -108,63 +96,6 @@ exports.init = function (req, res) {
 			console.log('User added');
 		})
 	}
-
-	const addNewVenueToDb = (data) => {
-		console.log('GOING TO ADD NEW VENUE TO DB', data);
-		const { userId, venueName, venueDescription, venueWorld, venueLocation, venueWard, venuePlot, venueAetheryte, venueWebsite, venueType1, venueType2, venueType3, isMature } = data
-
-		pool.query('INSERT INTO venues (userid, name, description, world, location, ward, plot, aetheryte, website, type1, type2, type3, ismature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [userId, venueName, venueDescription, venueWorld, venueLocation, venueWard, venuePlot, venueAetheryte, venueWebsite, venueType1, venueType2, venueType3, isMature], (error, results) => {
-			if (error) {
-				throw error
-			}
-			console.log('Venue added');
-		})
-
-		pool.query(
-			'UPDATE users SET haveVenue = true WHERE userid = $1',
-			[data.userId],
-			(error, results) => {
-				if (error) {
-					throw error
-				}
-				console.log('Users updated to have venue');
-			}
-		)
-	}
-
-	const addNewEventToDb = (data) => {
-		console.log('GOING TO ADD NEW EVENT TO DB', data);
-		const { userId, venueId, eventName, eventSubTitle, eventTime, eventIsMature } = data
-
-		pool.query('INSERT INTO events (userid, venueid, name, subtitle, time, ismature) VALUES ($1, $2, $3, $4, $5, $6)', [userId, venueId, eventName, eventSubTitle, eventTime, eventIsMature ], (error, results) => {
-			if (error) {
-				throw error
-			}
-			console.log('Event added');
-		})
-
-		pool.query(
-			'UPDATE venues SET haveevents = true WHERE id = $1',
-			[venueId],
-			(error, results) => {
-				if (error) {
-					throw error
-				}
-				console.log('Venue updated to have events');
-			}
-		)
-	}
-
-	const uploadFile = (buffer, name, type) => {
-		const params = {
-			ACL: 'public-read',
-			Body: buffer,
-			Bucket: 'crystal-venue-association',
-			ContentType: type.mime,
-			Key: `${name}.${type.ext}`,
-		};
-		return s3.upload(params).promise();
-	};
 
 	app.get('/profile', function (req, res) {
 		// res.status(200).send({ success: true })
@@ -287,187 +218,4 @@ exports.init = function (req, res) {
 			res.send('No Cookie found');
 		}
 	});
-
-	app.post('/addVenue', [
-		body('userId')
-			.escape()
-			.not()
-			.isString(),
-		body('venueName')
-			.escape()
-			.isString(),
-		body('venueDescription')
-			.escape()
-			.isString(),
-		body('venueWorld')
-			.escape()
-			.isString(),
-		body('venueLocation')
-			.escape()
-			.isString(),
-		body('venueWard')
-			.escape()
-			.not()
-			.isString(),
-		body('venuePlot')
-			.escape()
-			.not()
-			.isString(),
-		body('venueAetheryte')
-			.escape()
-			.isString(),
-		body('venueWebsite')
-			.escape()
-			.isString(),
-		body('venueType1')
-			.escape()
-			.isString(),
-		body('venueType2')
-			.escape()
-			.isString(),
-		body('venueType3')
-			.escape()
-			.isString(),
-		body('isMature')
-			.escape()
-			.isBoolean()
-	], function (req, res) {
-		console.log('addVenue POST received', req.body);
-
-		const venueObject = {
-			userId: req.body.userId,
-			venueName: req.body.venueName,
-			venueDescription: req.body.venueDescription,
-			venueWorld: req.body.venueWorld,
-			venueLocation: req.body.venueLocation,
-			venueWard: req.body.venueWard,
-			venuePlot: req.body.venuePlot,
-			venueAetheryte: req.body.venueAetheryte,
-			venueWebsite: req.body.venueWebsite,
-			venueType1: req.body.venueType1,
-			venueType2: req.body.venueType2,
-			venueType3: req.body.venueType3,
-			isMature: req.body.isMature,
-		}
-		addNewVenueToDb(venueObject);
-		res.status(200).send({ success: true })
-
-	});
-
-	app.post('/addEvent', [
-		body('userId')
-			.escape()
-			.not()
-			.isString(),
-		body('venueId')
-			.escape()
-			.not()
-			.isString(),
-		body('eventName')
-			.escape()
-			.isString(),
-		body('venueSubTitle')
-			.escape()
-			.isString(),
-		body('eventTime')
-			.escape()
-			.not()
-			.isString(),
-		body('eventIsMature')
-			.escape()
-			.isBoolean()
-	], function (req, res) {
-		console.log('addEvent POST received', req.body);
-
-		const eventObject = {
-			userId: req.body.userId,
-			venueId: req.body.venueId,
-			eventName: req.body.eventName,
-			eventSubTitle: req.body.eventSubTitle,
-			eventTime: req.body.eventTime,
-			eventIsMature: req.body.eventIsMature,
-		}
-		addNewEventToDb(eventObject);
-		res.status(200).send({ success: true })
-
-	});
-
-	app.post('/upload', (request, response) => {
-		const form = new multiparty.Form();
-		form.parse(request, async (error, fields, files) => {
-			console.log('hmmmmm', fields, files);
-			if (error) {
-				return response.status(500).send(error);
-			};
-			try {
-				const path = files.file[0].path;
-				console.log('going to send to aws');
-				const buffer = fs.readFileSync(path);
-				const type = await fileType.fromBuffer(buffer);
-				console.log('going to send to aws2');
-				const fileName = `venueImage/${Date.now().toString()}`;
-				const data = await uploadFile(buffer, fileName, type);
-
-				const venueId = parseInt(fields.id);
-
-				console.log('hello upload success', data, data.Location);
-
-				pool.query(
-					'UPDATE venues SET image = $1 WHERE id = $2',
-					[data.Location, venueId],
-					(error, results) => {
-						if (error) {
-							throw error
-						}
-						console.log('Users venue is updated with new image');
-					}
-				)
-
-				return response.status(200).send(data);
-			} catch (err) {
-				console.log('hello upload fail', err)
-				return response.status(500).send(err);
-			}
-		});
-	});
-
-	app.post('/uploadEventPic', (request, response) => {
-		const form = new multiparty.Form();
-		form.parse(request, async (error, fields, files) => {
-			//onsole.log('hmmmmm', fields, files);
-			if (error) {
-				return response.status(500).send(error);
-			};
-			try {
-				const path = files.file[0].path;
-				console.log('going to send to aws');
-				const buffer = fs.readFileSync(path);
-				const type = await fileType.fromBuffer(buffer);
-				console.log('going to send to aws2');
-				const fileName = `eventImage/${Date.now().toString()}`;
-				const data = await uploadFile(buffer, fileName, type);
-
-				const eventId = parseInt(fields.id);
-
-				console.log('hello upload success', data, data.Location);
-
-				pool.query(
-					'UPDATE events SET image = $1 WHERE id = $2',
-					[data.Location, eventId],
-					(error, results) => {
-						if (error) {
-							throw error
-						}
-						console.log('Users event is updated with new image');
-					}
-				)
-
-				return response.status(200).send(data);
-			} catch (err) {
-				console.log('hello upload fail', err)
-				return response.status(500).send(err);
-			}
-		});
-	});
-
 }

@@ -44,7 +44,7 @@ class VenueModule extends React.Component {
 
         console.log('sending to upload', formData);
 
-        fetch('/upload', {
+        fetch('/uploadVenuePic', {
             method: 'POST',
             body: formData
         })

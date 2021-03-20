@@ -1,58 +1,112 @@
-const { Console } = require('console');
+const { json } = require('express');
 
-exports.awsInit = function (req, res) {
-    const express = require('express');
-    const AWS = require('aws-sdk');
-    const fs = require('fs');
-    const fileType = require('file-type');
-    const multiparty = require('multiparty');
-    const app = require('./app.js');
+exports.init = function (req, res) {
 
-    console.log('HELLLOOO');
+	const app = require('./app.js');
+	const AWS = require('aws-sdk');
+	const express = require('express');
+	const fs = require('fs');
+	const fileType = require('file-type');
+	const multiparty = require('multiparty');
+	const Pool = require('pg').Pool;
 
-    // configure the keys for accessing AWS
-    AWS.config.update({
-        accessKeyId: 'AKIA4BRRINS3O5CFOTEU',
-        secretAccessKey: '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',
-    });
+	const pool = new Pool({
+		user: 'me',
+		host: 'localhost',
+		database: 'cva',
+		password: 'password',
+		port: 5432,
+    })
+    
+	AWS.config.update({
+		accessKeyId: 'AKIA4BRRINS3O5CFOTEU',
+		secretAccessKey: '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',
+	});
 
-    // create S3 instance
-    const s3 = new AWS.S3();
+	app.use(express.urlencoded({ extended: true }));
+	app.use(express.json());
 
-    // abstracts function to upload a file returning a promise
-    // NOTE: if you are using TypeScript the typed function signature will be
-    // const uploadFile = (buffer: S3.Body, name: string, type: { ext: string; mime: string })
-    const uploadFile = (buffer, name, type) => {
-        const params = {
-            ACL: 'public-read',
-            Body: buffer,
-            Bucket: 'crystal-venue-association',
-            ContentType: type.mime,
-            Key: `${name}.${type.ext}`,
-        };
-        return s3.upload(params).promise();
-    };
+	const s3 = new AWS.S3();
 
-    // Define POST route
-    app.post('/test-upload', (request, response) => {
-        const form = new multiparty.Form();
-        form.parse(request, async (error, fields, files) => {
-        if (error) {
-            return response.status(500).send(error);
-        };
-        try {
-            const path = files.file[0].path;
-            const buffer = fs.readFileSync(path);
-            const type = await fileType.fromBuffer(buffer);
-            const fileName = `bucketFolder/${Date.now().toString()}`;
-            const data = await uploadFile(buffer, fileName, type);
+	const uploadFile = (buffer, name, type) => {
+		const params = {
+			ACL: 'public-read',
+			Body: buffer,
+			Bucket: 'crystal-venue-association',
+			ContentType: type.mime,
+			Key: `${name}.${type.ext}`,
+		};
+		return s3.upload(params).promise();
+	};
 
-            console.log('hello upload success', data)
-            return response.status(200).send(data);
-        } catch (err) {
-            console.log('hello upload fail', err)
-            return response.status(500).send(err);
-        }
-        });
-    });
+	app.post('/uploadVenuePic', (request, response) => {
+		const form = new multiparty.Form();
+		form.parse(request, async (error, fields, files) => {
+			console.log('hmmmmm', fields, files);
+			if (error) {
+				return response.status(500).send(error);
+			};
+			try {
+				const path = files.file[0].path;
+				const buffer = fs.readFileSync(path);
+				const type = await fileType.fromBuffer(buffer);
+				const fileName = `venueImage/${Date.now().toString()}`;
+				const data = await uploadFile(buffer, fileName, type);
+
+				const venueId = parseInt(fields.id);
+
+				pool.query(
+					'UPDATE venues SET image = $1 WHERE id = $2',
+					[data.Location, venueId],
+					(error, results) => {
+						if (error) {
+							throw error
+						}
+						console.log('Users venue is updated with new image');
+					}
+				)
+
+				return response.status(200).send(data);
+			} catch (err) {
+				console.log('uploadVenuePic fail', err)
+				return response.status(500).send(err);
+			}
+		});
+	});
+
+	app.post('/uploadEventPic', (request, response) => {
+		const form = new multiparty.Form();
+		form.parse(request, async (error, fields, files) => {
+			//onsole.log('hmmmmm', fields, files);
+			if (error) {
+				return response.status(500).send(error);
+			};
+			try {
+				const path = files.file[0].path;
+				const buffer = fs.readFileSync(path);
+				const type = await fileType.fromBuffer(buffer);
+				const fileName = `eventImage/${Date.now().toString()}`;
+				const data = await uploadFile(buffer, fileName, type);
+
+				const eventId = parseInt(fields.id);
+
+				pool.query(
+					'UPDATE events SET image = $1 WHERE id = $2',
+					[data.Location, eventId],
+					(error, results) => {
+						if (error) {
+							throw error
+						}
+						console.log('Users event is updated with new image');
+					}
+				)
+
+				return response.status(200).send(data);
+			} catch (err) {
+				console.log('uploadEventPic fail', err)
+				return response.status(500).send(err);
+			}
+		});
+	});
+
 }
