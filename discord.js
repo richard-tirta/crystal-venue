@@ -81,6 +81,21 @@ exports.init = function (req, res) {
 		});
 	}
 
+	const getEventsByVenueId = (venueId) => {
+		const query = 'SELECT * FROM events WHERE venueid = $1';
+
+		return new Promise(function (resolve, reject) {
+			pool.query(query, [venueId], (err, response) => {
+				if (err) {
+					console.log('getEventsByVenueId error', err)
+					reject(0);
+				} else {
+					resolve(response.rows);
+				}
+			})
+		});
+	}
+
 
 	const addNewUserToDb = (data) => {
 		console.log('GOING TO ADD NEW USER TO DB', data);
@@ -113,6 +128,29 @@ exports.init = function (req, res) {
 					throw error
 				}
 				console.log('Users updated to have venue');
+			}
+		)
+	}
+
+	const addNewEventToDb = (data) => {
+		console.log('GOING TO ADD NEW EVENT TO DB', data);
+		const { userId, venueId, eventName, eventSubTitle, eventTime, eventIsMature } = data
+
+		pool.query('INSERT INTO events (userid, venueid, name, subtitle, time, ismature) VALUES ($1, $2, $3, $4, $5, $6)', [userId, venueId, eventName, eventSubTitle, eventTime, eventIsMature ], (error, results) => {
+			if (error) {
+				throw error
+			}
+			console.log('Event added');
+		})
+
+		pool.query(
+			'UPDATE venues SET haveevents = true WHERE id = $1',
+			[venueId],
+			(error, results) => {
+				if (error) {
+					throw error
+				}
+				console.log('Venue updated to have events');
 			}
 		)
 	}
@@ -159,13 +197,7 @@ exports.init = function (req, res) {
 					function (response) {
 						response.json().then(function (guildData) {
 							guildData.find(function (guild, index) {
-
-								// id: '797508055960256554',
-								// name: 'Eagle Dragon Leather Bar',
-								//id: '758143077701124137',
-								// name: 'Crystal Venue Association',
-
-								if (parseInt(guild.id) == 797508055960256554) {
+								if (parseInt(guild.id) == 758143077701124137) {
 									isMember = true;
 								}
 							});
@@ -234,11 +266,17 @@ exports.init = function (req, res) {
 		if (gotCookie) {
 			const userId = getAppCookies(req, res)['userId'];
 			getUserByUserId(userId).then((response) => {
-				console.log('hmmm', response[0].havevenue);
 				if (response[0].havevenue) {
 					getVenueByUserId(userId).then((venue) => {
 						response[0].venue = venue;
-						res.send(response);
+						if (response[0].venue[0].haveevents) {
+							getEventsByVenueId(venue[0].id).then((events) => {
+								response[0].venue[0].events = events;
+								res.send(response);
+							});
+						} else {
+							res.send(response);
+						}
 					})
 				} else {
 					res.send(response);
@@ -316,6 +354,44 @@ exports.init = function (req, res) {
 
 	});
 
+	app.post('/addEvent', [
+		body('userId')
+			.escape()
+			.not()
+			.isString(),
+		body('venueId')
+			.escape()
+			.not()
+			.isString(),
+		body('eventName')
+			.escape()
+			.isString(),
+		body('venueSubTitle')
+			.escape()
+			.isString(),
+		body('eventTime')
+			.escape()
+			.not()
+			.isString(),
+		body('eventIsMature')
+			.escape()
+			.isBoolean()
+	], function (req, res) {
+		console.log('addEvent POST received', req.body);
+
+		const eventObject = {
+			userId: req.body.userId,
+			venueId: req.body.venueId,
+			eventName: req.body.eventName,
+			eventSubTitle: req.body.eventSubTitle,
+			eventTime: req.body.eventTime,
+			eventIsMature: req.body.eventIsMature,
+		}
+		addNewEventToDb(eventObject);
+		res.status(200).send({ success: true })
+
+	});
+
 	app.post('/upload', (request, response) => {
 		const form = new multiparty.Form();
 		form.parse(request, async (error, fields, files) => {
@@ -344,6 +420,45 @@ exports.init = function (req, res) {
 							throw error
 						}
 						console.log('Users venue is updated with new image');
+					}
+				)
+
+				return response.status(200).send(data);
+			} catch (err) {
+				console.log('hello upload fail', err)
+				return response.status(500).send(err);
+			}
+		});
+	});
+
+	app.post('/uploadEventPic', (request, response) => {
+		const form = new multiparty.Form();
+		form.parse(request, async (error, fields, files) => {
+			//onsole.log('hmmmmm', fields, files);
+			if (error) {
+				return response.status(500).send(error);
+			};
+			try {
+				const path = files.file[0].path;
+				console.log('going to send to aws');
+				const buffer = fs.readFileSync(path);
+				const type = await fileType.fromBuffer(buffer);
+				console.log('going to send to aws2');
+				const fileName = `eventImage/${Date.now().toString()}`;
+				const data = await uploadFile(buffer, fileName, type);
+
+				const eventId = parseInt(fields.id);
+
+				console.log('hello upload success', data, data.Location);
+
+				pool.query(
+					'UPDATE events SET image = $1 WHERE id = $2',
+					[data.Location, eventId],
+					(error, results) => {
+						if (error) {
+							throw error
+						}
+						console.log('Users event is updated with new image');
 					}
 				)
 

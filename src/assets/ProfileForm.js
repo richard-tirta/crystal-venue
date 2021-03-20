@@ -3,8 +3,8 @@ import React from "react";
 import VenueForm from "./VenueForm";
 import VenueModule from "./VenueModule";
 import EventForm from "./EventForm";
-import { DateTime } from "luxon";
 import ErrorBoundary from './ErrorBoundary';
+import EventsModule from "./EventsModule";
 
 class ProfileForm extends React.Component {
     constructor(props) {
@@ -34,7 +34,9 @@ class ProfileForm extends React.Component {
                 venueType3: undefined,
                 isMature: false,
                 image: undefined,
-            }
+                hasEvents : false,
+            },
+            events: [],
         };
 
     }
@@ -52,9 +54,9 @@ class ProfileForm extends React.Component {
                         console.log(result);
                         const resultData = result[0];
                         let venue = this.state.venue;
+                        let events = this.state.events;
 
                         if (resultData.havevenue) {
-                            //console.log('venue Data', resultData.venue[0]);
                             venue.id = resultData.venue[0].id;
                             venue.venueName = resultData.venue[0].name;
                             venue.venueDescription = resultData.venue[0].description;
@@ -69,9 +71,11 @@ class ProfileForm extends React.Component {
                             venue.venueType3 = resultData.venue[0].type3;
                             venue.isMature = resultData.venue[0].ismature;
                             venue.image = resultData.venue[0].image;
+                            venue.haveEvents = resultData.venue[0].haveEvents;
+                            if (resultData.venue[0].haveevents) {
+                                events = resultData.venue[0].events;
+                            }
                         }
-
-                        console.log('hmmm', resultData);
 
                         this.setState({
                             isLoaded: true,
@@ -82,6 +86,7 @@ class ProfileForm extends React.Component {
                             isMember: resultData.ismember,
                             haveVenue: resultData.havevenue,
                             venue,
+                            events,
                         });
                     },
                     (error) => {
@@ -108,9 +113,7 @@ class ProfileForm extends React.Component {
                     <a href="#" onClick={(e) => this.toggleAddVenue(e)}>List a Venue &raquo;</a>
                 </h4>
             )
-            : (
-                <a href="#">Add an Event &raquo;</a>
-            );
+            : null;
 
         return (
             <section className="profile-section">
@@ -133,7 +136,9 @@ class ProfileForm extends React.Component {
                 </div>
                 <div className="event-container">
                     <h3>Event Admin:</h3>
-                    <EventForm userId={this.state.userid}/>
+                    {this.state.haveVenue ? <EventsModule userId={this.state.userid} venue={this.state.venue} events={this.state.events} /> : venueStatus}
+                    <p><strong>Add an Event</strong></p>
+                    {this.state.haveVenue ? <EventForm userId={this.state.userid} /> : venueStatus}
                 </div>
             </section>
         );

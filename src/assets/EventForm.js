@@ -35,7 +35,8 @@ class EventForm extends React.Component {
         const eventTimeUTC = this.state.eventTime.getTime();
 
         const data = JSON.stringify({
-            venueId: this.props.eventId,
+            userId: this.props.userId,
+            venueId: this.props.venue.id,
             eventName: this.state.eventName,
             eventSubTitle: this.state.eventSubTitle,
             eventTime: eventTimeUTC,
@@ -68,43 +69,41 @@ class EventForm extends React.Component {
     }
 
     render() {
-        if (isFormSubmitted) {
-            return (<h2>event has been submitted</h2>);
+        if (this.state.isFormSubmitted) {
+            return (<h2>Event has been submitted</h2>);
         }
         return (
-            <div>
-                <form>
-                    <div className="column-container">
-                        <div className="form-column">
-                            <label htmlFor="eventName">Event Name*</label>
-                            <input type="text" id="event-form_name" className="form-input" name="eventName" minLength="3" maxLength="35" placeholder="Event Name" required onChange={this.handleInputChange} />
+            <form>
+                <div className="column-container">
+                    <div className="form-column">
+                        <label htmlFor="eventName">Event Name*</label>
+                        <input type="text" id="event-form_name" className="form-input" name="eventName" minLength="3" maxLength="35" placeholder="Event Name" required onChange={this.handleInputChange} />
 
-                            <label htmlFor="eventSubtitle">Event SubTitle</label>
-                            <input type="text" id="event-form_subtitle" className="form-input" name="eventSubTitle" minLength="3" maxLength="35" placeholder="Event SubTitle" required onChange={this.handleInputChange} />     
-                        </div>
-                        <div className="form-column">
-                            <label htmlFor="eventWorld">Event Date*</label>
-                            <DatePicker
-                                showTimeSelect
-                                dateFormat="EE, dd-MM-yyyy. hh:mm a"
-                                placeholderText="Click to select a date"
-                                minDate={new Date()}
-                                selected={this.state.eventTime}
-                                onChange={event => this.setState({ eventTime: event })}
-                            />
-                            <div className="form-checkbox-container">
-                                <label htmlFor="eventIsMature">Mature (18+)</label>
-                                <input className="form-checkbox" type="checkbox" id="event-form_mature" name="eventIsMature" onChange={this.handleInputChange} />
-                            </div>
+                        <label htmlFor="eventSubtitle">Event SubTitle</label>
+                        <input type="text" id="event-form_subtitle" className="form-input" name="eventSubTitle" minLength="3" maxLength="35" placeholder="Event SubTitle" required onChange={this.handleInputChange} />     
+                    </div>
+                    <div className="form-column">
+                        <label htmlFor="eventWorld">Event Date*</label>
+                        <DatePicker
+                            showTimeSelect
+                            dateFormat="EE, dd-MM-yyyy. hh:mm a"
+                            placeholderText="Click to select a date"
+                            minDate={new Date()}
+                            selected={this.state.eventTime}
+                            onChange={event => this.setState({ eventTime: event })}
+                        />
+                        <div className="form-checkbox-container">
+                            <label htmlFor="eventIsMature">Mature (18+)</label>
+                            <input className="form-checkbox" type="checkbox" id="event-form_mature" name="eventIsMature" onChange={this.handleInputChange} />
                         </div>
                     </div>
-                    <a href="#" id="submit-cta"
-                        className="form-submit"
-                        onClick={this.handleSubmit}>
-                        Submit
-                        </a>
-                </form>
-            </div>
+                </div>
+                <a href="#" id="submit-cta"
+                    className="form-submit"
+                    onClick={this.handleSubmit}>
+                    Submit New Event
+                    </a>
+            </form>
         );
     }
 }

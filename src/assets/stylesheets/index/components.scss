@@ -49,6 +49,11 @@ header {
 	}
 }
 
+form {
+	margin-bottom: 20px;
+	margin-top: 20px;
+}
+
 input, textarea {
 	border: 2px solid #797979;
 	border-radius: 2px;
@@ -132,4 +137,23 @@ label {
 	font-size: 14px;
 	font-weight: 800;
 	line-height: 1.5;
+}
+
+.edit-venue-button {
+    background: rgba(50,50,50,0.5);
+    border: 1px solid #797979;;
+    color: rgb(180,180,180);
+    display: block;
+    font-size: 14px;
+    height: 20px;
+    padding-top: 2px;
+    position: absolute;
+    top: 3%;
+    right: 1%;
+    text-align: center;
+    width: 110px;
+    &:hover {
+        background: rgba(120,120,120,1);
+        color: rgb(250,250,250);
+    }
 }

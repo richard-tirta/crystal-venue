@@ -1,9 +1,11 @@
 
+import { Firehose } from "aws-sdk";
 import fetch from "node-fetch";
 import React from "react";
+import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-venue.jpg";
 
-class VenueModule extends React.Component {
+class EventsModule extends React.Component {
     constructor(props) {
         super(props);
 
@@ -12,16 +14,18 @@ class VenueModule extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
 
         this.state = {
-            showImageUpload: false,
+            showImageUpload: null,
             file: undefined,
             isImageUploaded: false,
+            eventId: null,
         }
     }
 
-    handleImageEditBtn(event) {
+    handleImageEditBtn(event, index, eventId) {
         event.preventDefault();
         this.setState({
-            showImageUpload: !this.state.showImageUpload,
+            showImageUpload: index,
+            eventId: eventId,
         })
     }
 
@@ -40,11 +44,11 @@ class VenueModule extends React.Component {
         }
         const formData = new FormData();
         formData.append('file', this.state.file[0]);
-        formData.append('id', this.props.venue.id);
+        formData.append('id', this.state.eventId);
 
         console.log('sending to upload', formData);
 
-        fetch('/upload', {
+        fetch('/uploadEventPic', {
             method: 'POST',
             body: formData
         })
@@ -66,8 +70,14 @@ class VenueModule extends React.Component {
     }
 
     render() {
-        const venue = this.props.venue;
-        const venueImage = venue.image ? venue.image : sampleImage;
+        const eventImage = (eventImage) => {
+            return eventImage ? eventImage : sampleImage;
+        };
+
+        const getTime = (data) => {
+            const newDate = DateTime.fromMillis(parseInt(data)).toFormat('EEE, MMM. dd | hh:mm a ZZZZ');
+            return newDate;
+        }
 
         const imageUploadEl = (
             <form onSubmit={this.handleSubmit} className="image-upload-form">
@@ -76,29 +86,29 @@ class VenueModule extends React.Component {
                 <button type="submit" className="form-submit" >Upload</button>
             </form>
         );
+
         return (
-            <div className="venue-module">
-                <div className="venue-description">
-                    <div className="venue-desc_about">
-                        <h3>{venue.venueName}</h3>
-                        <p dangerouslySetInnerHTML={{ __html: venue.venueDescription }} />
-                        <a href={"https://" + venue.venueWebsite}>{venue.venueWebsite} &raquo;</a>
-                        <p className="venue-desc_type">{venue.venueType1} | {venue.venueType2} | {venue.venueType3}
-                        </p>
+            <div className="events-module">
+                {this.props.events.map((event, index) => (
+                    <div key={'event' + index}>
+                        <div className="event-item">
+                            <div className="event-image">
+                                {this.state.showImageUpload === index ? imageUploadEl : null}
+                                <a href="#" className="edit-venue-button" onClick={e => this.handleImageEditBtn(e, index, event.id)}>Edit Event Pic &raquo;</a>
+                                <img src={eventImage(event.image)} />
+                            </div>
+                            <div className="event-description">
+                                <p>
+                                    {getTime(event.time)} <span>{Date.now() > event.time  + 43200 ? '[ended]' : null}</span>
+                                </p>
+                                <h3>{event.name}</h3>
+                                <h4>{event.subtitle}</h4>
+                                <p className="event-venue">{this.props.venue.venueName}</p>
+                            </div>
+                        </div>
+                        <a href="#">Remove this event &raquo;</a> 
                     </div>
-                    <div className="venue-desc_location">
-                        <h4>{venue.venueWorld} | {venue.venueLocation} | Ward {venue.venueWard} | Plot {venue.venuePlot}</h4>
-                        <p className="venue-desc_aetheryte">
-                            <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
-                            {venue.venueAetheryte}
-                        </p>
-                    </div>
-                </div>
-                <div className="venue-image">
-                    {this.state.showImageUpload ? imageUploadEl : null }
-                    <img src={venueImage}/>
-                    <a href="#" className="edit-venue-button" onClick={this.handleImageEditBtn}>Edit Venue Pic &raquo;</a>
-                </div>
+                ))}
             </div>
         );
     };
@@ -106,4 +116,4 @@ class VenueModule extends React.Component {
 }
 
 
-export default VenueModule;
+export default EventsModule;
