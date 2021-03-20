@@ -207,11 +207,12 @@ exports.init = function (req, res) {
 		if (gotCookie) {
 			const userId = getAppCookies(req, res)['userId'];
 			getUserByUserId(userId).then((response) => {
-				if (response[0].havevenue) {
+				console.log('wtf', response[0]);
+				if (response[0].havevenue == true) {
 					console.log('user have venue, fetching venue');
 					getVenueByUserId(userId).then((venue) => {
 						response[0].venue = venue;
-						if (response[0].venue[0].haveevents) {
+						if (response[0].venue[0].haveevents == true) {
 							console.log('venue have events, fetching events');
 							getEventsByVenueId(venue[0].id).then((events) => {
 								response[0].venue[0].events = events;
