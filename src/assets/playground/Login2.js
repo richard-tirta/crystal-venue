@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ErrorBoundary from './ErrorBoundary';
 import Login3 from './Login3'
 
 export default function Login2() {

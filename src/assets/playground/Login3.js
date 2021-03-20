@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ErrorBoundary from './ErrorBoundary';
 
 export default function Login2(props) {
     const [isVisible, togglePasswordVis] = useState(false);

@@ -1,8 +1,8 @@
 const express = require("express");
 const path = require("path");
 const profile = require('./profile');
-const venueAdmin = require('./venueAdmin');
-const eventAdmin = require('./eventAdmin');
+const venueAdmin = require('./venue-admin');
+const eventAdmin = require('./event-admin');
 const upload = require('./upload');
 
 const app = express();
@@ -17,7 +17,6 @@ var server = app.listen(port, function () {
 });
 
 app.use(express.static(__dirname + '/dist/'));
-
 
 app.get('/', function (req, res) {
 	console.log('/ requested', req.query.code);

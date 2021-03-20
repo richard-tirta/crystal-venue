@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Login from './Login';
-import ErrorBoundary from './ErrorBoundary'
 
 export default function ToDoTest(props) {
     const [currentInput, handleInput] = useState('');
@@ -20,9 +19,7 @@ export default function ToDoTest(props) {
                     )
                 }
             </ul>
-            <ErrorBoundary>
                 <Login/>
-            </ErrorBoundary> 
          </section>
     );
 }

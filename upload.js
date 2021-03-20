@@ -11,16 +11,16 @@ exports.init = function (req, res) {
 	const Pool = require('pg').Pool;
 
 	const pool = new Pool({
-		user: 'me',
-		host: 'localhost',
-		database: 'cva',
-		password: 'password',
-		port: 5432,
+		user: process.env.DB_USER,
+		host: process.env.DB_HOST,
+		database: process.env.DB_DATABASE,
+		password: process.env.DB_PASSWORD,
+		port: process.env.DB_PORT,
     })
     
 	AWS.config.update({
-		accessKeyId: 'AKIA4BRRINS3O5CFOTEU',
-		secretAccessKey: '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',
+		accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+		secretAccessKey: process.env.AWS_ACCESS_SECRET_KEY,
 	});
 
 	app.use(express.urlencoded({ extended: true }));

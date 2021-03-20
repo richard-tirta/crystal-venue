@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Login2 from './Login2';
-import ErrorBoundary from './ErrorBoundary'
 
 class ToDoTest2 extends React.Component {
     constructor(props) {

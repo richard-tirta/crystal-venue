@@ -6,20 +6,23 @@ exports.init = function (req, res) {
 	const app = require('./app.js');
 	const cookieParser = require("cookie-parser");
 	const cors = require('cors');
+	const doteenv = require('dotenv');
 	const express = require('express');
 	const fetch = require('node-fetch');
 	const Pool = require('pg').Pool;
 
+	doteenv.config();
+
 	const pool = new Pool({
-		user: 'me',
-		host: 'localhost',
-		database: 'cva',
-		password: 'password',
-		port: 5432,
+		user: process.env.DB_USER,
+		host: process.env.DB_HOST,
+		database: process.env.DB_DATABASE,
+		password: process.env.DB_PASSWORD,
+		port: process.env.DB_PORT,
 	})
 
-	const DISCORD_CLIENT_ID = '819420216583913532';
-	const DISCORD_CLIENT_SECRET = 'whvp1V0pnXoMsm6O1zFqAQ4l8IDvBMB5';
+	const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+	const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
 
 	app.use(cookieParser());
 	app.use(express.urlencoded({ extended: true }));
@@ -158,7 +161,7 @@ exports.init = function (req, res) {
 				client_secret: DISCORD_CLIENT_SECRET,
 				grant_type: "authorization_code",
 				code: req.query.code,
-				redirect_uri: "http://localhost:3000/profile",
+				redirect_uri: process.env.REDIRECT_URI,
 				scope: "identify guilds"
 			};
 
@@ -180,7 +183,7 @@ exports.init = function (req, res) {
 				.catch(err => console.log(err));
 
 		} else {
-			res.redirect('https://discord.com/api/oauth2/authorize?client_id=819420216583913532&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fprofile&response_type=code&scope=identify%20guilds');
+			res.redirect(process.env.REDIRECT_DISCORD);
 		}
 	});
 
