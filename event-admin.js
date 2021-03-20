@@ -6,25 +6,26 @@ exports.init = function (req, res) {
 	const app = require('./app.js');
 	const cookieParser = require("cookie-parser");
 	const cors = require('cors');
+	const doteenv = require('dotenv');
 	const express = require('express');
 	const Pool = require('pg').Pool;
 
-	if (process.env.DATABASE_URL) {
-		pool = new Pool({
+	doteenv.config();
+
+	const pool = process.env.DATABASE_URL
+		? new Pool({
 			connectionString: process.env.DATABASE_URL,
 			ssl: {
 				rejectUnauthorized: false
 			}
 		})
-	} else {
-		pool = new Pool({
+		: new Pool({
 			user: process.env.DB_USER,
 			host: process.env.DB_HOST,
 			database: process.env.DB_DATABASE,
 			password: process.env.DB_PASSWORD,
 			port: process.env.DB_PORT,
-		})
-	}
+		});
 
 	app.use(cookieParser());
 	app.use(express.urlencoded({ extended: true }));
