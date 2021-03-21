@@ -16,7 +16,6 @@ class EventForm extends React.Component {
             eventSubTitle: '',
             eventTime: '',
             eventIsMature: false,
-            isFormSubmitted: false,
         }
     }
 
@@ -55,23 +54,15 @@ class EventForm extends React.Component {
             .then(response => response.json())
             .then(
                 (result) => {
-                    this.setState({
-                        isFormSubmitted: true,
-                    });
+                    this.props.isFormUpdate(true);
                 },
                 (error) => {
                     console.log('Form is not submitted', error);
-                    this.setState({
-                        isFormSubmitted: false,
-                    });
                 }
             )
     }
 
     render() {
-        if (this.state.isFormSubmitted) {
-            return (<h2>Event has been submitted</h2>);
-        }
         return (
             <form>
                 <div className="column-container">
@@ -86,7 +77,7 @@ class EventForm extends React.Component {
                         <label htmlFor="eventWorld">Event Date*</label>
                         <DatePicker
                             showTimeSelect
-                            dateFormat="EE, dd-MM-yyyy. hh:mm a"
+                            dateFormat="EE, MMM dd yyyy. hh:mm a"
                             placeholderText="Click to select a date"
                             minDate={new Date()}
                             selected={this.state.eventTime}

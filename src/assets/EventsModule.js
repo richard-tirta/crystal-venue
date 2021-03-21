@@ -12,12 +12,15 @@ class EventsModule extends React.Component {
         this.handleImageEditBtn = this.handleImageEditBtn.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleRemoveEvent = this.handleRemoveEvent.bind(this);
+        this.handleRemoveWarning = this.handleRemoveWarning.bind(this);
 
         this.state = {
             showImageUpload: null,
             file: undefined,
             isImageUploaded: false,
             eventId: null,
+            showDeleteWarning: false,
         }
     }
 
@@ -55,10 +58,11 @@ class EventsModule extends React.Component {
             .then(response => response.json())
             .then(
                 (result) => {
-                    console.log('image uploaded', result);
+                    console.log('event uploaded', result);
                     this.setState({
                         isImageUploaded: true,
                     });
+                    this.props.isFormUpdate(true);
                 },
                 (error) => {
                     console.log('image upload error', error);
@@ -67,6 +71,46 @@ class EventsModule extends React.Component {
                     });
                 }
             );
+    }
+
+    handleRemoveEvent(event, eventId, venueId, eventsCount) {
+        event.preventDefault();
+
+        console.log('removeEvent', event, eventId, venueId, eventsCount);
+
+        const data = JSON.stringify({
+            eventId: eventId,
+            venueId: venueId,
+            eventsCount: eventsCount,
+        });
+
+        fetch('/deleteEvent', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'DELETE',
+            body: data
+        })
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    console.log('event deleted', result);
+                    this.props.isFormUpdate(true);
+                    this.setState({
+                        showDeleteWarning: !this.state.showDeleteWarning,
+                    });
+                },
+                (error) => {
+                    console.log('event delete error', error);
+                }
+            );
+    }
+
+    handleRemoveWarning(event) {
+        event.preventDefault();
+        this.setState({
+            showDeleteWarning: !this.state.showDeleteWarning,
+        });
     }
 
     render() {
@@ -99,14 +143,34 @@ class EventsModule extends React.Component {
                             </div>
                             <div className="event-description">
                                 <p>
-                                    {getTime(event.time)} <span>{Date.now() > event.time  + 43200 ? '[ended]' : null}</span>
+                                    <span className={Date.now() - 43200 > event.time ? 'event-ended' : null}>
+                                    {getTime(event.time)}</span> {Date.now() - 43200 > event.time ? <small>Completed</small> : null}
                                 </p>
                                 <h3>{event.name}</h3>
                                 <h4>{event.subtitle}</h4>
                                 <p className="event-venue">{this.props.venue.venueName}</p>
                             </div>
                         </div>
-                        <a href="#">Remove this event &raquo;</a> 
+                        <a href="#" onClick={e => this.handleRemoveWarning(e)}>Remove this event &raquo;</a>
+                        {
+                            this.state.showDeleteWarning
+                                ? (
+                                    <div className="lightbox">
+                                        <h3>
+                                            Are you sure you want to remove <br />
+                                            {event.name}<br />
+                                            from CVA listing?
+                                        </h3>
+                                        <button onClick={e => this.handleRemoveEvent(e, event.id, this.props.venue.id, this.props.events.length)} className="form-submit">
+                                            Yes, remove this event.
+                                        </button>
+                                        <button onClick={e => this.handleRemoveWarning(e)} className="form-submit">
+                                            No, keep this event.
+                                        </button>
+                                    </div>
+                                )
+                                : null
+                        }
                     </div>
                 ))}
             </div>

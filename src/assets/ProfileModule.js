@@ -8,6 +8,8 @@ class ProfileModule extends React.Component {
     constructor(props) {
         super(props);
 
+        this.handleIsFormUpdate = this.handleIsFormUpdate.bind(this);
+
         this.state = {
             isLoaded: false,
             userid: undefined,
@@ -17,6 +19,7 @@ class ProfileModule extends React.Component {
             isMember: false,
             isAddVenue: false,
             haveVenue: false,
+            isFormUpdate: false,
             venue: {
                 id: undefined,
                 venueName: undefined,
@@ -39,8 +42,7 @@ class ProfileModule extends React.Component {
 
     }
 
-    componentDidMount() {
-        console.log('ProfileModule componentDidMount');
+    requestData() {
         fetch('/discord')
             .then(response => {
                 if (response.status !== 200) {
@@ -94,10 +96,34 @@ class ProfileModule extends React.Component {
             })
     }
 
+    componentDidMount() {
+        console.log('ProfileModule componentDidMount');
+        this.requestData();
+    }
+
+    componentDidUpdate(prevProps) {
+        console.log('componentDidUpdate', prevProps);
+        //this.requestData();
+        if (this.state.isFormUpdate) {
+            console.log('form update detected, should check new data');
+            this.requestData();
+            console.log('reverting isFormUpdate back to false');
+            this.setState({
+                isFormUpdate: false,
+            });
+        }
+    }
+
     toggleAddVenue(e) {
         e.preventDefault();
         this.setState({
             isAddVenue: !this.state.isAddVenue
+        });
+    }
+
+    handleIsFormUpdate(formUpdate) {
+        this.setState({
+            isFormUpdate: formUpdate,
         });
     }
 
@@ -128,8 +154,16 @@ class ProfileModule extends React.Component {
                 </div>
                 <div className="venue-container">
                     <h3>Venue Admin:</h3>
-                    {this.state.haveVenue ? (<VenueModule userId={this.state.userid} venue={this.state.venue} events={this.state.events} />) : null}
-                    {this.state.isAddVenue ? <VenueForm userId={this.state.userid} isAddVenue={this.state.isAddVenue} /> : venueStatus}
+                    {
+                        this.state.haveVenue
+                            ? <VenueModule userId={this.state.userid} venue={this.state.venue} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
+                            : null
+                    }
+                    {
+                        this.state.isAddVenue
+                            ? <VenueForm userId={this.state.userid} isAddVenue={this.state.isAddVenue} isFormUpdate={this.handleIsFormUpdate} />
+                            : venueStatus
+                    }
                 </div>
             </section>
         );

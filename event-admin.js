@@ -4,8 +4,6 @@ exports.init = function (req, res) {
 
 	const { body, validationResult } = require('express-validator');
 	const app = require('./app.js');
-	const cookieParser = require("cookie-parser");
-	const cors = require('cors');
 	const doteenv = require('dotenv');
 	const express = require('express');
 	const Pool = require('pg').Pool;
@@ -27,10 +25,8 @@ exports.init = function (req, res) {
 			port: process.env.DB_PORT,
 		});
 
-	app.use(cookieParser());
 	app.use(express.urlencoded({ extended: true }));
 	app.use(express.json());
-	app.use(cors());
 
 	const addNewEventToDb = (data) => {
 		console.log('GOING TO ADD NEW EVENT TO DB', data);
@@ -55,6 +51,31 @@ exports.init = function (req, res) {
 		)
 	}
 
+	const deleteEventByEventId = (data) => {
+		console.log('GOING TO DELETE EVENT BY EVENT ID', data);
+		const { eventId, venueId, eventsCount } = data
+
+		pool.query('DELETE FROM events WHERE id = $1', [eventId], (error, results) => {
+			if (error) {
+				throw error
+			}
+			console.log('Event removed');
+		})
+
+		if (eventsCount - 1 < 1) {
+			pool.query(
+				'UPDATE venues SET haveevents = false WHERE id = $1',
+				[venueId],
+				(error, results) => {
+					if (error) {
+						throw error
+					}
+					console.log('Venue updated to have events');
+				}
+			)
+		}
+	}
+
 	app.post('/addEvent', [
 		body('userId')
 			.escape()
@@ -77,7 +98,7 @@ exports.init = function (req, res) {
 		body('eventIsMature')
 			.escape()
 			.isBoolean()
-	], function (req, res) {
+	], (req, res) => {
 		console.log('addEvent POST received', req.body);
 
 		const eventObject = {
@@ -91,6 +112,31 @@ exports.init = function (req, res) {
 		addNewEventToDb(eventObject);
 		res.status(200).send({ success: true })
 
+	});
+
+	app.delete('/deleteEvent', [
+		body('eventId')
+			.escape()
+			.not()
+			.isString(),
+		body('venueId')
+			.escape()
+			.not()
+			.isString(),
+		body('eventsCount')
+			.escape()
+			.not()
+			.isString()
+	], (req, res) => {
+		console.log('deleteEvent DELETE received', req.body);
+
+		const eventObject = {
+			eventId: req.body.eventId,
+			venueId: req.body.venueId,
+			eventsCount: req.body.eventsCount,
+		}
+		deleteEventByEventId(eventObject);
+		res.status(200).send({ success: true })
 	});
 
 }

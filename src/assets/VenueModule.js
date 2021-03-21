@@ -57,6 +57,7 @@ class VenueModule extends React.Component {
                     this.setState({
                         isImageUploaded: true,
                     });
+                    this.props.isFormUpdate(true);
                 },
                 (error) => {
                     console.log('image upload error', error);
@@ -110,9 +111,11 @@ class VenueModule extends React.Component {
                         this.props.events
                             ? (
                                 <div>
-                                    <EventsModule userId={this.props.userid} venue={this.props.venue} events={this.props.events} />
-                                    <p><strong>Add an Event</strong>
-                                    </p><EventForm userId={this.props.userid} />
+                                    <EventsModule
+                                        userId={this.props.userid} venue={this.props.venue} events={this.props.events} isFormUpdate={this.props.isFormUpdate}
+                                    />
+                                    <p><strong>Add an Event</strong></p>
+                                    <EventForm userId={this.props.userid} venue={this.props.venue} isFormUpdate={this.props.isFormUpdate} />
                                 </div>
                             )
                             : "No Event is listed under your Venue."}
