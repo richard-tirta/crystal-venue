@@ -36,6 +36,7 @@ class EventForm extends React.Component {
         const data = JSON.stringify({
             userId: this.props.userId,
             venueId: this.props.venue.id,
+            venueName: this.props.venue.venueName,
             eventName: this.state.eventName,
             eventSubTitle: this.state.eventSubTitle,
             eventTime: eventTimeUTC,

@@ -8,7 +8,5 @@ import "./stylesheets/all.scss";
 
 const profileNode = document.getElementById("profile");
 
-console.log('hello');
-
 // moreAbout();
 ReactDOM.render(<ProfileModule />, profileNode);

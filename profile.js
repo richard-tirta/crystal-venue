@@ -194,7 +194,7 @@ exports.init = function (req, res) {
 		}
 	});
 
-	app.get('/discord', (req, res) => {
+	app.get('/userInfo', (req, res) => {
 		let gotCookie = false;
 		let userData = undefined;
 		//console.log('hmmmm', req.headers.cookie);
@@ -216,15 +216,15 @@ exports.init = function (req, res) {
 							getEventsByVenueId(venue[0].id).then((events) => {
 								response[0].venue[0].events = events;
 								res.send(response);
-							});
+							}).catch(err => console.log(err));
 						} else {
 							res.send(response);
 						}
-					})
+					}).catch(err => console.log(err));
 				} else {
 					res.send(response);
 				}
-			})
+			}).catch(err => console.log(err));
 		} else {
 			res.status(400);
 			res.send('No Cookie found');

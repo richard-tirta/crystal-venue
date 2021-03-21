@@ -43,7 +43,7 @@ class ProfileModule extends React.Component {
     }
 
     requestData() {
-        fetch('/discord')
+        fetch('/userInfo')
             .then(response => {
                 if (response.status !== 200) {
                     console.log('Looks like there was a problem. Status Code: ' +
