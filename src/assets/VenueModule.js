@@ -15,8 +15,11 @@ class VenueModule extends React.Component {
 
         this.state = {
             showImageUpload: false,
+            isImageUploading: false,
             file: undefined,
-            isImageUploaded: false,
+            errors: {
+                imageForm: '',
+            }
         }
     }
 
@@ -29,22 +32,41 @@ class VenueModule extends React.Component {
 
     handleFileChange(event) {
         const file = event.target.files;
+        let errors = this.state.errors;
         event.preventDefault();
+        if (file[0].size > 5000000) {
+            errors.imageForm = 'Image is too big. Please resize it below 5MB.'
+        }
         this.setState({
-            file: file
+            file: file,
+            errors: errors
         });
     }
 
     handleSubmit(event) {
+        let errors = this.state.errors;
+
         event.preventDefault();
+
         if (!this.state.file) {
-            throw new Error('Select a file first!');
+            errors.imageForm = 'Please select a file to upload'
+            this.setState({
+                errors: errors,
+            });
+            return;
+        } else if (errors.imageForm) {
+            return;
         }
+
         const formData = new FormData();
         formData.append('file', this.state.file[0]);
         formData.append('id', this.props.venue.id);
 
         console.log('sending to upload', formData);
+
+        this.setState({
+            isImageUploading: true,
+        });
 
         fetch('/uploadVenuePic', {
             method: 'POST',
@@ -55,15 +77,12 @@ class VenueModule extends React.Component {
                 (result) => {
                     console.log('image uploaded', result);
                     this.setState({
-                        isImageUploaded: true,
+                        isImageUploading: false,
                     });
                     this.props.isFormUpdate(true);
                 },
                 (error) => {
                     console.log('image upload error', error);
-                    this.setState({
-                        isImageUploaded: false,
-                    });
                 }
             );
     }
@@ -72,13 +91,25 @@ class VenueModule extends React.Component {
         const venue = this.props.venue;
         const venueImage = venue.image ? venue.image : sampleImage;
 
-        const imageUploadEl = (
-            <form onSubmit={this.handleSubmit} className="image-upload-form">
-                <label>Upload Image</label>
-                <input type="file" accept=".jpg, .jpeg, .webp" onChange={this.handleFileChange} />
-                <button type="submit" className="form-submit" >Upload</button>
-            </form>
-        );
+        const imageUploadEl = !this.state.isImageUploading
+            ? (
+                <div className="image-upload-form_container">
+                    <form onSubmit={this.handleSubmit} className="image-upload-form">
+                        <label>Upload Image</label>
+                        <p>
+                            Image needs to be in 3:2 aspect ratio (eg: 1200x800) and not over 5MB in size.
+                        </p>
+                        {this.state.errors.imageForm.length > 0 && <span className='form-error'>{this.state.errors.imageForm}</span>}
+                        <input type="file" accept=".jpg, .jpeg, .webp" onChange={this.handleFileChange} />
+                        <button type="submit" className="form-submit" >Upload</button>
+                            </form>
+                </div>
+            ) : (
+                <div className="image-upload-loading">
+                    <img className="loading-gif" src={loadingImage}/>
+                    <h3>Uploading Image. Please Wait.</h3>
+                </div>
+        ) ;
         return (
             <div>
                 <div className="venue-module">

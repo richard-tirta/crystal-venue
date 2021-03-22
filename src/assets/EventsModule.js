@@ -40,7 +40,7 @@ class EventsModule extends React.Component {
         const file = event.target.files;
         let errors = this.state.errors;
         event.preventDefault();
-        console.log('file size', event.target.files[0].size);
+        //console.log('file size', event.target.files[0].size);
         if (file[0].size > 5000000) {
             errors.imageForm = 'Image is too big. Please resize it below 5MB.'
         }
@@ -137,12 +137,17 @@ class EventsModule extends React.Component {
     render() {
         const imageUploadEl = !this.state.isImageUploading
             ? (
-            <form onSubmit={this.handleSubmit} className="image-upload-form">
-                <label>Upload Image</label>
-                {this.state.errors.imageForm.length > 0 && <span className='form-error'>{this.state.errors.imageForm}</span>}
-                <input type="file" accept=".jpg, .jpeg, .webp" onChange={this.handleFileChange} />
-                <button type="submit" className="form-submit" >Upload</button>
-            </form>
+                <div className="image-upload-form_container">
+                    <form onSubmit={this.handleSubmit} className="image-upload-form">
+                        <label>Upload Image</label>
+                        <p>
+                            Image needs to be in 3:2 aspect ratio (eg: 1200x800) and not over 5MB in size.
+                        </p>
+                        {this.state.errors.imageForm.length > 0 && <span className='form-error'>{this.state.errors.imageForm}</span>}
+                        <input type="file" accept=".jpg, .jpeg, .webp" onChange={this.handleFileChange} />
+                        <button type="submit" className="form-submit" >Upload</button>
+                            </form>
+                </div>
             ) : (
                 <div className="image-upload-loading">
                     <img className="loading-gif" src={loadingImage}/>

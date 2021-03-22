@@ -176,22 +176,39 @@ label {
         color: rgb(250,250,250);
     }
 }
-
-.image-upload-form {
-    background: rgb(80,80,80);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-    margin-bottom: 0;
-    margin-top: 0;
-	padding: 20px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 9;
+.image-upload-form_container {
+	background: rgb(80,80,80);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+	margin-bottom: 0;
+	margin-top: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 9;
+	.image-upload-form {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin: 0;
+		transform: translateX(-50%) translateY(-50%);
+		width: 350px;
+		label {
+			font-weight: 800;
+			margin-bottom: 14px;
+		}
+		input, button {
+			max-width: 300px;
+			padding: 6px;
+			margin-top: 10px;
+			text-align: center;
+		}
+	}
 }
+
 
 .form-submitted-lightbox {
 	background: #373737;

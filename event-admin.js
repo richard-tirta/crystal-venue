@@ -118,7 +118,7 @@ exports.init = function (req, res) {
 	app.get('/allEvents', (req, res) => {
 		const currentTime = parseInt(Date.now());
 		// only grab new data if data is older than 5 minutes
-		console.log('cache', eventsCache.timeStamp + 300000, currentTime);
+		//console.log('cache', eventsCache.timeStamp + 300000, currentTime);
 		if (eventsCache.timeStamp + 300000 < currentTime) {
 			console.log('allEvents getting new data');
 			getAllEvents().then((events) => {
