@@ -32,9 +32,10 @@ header {
 		justify-content: space-between;
 		min-width: 400px;
 		margin-bottom: 33px;
+		margin-top: 18px;
 		width: 75%;
 		#registration {
-			margin-right: 30px;
+			margin-right: 60px;
 		}
 		nav {
 			display: flex;
@@ -156,6 +157,24 @@ label {
 	font-size: 16px;
 	font-weight: 800;
 	line-height: 1.5;
+}
+
+.edit-button {
+    background: rgba(50,50,50,0.5);
+    border: 1px solid #797979;;
+    color: rgb(180,180,180);
+    display: block;
+    font-size: 18px;
+    height: 20px;
+    padding-top: 2px;
+	padding-bottom: 8px;
+	margin-bottom: 10px;
+    text-align: center;
+    min-width: 110px;
+    &:hover {
+        background: rgba(120,120,120,1);
+        color: rgb(250,250,250);
+    }
 }
 
 .edit-venue-button {

@@ -107,6 +107,22 @@ exports.init = function (req, res) {
 		})
 	}
 
+	const updateBday = (data) => {
+		console.log('GOING TO UPDATE BDAY TO DB', data);
+		const { userId, birthday } = data
+
+		pool.query(
+		'UPDATE users SET birthday = $1 WHERE userid = $2',
+		[birthday, userId],
+		(error, results) => {
+			if (error) {
+				throw error
+			}
+			console.log('Users bday is updated');
+		}
+	)
+	}
+
 	app.get('/profile', function (req, res) {
 		// res.status(200).send({ success: true })
 		let userData = undefined;
@@ -229,5 +245,26 @@ exports.init = function (req, res) {
 			res.status(400);
 			res.send('No Cookie found');
 		}
+	});
+
+	app.post('/updateBday', [
+		body('userId')
+			.escape()
+			.not()
+			.isString(),
+		body('birthday')
+			.escape()
+			.not()
+			.isString(),
+	], (req, res) => {
+		console.log('updateBday POST received', req.body);
+
+		const eventObject = {
+			userId: req.body.userId,
+			birthday: req.body.birthday,
+		}
+		updateBday(eventObject);
+		res.status(200).send({ success: true })
+
 	});
 }

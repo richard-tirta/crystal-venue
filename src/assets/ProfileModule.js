@@ -2,6 +2,9 @@
 import React from "react";
 import VenueForm from "./VenueForm";
 import VenueModule from "./VenueModule";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
+import { DateTime } from "luxon";
 import ErrorBoundary from './ErrorBoundary';
 
 class ProfileModule extends React.Component {
@@ -9,17 +12,22 @@ class ProfileModule extends React.Component {
         super(props);
 
         this.handleIsFormUpdate = this.handleIsFormUpdate.bind(this);
+        this.handleBdayForm = this.handleBdayForm.bind(this);
+        this.handleBdaySubmit = this.handleBdaySubmit.bind(this);
 
         this.state = {
             isLoaded: false,
             userid: undefined,
             username: undefined,
             discriminator: undefined,
+            birthday: undefined,
+            newBirthday: undefined,
             avatar: undefined,
             isMember: false,
             isAddVenue: false,
             haveVenue: false,
             isFormUpdate: false,
+            showBdayForm: false,
             venue: {
                 id: undefined,
                 venueName: undefined,
@@ -35,7 +43,7 @@ class ProfileModule extends React.Component {
                 venueType3: undefined,
                 isMature: false,
                 image: undefined,
-                hasEvents : false,
+                hasEvents: false,
             },
             events: [],
         };
@@ -81,6 +89,7 @@ class ProfileModule extends React.Component {
                             userid: resultData.userid,
                             username: resultData.username,
                             discriminator: resultData.discriminator,
+                            birthday: resultData.birthday,
                             avatar: resultData.avatar,
                             isMember: resultData.ismember,
                             haveVenue: resultData.havevenue,
@@ -127,6 +136,46 @@ class ProfileModule extends React.Component {
         });
     }
 
+    handleBdayForm(event) {
+        event.preventDefault();
+        this.setState({
+            showBdayForm: !this.state.showBdayForm,
+        });
+    }
+
+    handleBdaySubmit(event) {
+        event.preventDefault();
+
+        const bdayUTC = this.state.newBirthday.getTime();
+
+        const data = JSON.stringify({
+            userId: this.state.userid,
+            birthday: bdayUTC,
+        });
+
+        console.log('WE ARE READY TO SHIP', data);
+
+        fetch('/updateBday', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: data
+        })
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        isFormUpdate: true,
+                        showBdayForm: false,
+                    });
+                },
+                (error) => {
+                    console.log('Form is not submitted', error);
+                }
+            )
+    }
+
     render() {
 
         const venueStatus = !this.state.haveVenue
@@ -137,6 +186,33 @@ class ProfileModule extends React.Component {
                 </h4>
             )
             : null;
+
+        const bdayForm = this.state.showBdayForm
+            ? (
+                <form className="bday-form">
+                    <DatePicker
+                        dateFormat="MMM dd yyyy"
+                        maxDate={new Date()}
+                        placeholderText="Click to select a date"
+                        selected={this.state.newBirthday}
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                        onChange={date => this.setState({newBirthday: date })}
+                    />
+                    <a href="#" id="birthday-cancel" className="bday-button" onClick={this.handleBdayForm}>
+                        Cancel
+                    </a>
+                    <a href="#" id="birthday-save" className="bday-button" onClick={this.handleBdaySubmit}>
+                        Save &raquo;
+                    </a>
+                </form>
+            ) : <a href="#" className="edit-button" onClick={this.handleBdayForm}>Add birth date &raquo;</a>;
+        
+        const getTime = (data) => {
+            const newDate = DateTime.fromMillis(parseInt(data)).toFormat('MMMM dd y');
+            return newDate;
+        }
 
         return (
             <section className="profile-section">
@@ -149,6 +225,11 @@ class ProfileModule extends React.Component {
                     }
                     <div>
                         <h3 className="profile-name">{this.state.username}<span>#{this.state.discriminator}</span></h3>
+                        {
+                            this.state.birthday
+                                ? getTime(this.state.birthday)
+                                : bdayForm
+                        }
                         <p>Role: {this.state.isMember ? 'Member' : 'Guest'}</p>
                     </div>
                 </div>

@@ -19,12 +19,45 @@
     .profile-pic {
         border-radius: 50%;
         margin-right: 30px;
+        max-height: 128px;
     }
     .profile-name span {
         color: #797979;
     }
     .venue-container {
         margin-top: 30px;
+    }
+    .bday-form {
+        align-items: center;
+        display: flex;
+        margin: 0 0 10px 0;
+        input {
+            border: 1px solid #797979;
+            font-size: 18px;
+            height: 20px;
+            margin: 0;
+            padding-top: 0;
+	        padding-bottom: 0;
+            min-width: auto;
+            text-align: center;
+        }
+        select {
+            color: inherit;
+            min-width: auto;
+        }
+        .bday-button {
+            background: rgba(50,50,50,0.5);
+            border: 1px solid #797979;
+            display: block;
+            padding: 4px 8px 4px 8px;
+            min-width: 76px;
+            margin-left: 16px;
+            text-align: center;
+            &:hover {
+                background: rgba(120,120,120,1);
+                color: rgb(250,250,250);
+            }
+        }
     }
 }
 
