@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const listings = require('./listings');
 const profile = require('./profile');
 const venueAdmin = require('./venue-admin');
 const eventAdmin = require('./event-admin');
@@ -33,6 +34,7 @@ app.get('/about', function (req, res) {
 	// res.status(200).send({ success: true })
 });
 
+listings.init();
 profile.init();
 venueAdmin.init();
 eventAdmin.init();

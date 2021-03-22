@@ -8,7 +8,7 @@ exports.init = function (req, res) {
 	const doteenv = require('dotenv');
 	const express = require('express');
 	const Pool = require('pg').Pool;
-
+	
 	doteenv.config();
 
 	const pool = process.env.DATABASE_URL
