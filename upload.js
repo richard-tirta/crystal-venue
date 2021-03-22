@@ -10,6 +10,7 @@ exports.init = function (req, res) {
 	const fileType = require('file-type');
 	const multiparty = require('multiparty');
 	const Pool = require('pg').Pool;
+	const sharp = require('sharp');
 
 	doteenv.config();
 
@@ -93,12 +94,12 @@ exports.init = function (req, res) {
 			};
 			try {
 				const path = files.file[0].path;
-				const buffer = fs.readFileSync(path);
-				const type = await fileType.fromBuffer(buffer);
-				const fileName = `eventImage/${Date.now().toString()}`;
-				const data = await uploadFile(buffer, fileName, type);
-
+				//const buffer = fs.readFileSync(path);
+				const thumbnailImg = await sharp(path).resize(832).webp().toBuffer();
+				const type = await fileType.fromBuffer(thumbnailImg);
 				const eventId = parseInt(fields.id);
+				const fileName = `eventImage/${eventId}_${Date.now().toString()}_thumbnail`;
+				const data = await uploadFile(thumbnailImg, fileName, type);
 
 				pool.query(
 					'UPDATE events SET image = $1 WHERE id = $2',
