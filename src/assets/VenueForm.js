@@ -100,7 +100,7 @@ class VenueForm extends React.Component {
     }
 
     render() {
-        if (isFormSubmitted) {
+        if (this.state.isFormSubmitted) {
             return (<h2>Venue has been submitted</h2>);
         }
         return (
