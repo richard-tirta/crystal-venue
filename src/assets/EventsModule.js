@@ -22,6 +22,9 @@ class EventsModule extends React.Component {
             file: undefined,
             eventId: null,
             showDeleteWarning: null,
+            errors: {
+                imageForm: '',
+            }
         }
     }
 
@@ -35,17 +38,33 @@ class EventsModule extends React.Component {
 
     handleFileChange(event) {
         const file = event.target.files;
+        let errors = this.state.errors;
         event.preventDefault();
+        console.log('file size', event.target.files[0].size);
+        if (file[0].size > 5000000) {
+            errors.imageForm = 'Image is too big. Please resize it below 5MB.'
+        }
         this.setState({
-            file: file
+            file: file,
+            errors: errors
         });
     }
 
     handleSubmit(event) {
+        let errors = this.state.errors;
+
         event.preventDefault();
+
         if (!this.state.file) {
-            throw new Error('Select a file first!');
+            errors.imageForm = 'Please select a file to upload'
+            this.setState({
+                errors: errors,
+            });
+            return;
+        } else if (errors.imageForm) {
+            return;
         }
+
         const formData = new FormData();
         formData.append('file', this.state.file[0]);
         formData.append('id', this.state.eventId);
@@ -120,7 +139,8 @@ class EventsModule extends React.Component {
             ? (
             <form onSubmit={this.handleSubmit} className="image-upload-form">
                 <label>Upload Image</label>
-                <input type="file" onChange={this.handleFileChange} />
+                {this.state.errors.imageForm.length > 0 && <span className='form-error'>{this.state.errors.imageForm}</span>}
+                <input type="file" accept=".jpg, .jpeg, .webp" onChange={this.handleFileChange} />
                 <button type="submit" className="form-submit" >Upload</button>
             </form>
             ) : (

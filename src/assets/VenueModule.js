@@ -75,7 +75,7 @@ class VenueModule extends React.Component {
         const imageUploadEl = (
             <form onSubmit={this.handleSubmit} className="image-upload-form">
                 <label>Upload Image</label>
-                <input type="file" onChange={this.handleFileChange} />
+                <input type="file" accept=".jpg, .jpeg, .webp" onChange={this.handleFileChange} />
                 <button type="submit" className="form-submit" >Upload</button>
             </form>
         );

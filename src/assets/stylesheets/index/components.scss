@@ -152,8 +152,8 @@ label {
 }
 
 .form-error {
-	color: #E70000;
-	font-size: 14px;
+	color: red;
+	font-size: 16px;
 	font-weight: 800;
 	line-height: 1.5;
 }
@@ -185,6 +185,7 @@ label {
     height: 100%;
     margin-bottom: 0;
     margin-top: 0;
+	padding: 20px;
     position: absolute;
     top: 0;
     left: 0;
