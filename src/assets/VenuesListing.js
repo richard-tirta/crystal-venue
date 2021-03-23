@@ -1,5 +1,6 @@
 
 import React from "react";
+import ReactDOM from "react-dom";
 import Filter from "./form_component/Filter";
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-venue.jpg";
@@ -41,6 +42,8 @@ class VenuesListing extends React.Component {
                         this.setState({
                             venues: result.data.venues,
                             events: result.data.events,
+                            userName: result.userData.userName,
+                            userIsMature: result.userData.userIsMature,
                         });
                     },
                     (error) => {
@@ -48,6 +51,15 @@ class VenuesListing extends React.Component {
                     }
                 )
             })
+    }
+
+    componentDidUpdate() {
+        ReactDOM.render(
+            <a href={this.state.userName ? '/profile.html' : '/profile' }>
+                {this.state.userName ? 'Profile (' + this.state.userName + ')' : 'Login'}
+            </a>,
+            this.props.profileNavNode
+        );
     }
 
     handleInputChange(event) {

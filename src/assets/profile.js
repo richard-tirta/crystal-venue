@@ -7,6 +7,7 @@ import "./stylesheets/all.scss";
 
 
 const profileNode = document.getElementById("profile");
+const profileNavNode = document.getElementById("profile-nav");
 
 // moreAbout();
-ReactDOM.render(<ProfileModule />, profileNode);
+ReactDOM.render(<ProfileModule profileNavNode={profileNavNode} />, profileNode);

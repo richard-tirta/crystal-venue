@@ -1,5 +1,6 @@
 
 import React from "react";
+import ReactDOM from "react-dom";
 import VenueForm from "./VenueForm";
 import VenueModule from "./VenueModule";
 import "react-datepicker/dist/react-datepicker.css";
@@ -132,6 +133,13 @@ class ProfileModule extends React.Component {
                 isFormUpdate: false,
             });
         }
+
+        ReactDOM.render(
+            <span>
+                <strong>{this.state.username ? 'Profile (' + this.state.username + ')' : 'Login'}</strong>
+            </span>,
+            this.props.profileNavNode
+        );
     }
 
     toggleAddVenue(e) {
