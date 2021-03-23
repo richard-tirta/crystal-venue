@@ -113,10 +113,10 @@ class VenueModule extends React.Component {
             .then(
                 (result) => {
                     console.log('event deleted', result);
-                    this.props.isFormUpdate(true);
                     this.setState({
                         showDeleteWarning: null,
                     });
+                    this.props.isFormUpdate(true);
                 },
                 (error) => {
                     console.log('event delete error', error);
