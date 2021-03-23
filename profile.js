@@ -4,6 +4,7 @@ exports.init = function (req, res) {
 
 	const { body, validationResult } = require('express-validator');
 	const app = require('./app.js');
+	const auth = require('./auth');
 	const cookieParser = require("cookie-parser");
 	const cors = require('cors');
 	const doteenv = require('dotenv');
@@ -31,6 +32,7 @@ exports.init = function (req, res) {
 
 	const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 	const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+	const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
 	app.use(cookieParser());
 	app.use(express.urlencoded({ extended: true }));
@@ -38,18 +40,30 @@ exports.init = function (req, res) {
 	app.use(cors());
 
 	const getAppCookies = (req) => {
-		if (req.headers.cookie) {
-			const rawCookies = req.headers.cookie.split('; ');
-			const parsedCookies = {};
-			rawCookies.forEach(rawCookie => {
-				const parsedCookie = rawCookie.split('=');
-				parsedCookies[parsedCookie[0]] = parsedCookie[1];
+
+		const rawCookies = req.headers.cookie.split('; ');
+		const parsedCookies = {};
+		let decodedToken = undefined;
+
+		rawCookies.forEach(rawCookie => {
+			const parsedCookie = rawCookie.split('=');
+			parsedCookies[parsedCookie[0]] = parsedCookie[1];
+		});
+
+		if (parsedCookies.token) {		
+			jwt.verify(parsedCookies.token, TOKEN_SECRET, function (err, decoded) {
+				if (err) {
+					console.log('JWT Verify error', err);
+					return undefined;
+				}
+				decodedToken = decoded;
 			});
-			return parsedCookies;
+			return decodedToken;
 		} else {
 			return undefined;
 		}
 	};
+	
 
 	const getUserByUserId = (userId) => {
 		const query = 'SELECT * FROM users WHERE userid = $1';
@@ -113,15 +127,15 @@ exports.init = function (req, res) {
 		const { userId, birthday } = data
 
 		pool.query(
-		'UPDATE users SET birthday = $1 WHERE userid = $2',
-		[birthday, userId],
-		(error, results) => {
-			if (error) {
-				throw error
+			'UPDATE users SET birthday = $1 WHERE userid = $2',
+			[birthday, userId],
+			(error, results) => {
+				if (error) {
+					throw error
+				}
+				console.log('Users bday is updated');
 			}
-			console.log('Users bday is updated');
-		}
-	)
+		)
 	}
 
 	app.get('/profile', function (req, res) {
@@ -162,21 +176,23 @@ exports.init = function (req, res) {
 							userData.isMember = isMember;
 
 							getUserByUserId(userData.id).then((response) => {
+
+								const timer = 86400;
+
 								if (response.length < 1) {
 									userData.haveVenue = false;
 									addNewUserToDb(userData);
 								}
+
+								let jwtToken = jwt.sign({ userId: userData.id }, TOKEN_SECRET, {
+									expiresIn: timer // expires in 24 hours
+								});
+
 								res.cookie(
-									'userId', userData.id, {
-									maxAge: 24 * 60 * 60 * 60,
+									'token', jwtToken, {
+									maxAge: timer,
 									httpOnly: true
 								});
-
-								let jwtToken = jwt.sign({ id: userData.id }, 'eagledragon', {
-									expiresIn: 86400 // expires in 24 hours
-								});
-
-								console.log('JWT token', jwtToken);
 
 								res.redirect('/profile.html');
 							})
@@ -219,40 +235,34 @@ exports.init = function (req, res) {
 	});
 
 	app.get('/userInfo', (req, res) => {
-		let gotCookie = false;
-		let userData = undefined;
-		//console.log('hmmmm', req.headers.cookie);
-		if (req.headers.cookie) {
-			if (getAppCookies(req, res)['userId']) {
-				gotCookie = true;
-			}
-		}
-		//console.log('hmmmm2', gotCookie, getAppCookies(req, res));
-		if (gotCookie) {
-			const userId = getAppCookies(req, res)['userId'];
-			getUserByUserId(userId).then((response) => {
-				if (response[0].havevenue) {
-					//console.log('user have venue, fetching venue');
-					getVenueByUserId(userId).then((venue) => {
-						response[0].venue = venue;
-						if (response[0].venue[0].haveevents) {
-							//console.log('venue have events, fetching events');
-							getEventsByVenueId(venue[0].id).then((events) => {
-								response[0].venue[0].events = events;
-								res.send(response);
-							}).catch(err => console.log(err));
-						} else {
-							res.send(response);
-						}
-					}).catch(err => console.log(err));
-				} else {
-					res.send(response);
-				}
-			}).catch(err => console.log(err));
-		} else {
+		let cookieAuth = auth.init(req);
+
+		if (!cookieAuth) {
 			res.status(400);
 			res.send('No Cookie found');
+			return;
 		}
+
+		const userId = cookieAuth['userId'];
+		getUserByUserId(userId).then((response) => {
+			if (response[0].havevenue) {
+				//console.log('user have venue, fetching venue');
+				getVenueByUserId(userId).then((venue) => {
+					response[0].venue = venue;
+					if (response[0].venue[0].haveevents) {
+						//console.log('venue have events, fetching events');
+						getEventsByVenueId(venue[0].id).then((events) => {
+							response[0].venue[0].events = events;
+							res.send(response);
+						}).catch(err => console.log(err));
+					} else {
+						res.send(response);
+					}
+				}).catch(err => console.log(err));
+			} else {
+				res.send(response);
+			}
+		}).catch(err => console.log(err));
 	});
 
 	app.post('/updateBday', [
