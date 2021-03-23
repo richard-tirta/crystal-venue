@@ -53,7 +53,7 @@ exports.init = function (req, res) {
 
 	app.post('/uploadVenuePic', (req, res) => {
 		const cookieAuth = auth.init(req);
-		const userIdAuth = cookieAuth['userId'];
+		const userId =  cookieAuth ? cookieAuth['userId'] : null;
 
 		if (!userIdAuth) {
 			res.redirect('/profile');
@@ -96,7 +96,7 @@ exports.init = function (req, res) {
 
 	app.post('/uploadEventPic', (req, res) => {
 		const cookieAuth = auth.init(req);
-		const userIdAuth = cookieAuth['userId'];
+		const userId =  cookieAuth ? cookieAuth['userId'] : null;
 
 		if (!userIdAuth) {
 			res.redirect('/profile');

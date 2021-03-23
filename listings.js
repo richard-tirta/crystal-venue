@@ -97,46 +97,71 @@ exports.init = function (req, res) {
 	}
     
 	app.get('/allVenues', (req, res) => {
+		const cookieAuth = auth.init(req);
+		const userId =  cookieAuth ? cookieAuth['userId'] : null;
 		const currentTime = parseInt(Date.now());
 		// only grab new data if data is older than 5 minutes
 		//console.log('cache', venuesCache.timeStamp + 300000, currentTime);
-		if (venuesCache.timeStamp + 300000 < currentTime) {
-			console.log('allVenues getting new data');
-            getAllVenues().then((venues) => {
-                const data = {
-                    venues: venues,
-                    events: eventsCache,
-                }
-				venuesCache = {
-                    data: {
-                        venues: venues,
-                        events: eventsCache,
-                    },
-					timeStamp: currentTime,
-				};
-				res.send(data);
+
+		let sessionData = {
+			data: null,
+			userData: {
+				userName: null,
+				isUserMature: false,
+			}
+		}
+
+		function sendData() {
+			if (venuesCache.timeStamp + 300000 < currentTime || !venuesCache.data.events) {
+				console.log('allVenues getting new data');
+				getAllVenues().then((venues) => {
+
+					console.log('hmm', venues, eventsCache.data);
+					const data = {
+						venues: venues,
+						events: eventsCache.data,
+					}
+					venuesCache = {
+						data: data,
+						timeStamp: currentTime,
+					};
+					sessionData.data = data;
+					res.send(sessionData);
+				}).catch(err => console.log(err));
+			} else {
+				console.log('allVenues using cache data', venuesCache);
+				sessionData.data = venuesCache.data;
+				res.send(sessionData);
+			}
+		}
+
+		if (userId) {
+			getUserByUserId(userId).then((userInfo) => {
+				sessionData.userData.userName = userInfo[0].username;
+				sessionData.userData.isUserMature = getAge(userInfo[0].birthday) > 18 ? true : false;
+				sendData();
 			}).catch(err => console.log(err));
 		} else {
-			console.log('allVenues using cache data');
-			res.send(venuesCache.data);
+			sendData();
 		}
+
+		
     });
     
 	app.get('/allEvents', (req, res) => {
 		const cookieAuth = auth.init(req);
-		const userId = cookieAuth['userId'];
+		const userId =  cookieAuth ? cookieAuth['userId'] : null;
 		const currentTime = parseInt(Date.now());
 
-		getUserByUserId(userId).then((userInfo) => {
-
-			let sessionData = {
-				eventsData: null,
-				userData: {
-					userName: userInfo[0].username,
-					isUserMature: getAge(userInfo[0].birthday) >  18 ? true : false,
-				}
+		let sessionData = {
+			eventsData: null,
+			userData: {
+				userName: null,
+				isUserMature: false,
 			}
-			
+		}
+
+		function sendData() {
 			// only grab new data if data is older than 5 minutes
 			//console.log('cache', eventsCache.timeStamp + 300000, currentTime);
 			if (eventsCache.timeStamp + 300000 < currentTime) {
@@ -154,6 +179,16 @@ exports.init = function (req, res) {
 				sessionData.eventsData = eventsCache.data;
 				res.send(sessionData);
 			}
-		}).catch(err => console.log(err));
+		}
+
+		if (userId) {
+			getUserByUserId(userId).then((userInfo) => {
+				sessionData.userData.userName = userInfo[0].username;
+				sessionData.userData.isUserMature = getAge(userInfo[0].birthday) > 18 ? true : false;
+				sendData();
+			}).catch(err => console.log(err));
+		} else {
+			sendData();
+		}
 	});
 }

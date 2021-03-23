@@ -116,7 +116,7 @@ exports.init = function (req, res) {
 		console.log('addEvent POST received', req.body);
 
 		const cookieAuth = auth.init(req);
-		const userIdAuth = cookieAuth['userId'];
+		const userId =  cookieAuth ? cookieAuth['userId'] : null;
 
 		if (userIdAuth !== req.body.userId) {
 			res.redirect('/profile');
@@ -157,7 +157,7 @@ exports.init = function (req, res) {
 		console.log('deleteEvent DELETE received', req.body);
 
 		const cookieAuth = auth.init(req);
-		const userIdAuth = cookieAuth['userId'];
+		const userId =  cookieAuth ? cookieAuth['userId'] : null;
 
 		if (!userIdAuth) {
 			res.redirect('/profile');

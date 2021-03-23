@@ -4,7 +4,7 @@ import Filter from "./form_component/Filter";
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-venue.jpg";
 
-class EventsListing extends React.Component {
+class VenuesListing extends React.Component {
     constructor(props) {
         super(props);
 
@@ -39,8 +39,8 @@ class EventsListing extends React.Component {
                         console.log(result);
                         
                         this.setState({
-                            venues: result.venues,
-                            events: result.events,
+                            venues: result.data.venues,
+                            events: result.data.events,
                         });
                     },
                     (error) => {
@@ -89,14 +89,15 @@ class EventsListing extends React.Component {
         }
 
         const findEvent = (venueId) => {
-            const event = eventsData.data.filter((venue) => {
+            if (!eventsData) {
+                return null;
+            }
+            const event = eventsData.filter((venue) => {
                 return venue.venueid == parseInt(venue.venueid);
-            });
-
+            })
             event.sort((a, b) => {
                 return a.time - b.time;
             });
-            console.log(event[0].name);
             const eventString = <p><strong>{event[0].name} | {getTime(event[0].time)}</strong></p>
             return eventString;
         }
@@ -160,4 +161,4 @@ class EventsListing extends React.Component {
 }
 
 
-export default EventsListing;
+export default VenuesListing;
