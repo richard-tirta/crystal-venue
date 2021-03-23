@@ -70,7 +70,7 @@ exports.init = function (req, res) {
 				//const buffer = fs.readFileSync(path);
 				const imgResized = await sharp(path).resize(1654).webp().toBuffer();
 				const type = await fileType.fromBuffer(imgResized);
-				const fileName = `venueImage/${Date.now().toString()}`;
+				const fileName = `venueImage/${venueId}_${Date.now().toString()}`;
 				const data = await uploadFile(imgResized, fileName, type);
 
 				const venueId = parseInt(fields.id);
