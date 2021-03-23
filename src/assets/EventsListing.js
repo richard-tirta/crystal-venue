@@ -3,7 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Filter from "./form_component/Filter";
 import { DateTime } from "luxon";
-import sampleImage from "./images/cva-no-venue.jpg";
+import sampleImage from "./images/cva-no-event.jpg";
 
 const userNameContext = React.createContext('');
 

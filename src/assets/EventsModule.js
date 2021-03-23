@@ -3,7 +3,7 @@ import { Firehose } from "aws-sdk";
 import fetch from "node-fetch";
 import React from "react";
 import { DateTime } from "luxon";
-import sampleImage from "./images/cva-no-venue.jpg";
+import sampleImage from "./images/cva-no-event.jpg";
 import loadingImage from "./images/icon-loading.gif";
 
 class EventsModule extends React.Component {
