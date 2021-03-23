@@ -214,7 +214,7 @@ exports.init = function (req, res) {
 		if (!cookieAuth) {
 			res.status(400);
 			res.send('No Cookie found');
-			return;
+			res.redirect('/profile');
 		}
 
 		const userId = cookieAuth['userId'];
@@ -249,6 +249,14 @@ exports.init = function (req, res) {
 			.not()
 			.isString(),
 	], (req, res) => {
+		const cookieAuth = auth.init(req);
+		const userIdAuth = cookieAuth['userId'];
+
+		if (userIdAuth !== req.body.userId) {
+			res.redirect('/profile');
+			return;
+		}
+
 		console.log('updateBday POST received', req.body);
 
 		const eventObject = {

@@ -51,6 +51,13 @@ exports.init = function (req, res) {
 	};
 
 	app.post('/uploadVenuePic', (request, response) => {
+		const cookieAuth = auth.init(req);
+		const userIdAuth = cookieAuth['userId'];
+
+		if (!userIdAuth) {
+			res.redirect('/profile');
+			return;
+		}
 		const form = new multiparty.Form();
 		form.parse(request, async (error, fields, files) => {
 			console.log('hmmmmm', fields, files);
@@ -86,6 +93,14 @@ exports.init = function (req, res) {
 	});
 
 	app.post('/uploadEventPic', (request, response) => {
+		const cookieAuth = auth.init(req);
+		const userIdAuth = cookieAuth['userId'];
+
+		if (!userIdAuth) {
+			res.redirect('/profile');
+			return;
+		}
+
 		const form = new multiparty.Form();
 		form.parse(request, async (error, fields, files) => {
 			//onsole.log('hmmmmm', fields, files);

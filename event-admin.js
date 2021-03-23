@@ -114,6 +114,14 @@ exports.init = function (req, res) {
 	], (req, res) => {
 		console.log('addEvent POST received', req.body);
 
+		const cookieAuth = auth.init(req);
+		const userIdAuth = cookieAuth['userId'];
+
+		if (userIdAuth !== req.body.userId) {
+			res.redirect('/profile');
+			return;
+		}
+
 		const eventObject = {
 			userId: req.body.userId,
 			venueId: req.body.venueId,
@@ -146,6 +154,14 @@ exports.init = function (req, res) {
 			.isString()
 	], (req, res) => {
 		console.log('deleteEvent DELETE received', req.body);
+
+		const cookieAuth = auth.init(req);
+		const userIdAuth = cookieAuth['userId'];
+
+		if (!userIdAuth) {
+			res.redirect('/profile');
+			return;
+		}
 
 		const eventObject = {
 			eventId: req.body.eventId,

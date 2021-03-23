@@ -4,6 +4,7 @@ exports.init = function (req, res) {
 
 	const { body, validationResult } = require('express-validator');
 	const app = require('./app.js');
+	const auth = require('./auth');
 	const cookieParser = require("cookie-parser");
 	const doteenv = require('dotenv');
 	const express = require('express');
@@ -129,6 +130,14 @@ exports.init = function (req, res) {
 	], function (req, res) {
 		console.log('addVenue POST received', req.body);
 
+		const cookieAuth = auth.init(req);
+		const userIdAuth = cookieAuth['userId'];
+
+		if (userIdAuth !== req.body.userId) {
+			res.redirect('/profile');
+			return;
+		}
+
 		const venueObject = {
 			userId: req.body.userId,
 			venueName: req.body.venueName,
@@ -160,6 +169,14 @@ exports.init = function (req, res) {
 			.isString(),
 	], (req, res) => {
 		console.log('deleteEvent DELETE received', req.body);
+
+		const cookieAuth = auth.init(req);
+		const userIdAuth = cookieAuth['userId'];
+
+		if (userIdAuth !== req.body.userId) {
+			res.redirect('/profile');
+			return;
+		}
 
 		const eventObject = {
 			eventId: req.body.venueId,
