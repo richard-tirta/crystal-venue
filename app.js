@@ -18,8 +18,17 @@ var server = app.listen(port, function () {
 	console.log('Example app listening at http://%s:%s', host, port)
 });
 
-app.use(helmet());
 app.use(express.static(__dirname + '/dist/'));
+
+
+app.use(
+	helmet.contentSecurityPolicy({
+		directives: {
+			...helmet.contentSecurityPolicy.getDefaultDirectives(),
+			"script-src": ["'self'", "discordapp.com"],
+		},
+	})
+);
 
 app.get('/', function (req, res) {
 	console.log('/ requested', req.query.code);
