@@ -41,6 +41,9 @@ class EventForm extends React.Component {
             eventSubTitle: this.state.eventSubTitle,
             eventTime: eventTimeUTC,
             eventIsMature: this.state.eventIsMature,
+            eventType1: this.props.venue.venueType1,
+            eventType2: this.props.venue.venueType2,
+            eventType3: this.props.venue.venueType3,
         });
 
         console.log('WE ARE READY TO SHIP', data);

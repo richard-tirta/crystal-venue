@@ -1,5 +1,6 @@
 
 import React from "react";
+import Filter from "./form_component/Filter";
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-venue.jpg";
 
@@ -7,9 +8,17 @@ class EventsListing extends React.Component {
     constructor(props) {
         super(props);
 
+        this.handleInputChange = this.handleInputChange.bind(this);
+
         this.state = {
             venues: null,
             events: null,
+            filterMusic: false,
+            filterFullBar: false,
+            filterMusic: false,
+            filterNovelties: false,
+            filterLgbtq: false,
+            filterMature: false,
         }
     }
 
@@ -35,6 +44,17 @@ class EventsListing extends React.Component {
                     }
                 )
             })
+    }
+
+    handleInputChange(event) {
+       
+        const target = event.target;
+        const name = target.name;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+
+        this.setState({
+            [name]: value,
+        });
     }
 
     render() {
@@ -65,6 +85,7 @@ class EventsListing extends React.Component {
 
         return (
             <section>
+                 <Filter onChange={this.handleInputChange} />
                 {
                     venueData
                         ? venueData.map((venue, index) => (

@@ -30,9 +30,9 @@ exports.init = function (req, res) {
 
 	const addNewEventToDb = (data) => {
 		console.log('GOING TO ADD NEW EVENT TO DB', data);
-		const { userId, venueId, venueName, eventName, eventSubTitle, eventTime, eventIsMature } = data
+		const { userId, venueId, venueName, eventName, eventSubTitle, eventTime, eventIsMature, eventType1, eventType2, eventType3 } = data
 
-		pool.query('INSERT INTO events (userid, venueid, venuename, name, subtitle, time, ismature) VALUES ($1, $2, $3, $4, $5, $6, $7)', [userId, venueId, venueName, eventName, eventSubTitle, eventTime, eventIsMature ], (error, results) => {
+		pool.query('INSERT INTO events (userid, venueid, venuename, name, subtitle, time, ismature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [userId, venueId, venueName, eventName, eventSubTitle, eventTime, eventIsMature, eventType1, eventType2, eventType3 ], (error, results) => {
 			if (error) {
 				throw error
 			}
@@ -101,7 +101,16 @@ exports.init = function (req, res) {
 			.isString(),
 		body('eventIsMature')
 			.escape()
-			.isBoolean()
+			.isBoolean(),
+		body('eventType1')
+			.escape()
+			.isString(),
+		body('eventType2')
+			.escape()
+			.isString(),
+		body('eventType3')
+			.escape()
+			.isString(),
 	], (req, res) => {
 		console.log('addEvent POST received', req.body);
 
@@ -113,6 +122,9 @@ exports.init = function (req, res) {
 			eventSubTitle: req.body.eventSubTitle,
 			eventTime: req.body.eventTime,
 			eventIsMature: req.body.eventIsMature,
+			eventType1: req.body.eventType1,
+			eventType2: req.body.eventType2,
+			eventType3: req.body.eventType3,
 		}
 		addNewEventToDb(eventObject);
 		res.status(200).send({ success: true })
