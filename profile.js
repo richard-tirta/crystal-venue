@@ -253,7 +253,7 @@ exports.init = function (req, res) {
 			.isString(),
 	], (req, res) => {
 		const cookieAuth = auth.init(req);
-		const userId =  cookieAuth ? cookieAuth['userId'] : null;
+		const userIdAuth =  cookieAuth ? cookieAuth['userId'] : null;
 
 		if (userIdAuth !== req.body.userId) {
 			res.redirect('/profile');

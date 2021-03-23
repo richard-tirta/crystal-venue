@@ -98,7 +98,7 @@ exports.init = function (req, res) {
     
 	app.get('/allVenues', (req, res) => {
 		const cookieAuth = auth.init(req);
-		const userId =  cookieAuth ? cookieAuth['userId'] : null;
+		const userIdAuth =  cookieAuth ? cookieAuth['userId'] : null;
 		const currentTime = parseInt(Date.now());
 		// only grab new data if data is older than 5 minutes
 		//console.log('cache', venuesCache.timeStamp + 300000, currentTime);
