@@ -142,7 +142,7 @@ class VenueModule extends React.Component {
                         userId={this.props.userid} venue={this.props.venue} events={this.props.events} isFormUpdate={this.props.isFormUpdate}
                     />
                     <p><strong>Add an Event</strong></p>
-                    <EventForm userId={this.props.userid} venue={this.props.venue} isFormUpdate={this.props.isFormUpdate} />
+                    <EventForm userId={this.props.userId} venue={this.props.venue} isFormUpdate={this.props.isFormUpdate} />
                 </div>
             </div>
         );

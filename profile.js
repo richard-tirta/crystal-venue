@@ -9,6 +9,7 @@ exports.init = function (req, res) {
 	const doteenv = require('dotenv');
 	const express = require('express');
 	const fetch = require('node-fetch');
+	const jwt = require('jsonwebtoken');
 	const Pool = require('pg').Pool;
 
 	doteenv.config();
@@ -170,6 +171,13 @@ exports.init = function (req, res) {
 									maxAge: 24 * 60 * 60 * 60,
 									httpOnly: true
 								});
+
+								let jwtToken = jwt.sign({ id: userData.id }, 'eagledragon', {
+									expiresIn: 86400 // expires in 24 hours
+								});
+
+								console.log('JWT token', jwtToken);
+
 								res.redirect('/profile.html');
 							})
 						});

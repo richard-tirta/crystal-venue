@@ -53,6 +53,36 @@ exports.init = function (req, res) {
 		)
 	}
 
+	const deleteVenueByVenueId = (data) => {
+		console.log('GOING TO DELETE EVENT BY EVENT ID AND ALL EVENTS ASSOCIATED WITH IT', data);
+		const { venueId, userId } = data
+
+		pool.query('DELETE FROM events WHERE venueid = $1', [venueId], (error, results) => {
+			if (error) {
+				throw error
+			}
+			console.log('Events removed');
+		})
+
+		pool.query('DELETE FROM venues WHERE id = $1', [venueId], (error, results) => {
+			if (error) {
+				throw error
+			}
+			console.log('Venue removed');
+		})
+
+		pool.query(
+			'UPDATE users SET haveVenue = false WHERE userid = $1',
+			[userId],
+			(error, results) => {
+				if (error) {
+					throw error
+				}
+				console.log('Users updated to have no venue');
+			}
+		)
+	}
+
 	app.post('/addVenue', [
 		body('userId')
 			.escape()
@@ -117,6 +147,26 @@ exports.init = function (req, res) {
 		addNewVenueToDb(venueObject);
 		res.status(200).send({ success: true })
 
+	});
+
+	app.delete('/deleteVenue', [
+		body('venueId')
+			.escape()
+			.not()
+			.isString(),
+		body('userId')
+			.escape()
+			.not()
+			.isString(),
+	], (req, res) => {
+		console.log('deleteEvent DELETE received', req.body);
+
+		const eventObject = {
+			eventId: req.body.venueId,
+			venueId: req.body.userId,
+		}
+		deleteVenueByVenueId(eventObject);
+		res.status(200).send({ success: true })
 	});
 
 }
