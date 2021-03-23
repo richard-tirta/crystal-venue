@@ -146,7 +146,7 @@ class VenuesListing extends React.Component {
                                         </p>
                                         <div>
                                             <p>Next Event:</p>
-                                            {findEvent(venue.id)}
+                                            {eventsData.length > 1 ? findEvent(venue.id) : null}
                                         </div>
                                     </div>
                                     <div className="venue-desc_location">

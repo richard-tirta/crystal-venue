@@ -116,7 +116,7 @@ exports.init = function (req, res) {
 				console.log('allVenues getting new data');
 				getAllVenues().then((venues) => {
 
-					console.log('hmm', venues, eventsCache.data);
+					//console.log('hmm', venues, eventsCache.data);
 					const data = {
 						venues: venues,
 						events: eventsCache.data,
@@ -129,7 +129,7 @@ exports.init = function (req, res) {
 					res.send(sessionData);
 				}).catch(err => console.log(err));
 			} else {
-				console.log('allVenues using cache data', venuesCache);
+				//console.log('allVenues using cache data', venuesCache);
 				sessionData.data = venuesCache.data;
 				res.send(sessionData);
 			}
