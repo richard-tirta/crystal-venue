@@ -4,6 +4,7 @@ exports.init = function (req, res) {
 
 	const { body, validationResult } = require('express-validator');
 	const app = require('./app.js');
+	const auth = require('./auth');
 	const doteenv = require('dotenv');
 	const express = require('express');
 	const Pool = require('pg').Pool;
@@ -32,7 +33,7 @@ exports.init = function (req, res) {
 		console.log('GOING TO ADD NEW EVENT TO DB', data);
 		const { userId, venueId, venueName, eventName, eventSubTitle, eventTime, eventIsMature, eventType1, eventType2, eventType3 } = data
 
-		pool.query('INSERT INTO events (userid, venueid, venuename, name, subtitle, time, ismature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [userId, venueId, venueName, eventName, eventSubTitle, eventTime, eventIsMature, eventType1, eventType2, eventType3 ], (error, results) => {
+		pool.query('INSERT INTO events (userid, venueid, venuename, name, subtitle, time, ismature, type1, type2, type3) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)', [userId, venueId, venueName, eventName, eventSubTitle, eventTime, eventIsMature, eventType1, eventType2, eventType3 ], (error, results) => {
 			if (error) {
 				throw error
 			}

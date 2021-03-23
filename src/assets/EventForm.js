@@ -10,12 +10,14 @@ class EventForm extends React.Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCloseAgeGate = this.handleCloseAgeGate.bind(this);
 
         this.state = {
             eventName: '',
             eventSubTitle: '',
             eventTime: '',
             eventIsMature: false,
+            showAgeGate: false,
         }
     }
 
@@ -23,6 +25,14 @@ class EventForm extends React.Component {
         const target = event.target;
         const name = target.name;
         const value = target.type === 'checkbox' ? target.checked : target.value;
+
+        if (name === "eventIsMature" && value && !this.props.isUserMature) {
+            this.setState({
+                showAgeGate: true,
+            });
+            return;
+        }
+
         this.setState({
             [name]: value,
         });
@@ -58,6 +68,12 @@ class EventForm extends React.Component {
             .then(response => response.json())
             .then(
                 (result) => {
+                    this.setState({
+                        eventName: '',
+                        eventSubTitle: '',
+                        eventTime: '',
+                        eventIsMature: false,
+                    });
                     this.props.isFormUpdate(true);
                 },
                 (error) => {
@@ -66,9 +82,30 @@ class EventForm extends React.Component {
             )
     }
 
+    handleCloseAgeGate(event) {
+        event.preventDefault();
+        this.setState({
+            showAgeGate: false,
+        });
+    }
+
     render() {
+        const ageGate = (
+            <div className="lightbox age-gate">
+                <a href="#" onClick={this.handleCloseAgeGate}>[Close]</a>
+                <h3>
+                        You need to be at least 18 years old<br />
+                        to list a Mature event.
+                     </h3>
+                    <p>
+                       Make sure your Birth date is set<br/> at the Personal Information section above.
+                    </p>
+            </div>
+        );
+
         return (
             <form>
+                {this.state.showAgeGate ? ageGate : null}
                 <div className="column-container">
                     <div className="form-column">
                         <label htmlFor="eventName">Event Name*</label>

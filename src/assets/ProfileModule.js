@@ -24,6 +24,7 @@ class ProfileModule extends React.Component {
             newBirthday: undefined,
             avatar: undefined,
             isMember: false,
+            isUserMature: false,
             isAddVenue: false,
             haveVenue: false,
             isFormUpdate: false,
@@ -63,6 +64,15 @@ class ProfileModule extends React.Component {
                         const resultData = result[0];
                         let venue = this.state.venue;
                         let events = this.state.events;
+
+                        const today = new Date();
+                        const birthDate = new Date(parseInt(resultData.birthday));
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const month = today.getMonth() - birthDate.getMonth();
+                        if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+                            age--;
+                        }
+
                         if (resultData.havevenue) {
                             venue.id = resultData.venue[0].id;
                             venue.venueName = resultData.venue[0].name;
@@ -92,6 +102,7 @@ class ProfileModule extends React.Component {
                             birthday: resultData.birthday,
                             avatar: resultData.avatar,
                             isMember: resultData.ismember,
+                            isUserMature: age >  18 ? true : false,
                             haveVenue: resultData.havevenue,
                             venue,
                             events,
@@ -237,12 +248,12 @@ class ProfileModule extends React.Component {
                     <h3>Venue Admin:</h3>
                     {
                         this.state.haveVenue
-                            ? <VenueModule userId={this.state.userid} venue={this.state.venue} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
+                            ? <VenueModule userId={this.state.userid} isUserMature={this.state.isUserMature} venue={this.state.venue} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
                             : null
                     }
                     {
                         this.state.isAddVenue
-                            ? <VenueForm userId={this.state.userid} isAddVenue={this.state.isAddVenue} isFormUpdate={this.handleIsFormUpdate} />
+                            ? <VenueForm userId={this.state.userid} isUserMature={this.state.isUserMature} isAddVenue={this.state.isAddVenue} isFormUpdate={this.handleIsFormUpdate} />
                             : venueStatus
                     }
                 </div>

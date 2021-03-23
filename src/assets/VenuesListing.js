@@ -9,8 +9,11 @@ class EventsListing extends React.Component {
         super(props);
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleCloseAgeGate = this.handleCloseAgeGate.bind(this);
 
         this.state = {
+            userName: undefined,
+            userIsMature: undefined,
             venues: null,
             events: null,
             filterMusic: false,
@@ -19,6 +22,7 @@ class EventsListing extends React.Component {
             filterNovelties: false,
             filterLgbtq: false,
             filterMature: false,
+            showAgeGate: false,
         }
     }
 
@@ -52,8 +56,22 @@ class EventsListing extends React.Component {
         const name = target.name;
         const value = target.type === 'checkbox' ? target.checked : target.value;
 
+        if (name === "filterMature" && value && !this.state.userIsMature) {
+            this.setState({
+                showAgeGate: true,
+            });
+            return;
+        }
+
         this.setState({
             [name]: value,
+        });
+    }
+
+    handleCloseAgeGate(event) {
+        event.preventDefault();
+        this.setState({
+            showAgeGate: false,
         });
     }
 
@@ -83,9 +101,24 @@ class EventsListing extends React.Component {
             return eventString;
         }
 
+        const ageGate = (
+            <div className="lightbox age-gate">
+                <a href="#" onClick={this.handleCloseAgeGate}>[Close]</a>
+                <h3>
+                        You need to be at least 18 years old<br />
+                        to activate this filter.
+                     </h3>
+                    <p>
+                        Go to <a href="/profile">Profile Page &raquo;</a><br/>
+                        to make sure your birth date is set.
+                    </p>
+            </div>
+        );
+
         return (
             <section>
-                 <Filter onChange={this.handleInputChange} />
+                <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature} />
+                {this.state.showAgeGate ? ageGate : null}
                 {
                     venueData
                         ? venueData.map((venue, index) => (
@@ -94,7 +127,7 @@ class EventsListing extends React.Component {
                                     <div className="venue-desc_about">
                                         <h3>{venue.name}</h3>
                                         <p dangerouslySetInnerHTML={{ __html: venue.description }} />
-                                        <a href={"https://" + venue.venueWebsite}>{venue.website} &raquo;</a>
+                                        <a href={venue.website}>{venue.website} &raquo;</a>
                                         <p className="venue-desc_type">
                                             {venue.type1} | {venue.type2} | {venue.type3}
                                         </p>

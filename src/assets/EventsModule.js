@@ -117,7 +117,7 @@ class EventsModule extends React.Component {
                     console.log('event deleted', result);
                     this.props.isFormUpdate(true);
                     this.setState({
-                        showDeleteWarning: !this.state.showDeleteWarning,
+                        showDeleteWarning: null,
                     });
                 },
                 (error) => {
@@ -169,7 +169,7 @@ class EventsModule extends React.Component {
                 <div className="lightbox">
                     <h3>
                         Are you sure you want to remove <br />
-                        {eventName}<br />
+                        <span className="warning-yellow">{eventName}</span><br />
                         from CVA listing?
                     </h3>
                     <button onClick={e => this.handleRemoveEvent(e, eventId, venueId, eventLength)} className="form-submit">
@@ -210,7 +210,9 @@ class EventsModule extends React.Component {
                                             <p className="event-venue">{this.props.venue.venueName}</p>
                                         </div>
                                     </div>
-                                    <a href="#" onClick={e => this.handleRemoveWarning(e, index)}>Remove this event &raquo;</a>
+                                    <div className="remove-link-container">
+                                        <a href="#" onClick={e => this.handleRemoveWarning(e, index)}>Remove this event &raquo;</a>
+                                    </div>
                                     {
                                         this.state.showDeleteWarning == index
                                             ? deleteLightbox(eventId, eventname, event.venueId, this.props.events.length, index)

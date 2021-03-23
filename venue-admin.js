@@ -179,8 +179,8 @@ exports.init = function (req, res) {
 		}
 
 		const eventObject = {
-			eventId: req.body.venueId,
-			venueId: req.body.userId,
+			venueId: req.body.venueId,
+			userId: req.body.userId,
 		}
 		deleteVenueByVenueId(eventObject);
 		res.status(200).send({ success: true })

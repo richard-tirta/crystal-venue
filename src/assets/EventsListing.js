@@ -9,8 +9,11 @@ class EventsListing extends React.Component {
         super(props);
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleCloseAgeGate = this.handleCloseAgeGate.bind(this);
 
         this.state = {
+            userName: undefined,
+            userIsMature: undefined,
             events: null,
             filterMusic: false,
             filterFullBar: false,
@@ -18,6 +21,7 @@ class EventsListing extends React.Component {
             filterNovelties: false,
             filterLgbtq: false,
             filterMature: false,
+            showAgeGate: false,
         }
     }
 
@@ -34,12 +38,14 @@ class EventsListing extends React.Component {
                         console.log(result);
 
                         //sort by event time
-                        const resultByEventTime = result.slice(0);
+                        const resultByEventTime = result.eventsData.slice(0);
                         resultByEventTime.sort((a, b) => {
                             return a.time - b.time;
                         });
 
                         this.setState({
+                            userName: result.userData.userName,
+                            userIsMature: result.userData.isUserMature,
                             events: resultByEventTime,
                         });
                     },
@@ -56,8 +62,22 @@ class EventsListing extends React.Component {
         const name = target.name;
         const value = target.type === 'checkbox' ? target.checked : target.value;
 
+        if (name === "filterMature" && value && !this.state.userIsMature) {
+            this.setState({
+                showAgeGate: true,
+            });
+            return;
+        }
+
         this.setState({
             [name]: value,
+        });
+    }
+
+    handleCloseAgeGate(event) {
+        event.preventDefault();
+        this.setState({
+            showAgeGate: false,
         });
     }
 
@@ -71,9 +91,24 @@ class EventsListing extends React.Component {
             const newDate = DateTime.fromMillis(parseInt(data)).toFormat('EEE, MMM. dd | hh:mm a ZZZZ');
             return newDate;
         }
+
+        const ageGate = (
+            <div className="lightbox age-gate">
+                <a href="#" onClick={this.handleCloseAgeGate}>[Close]</a>
+                <h3>
+                        You need to be at least 18 years old<br />
+                        to activate this filter.
+                     </h3>
+                    <p>
+                        Go to <a href="/profile">Profile Page &raquo;</a><br/>
+                        to make sure your birth date is set.
+                    </p>
+            </div>
+        );
         return (
             <div>
-                <Filter onChange={this.handleInputChange} />
+                <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature}/>
+                {this.state.showAgeGate ? ageGate : null}
                 <section className="events-module">
                     {
                         eventData

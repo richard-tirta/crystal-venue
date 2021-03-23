@@ -6,21 +6,22 @@ class VenueForm extends React.Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleCloseAgeGate = this.handleCloseAgeGate.bind(this);
 
         this.state = {
-            venueName: 'no name',
-            venueDescription: 'no description',
-            venueWorld: 'no world',
-            venueLocation: 'no location',
-            venueWard: 'no ward',
-            venuePlot: 'no plot',
-            venueAetheryte: 'no Aetheryte',
-            venueWebsite: 'no website',
-            venueType1: 'no type1',
-            venueType2: 'no type2',
-            venueType3: 'no type3',
+            venueName: '',
+            venueDescription: '',
+            venueWorld: '',
+            venueLocation: '',
+            venueWard: '',
+            venuePlot: '',
+            venueAetheryte: '',
+            venueWebsite: '',
+            venueType1: '',
+            venueType2: '',
+            venueType3: '',
             isMature: false,
-            isFormSubmitted: false,
+            showAgeGate: false,
             errors: {
                 venueWard: '',
                 venuePlot: '',
@@ -31,7 +32,7 @@ class VenueForm extends React.Component {
     handleInputChange(event) {
         const target = event.target;
         const name = target.name;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
+        let value = target.type === 'checkbox' ? target.checked : target.value;
         let errors = this.state.errors;
         switch (name) {
             case 'venueWard':
@@ -44,9 +45,27 @@ class VenueForm extends React.Component {
                     : '';
         }
 
+        if (name == 'venueWebsite' && value) {
+            value = value.replace(/(^\w+:|^)\/\//, '');
+        }
+
+        if (name === "eventIsMature" && value && !this.props.isUserMature) {
+            this.setState({
+                showAgeGate: true,
+            });
+            return;
+        }
+
         this.setState({
             [name]: value,
             errors,
+        });
+    }
+
+    handleCloseAgeGate(event) {
+        event.preventDefault();
+        this.setState({
+            showAgeGate: false,
         });
     }
 
@@ -86,13 +105,10 @@ class VenueForm extends React.Component {
             .then(response => response.json())
             .then(
                 (result) => {
-                    this.setState({
-                        isFormSubmitted: true,
-                    });
+                    this.props.isFormUpdate(true);
                 },
                 (error) => {
                     this.setState({
-                        isFormSubmitted: false,
                         error
                     });
                 }
@@ -100,11 +116,21 @@ class VenueForm extends React.Component {
     }
 
     render() {
-        if (this.state.isFormSubmitted) {
-            return (<h2>Venue has been submitted</h2>);
-        }
+        const ageGate = (
+            <div className="lightbox age-gate">
+                <a href="#" onClick={this.handleCloseAgeGate}>[Close]</a>
+                <h3>
+                        You need to be at least 18 years old<br />
+                        to list a Mature venue.
+                     </h3>
+                    <p>
+                       Make sure your Birth date is set<br/> at the Personal Information section above.
+                    </p>
+            </div>
+        );
         return (
             <form>
+                {this.state.showAgeGate ? ageGate : null}
                 <div className="column-container">
                     <div className="form-column">
                         <label for="venueName">Venue Name*</label>
@@ -113,9 +139,12 @@ class VenueForm extends React.Component {
                         <textarea id="venue-form_description" name="venueDescription" rows="3" cols="50" minLength="10" maxLength="280" className="form_textarea" placeholder="Venue Description" onChange={this.handleInputChange} required />
 
                         <label for="venueWebsite">Venue Website</label>
-                        <input type="text" id="venue-form_url" className="form_input" name="venueWebsite"
-                            minLength="4" maxLength="50" placeholder="Venue Website" className="form_input" onChange={this.handleInputChange} />
-
+                        <div className="form-website">
+                            <span className="form-website-http">https://</span>
+                            <input type="text" id="venue-form_url" className="form_input" name="venueWebsite"
+                            minLength="4" maxLength="50" placeholder="Venue Website (eg: rp-venue.carrd.co)" className="form_input" onChange={this.handleInputChange} />
+                        </div>
+                       
                         <label for="venueType1">Venue Main Type*</label>
                         <select name="venueType1" id="venue-form_type1" onChange={this.handleInputChange} required>
                             <option value="">--Select Venue Main Type--</option>

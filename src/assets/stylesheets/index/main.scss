@@ -63,7 +63,7 @@
 
 .venue-module{
     display: flex;
-    margin-bottom: 30px;
+    margin-bottom: 24px;
     min-height: 260px;
     max-height: 500px;
     position: relative;
@@ -109,6 +109,31 @@
             max-height: 500px;
         }
     }
+    .image-upload-loading {
+        background: rgb(80,80,80);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        margin-bottom: 0;
+        margin-top: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        z-index: 9;
+        .loading-gif  {
+            margin: auto;
+            width: 100px;
+            height: 100px;
+        }
+
+    }
+}
+
+.event-container {
+    margin-top: 30px;
 }
 
 .events-module{

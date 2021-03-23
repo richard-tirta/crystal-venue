@@ -3,6 +3,7 @@ const { json } = require('express');
 exports.init = function (req, res) {
 
 	const app = require('./app.js');
+	const auth = require('./auth');
 	const AWS = require('aws-sdk');
 	const doteenv = require('dotenv');
 	const express = require('express');
@@ -50,7 +51,7 @@ exports.init = function (req, res) {
 		return s3.upload(params).promise();
 	};
 
-	app.post('/uploadVenuePic', (request, response) => {
+	app.post('/uploadVenuePic', (req, res) => {
 		const cookieAuth = auth.init(req);
 		const userIdAuth = cookieAuth['userId'];
 
@@ -59,17 +60,18 @@ exports.init = function (req, res) {
 			return;
 		}
 		const form = new multiparty.Form();
-		form.parse(request, async (error, fields, files) => {
+		form.parse(req, async (error, fields, files) => {
 			console.log('hmmmmm', fields, files);
 			if (error) {
 				return response.status(500).send(error);
 			};
 			try {
 				const path = files.file[0].path;
-				const buffer = fs.readFileSync(path);
-				const type = await fileType.fromBuffer(buffer);
+				//const buffer = fs.readFileSync(path);
+				const imgResized = await sharp(path).resize(1654).webp().toBuffer();
+				const type = await fileType.fromBuffer(imgResized);
 				const fileName = `venueImage/${Date.now().toString()}`;
-				const data = await uploadFile(buffer, fileName, type);
+				const data = await uploadFile(imgResized, fileName, type);
 
 				const venueId = parseInt(fields.id);
 
@@ -84,15 +86,15 @@ exports.init = function (req, res) {
 					}
 				)
 
-				return response.status(200).send(data);
+				return res.status(200).send(data);
 			} catch (err) {
 				console.log('uploadVenuePic fail', err)
-				return response.status(500).send(err);
+				return res.status(500).send(err);
 			}
 		});
 	});
 
-	app.post('/uploadEventPic', (request, response) => {
+	app.post('/uploadEventPic', (req, res) => {
 		const cookieAuth = auth.init(req);
 		const userIdAuth = cookieAuth['userId'];
 
@@ -102,7 +104,7 @@ exports.init = function (req, res) {
 		}
 
 		const form = new multiparty.Form();
-		form.parse(request, async (error, fields, files) => {
+		form.parse(req, async (error, fields, files) => {
 			//onsole.log('hmmmmm', fields, files);
 			if (error) {
 				return response.status(500).send(error);
@@ -127,10 +129,10 @@ exports.init = function (req, res) {
 					}
 				)
 
-				return response.status(200).send(data);
+				return res.status(200).send(data);
 			} catch (err) {
 				console.log('uploadEventPic fail', err)
-				return response.status(500).send(err);
+				return res.status(500).send(err);
 			}
 		});
 	});

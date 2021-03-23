@@ -4,6 +4,7 @@ exports.init = function (req, res) {
 
 	const { body, validationResult } = require('express-validator');
 	const app = require('./app.js');
+	const auth = require('./auth');
 	const cookieParser = require("cookie-parser");
 	const doteenv = require('dotenv');
 	const express = require('express');
@@ -39,6 +40,17 @@ exports.init = function (req, res) {
 	app.use(express.urlencoded({ extended: true }));
 	app.use(express.json());
 
+	const getAge = (date) => {
+		const today = new Date();
+		const birthDate = new Date(parseInt(date));
+		let age = today.getFullYear() - birthDate.getFullYear();
+		const month = today.getMonth() - birthDate.getMonth();
+		if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+			age--;
+		}
+		return age;
+	}
+
 	const getAllVenues = () => {
 		const query = 'SELECT * FROM venues ORDER BY id ASC';
 
@@ -61,6 +73,21 @@ exports.init = function (req, res) {
 			pool.query(query, (err, response) => {
 				if (err) {
 					console.log('getAllEvents error', err)
+					reject(0);
+				} else {
+					resolve(response.rows);
+				}
+			})
+		});
+	}
+
+	const getUserByUserId = (userId) => {
+		const query = 'SELECT * FROM users WHERE userid = $1';
+
+		return new Promise(function (resolve, reject) {
+			pool.query(query, [userId], (err, response) => {
+				if (err) {
+					console.log('getUserByUserId error', err)
 					reject(0);
 				} else {
 					resolve(response.rows);
@@ -95,23 +122,38 @@ exports.init = function (req, res) {
 		}
     });
     
-    app.get('/allEvents', (req, res) => {
+	app.get('/allEvents', (req, res) => {
+		const cookieAuth = auth.init(req);
+		const userId = cookieAuth['userId'];
 		const currentTime = parseInt(Date.now());
-		
-		// only grab new data if data is older than 5 minutes
-		//console.log('cache', eventsCache.timeStamp + 300000, currentTime);
-		if (eventsCache.timeStamp + 300000 < currentTime) {
-			//console.log('allEvents getting new data');
-			getAllEvents().then((events) => {
-				eventsCache = {
-					data: events,
-					timeStamp: currentTime,
-				};
-				res.send(events);
-			}).catch(err => console.log(err));
-		} else {
-			console.log('allEvents using cache data');
-			res.send(eventsCache.data);
-		}
+
+		getUserByUserId(userId).then((userInfo) => {
+
+			let sessionData = {
+				eventsData: null,
+				userData: {
+					userName: userInfo[0].username,
+					isUserMature: getAge(userInfo[0].birthday) >  18 ? true : false,
+				}
+			}
+			
+			// only grab new data if data is older than 5 minutes
+			//console.log('cache', eventsCache.timeStamp + 300000, currentTime);
+			if (eventsCache.timeStamp + 300000 < currentTime) {
+				//console.log('allEvents getting new data');
+				getAllEvents().then((events) => {
+					eventsCache = {
+						data: events,
+						timeStamp: currentTime,
+					};
+					sessionData.eventsData = events;
+					res.send(sessionData);
+				}).catch(err => console.log(err));
+			} else {
+				console.log('allEvents using cache data');
+				sessionData.eventsData = eventsCache.data;
+				res.send(sessionData);
+			}
+		}).catch(err => console.log(err));
 	});
 }

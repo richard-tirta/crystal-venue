@@ -154,7 +154,8 @@ exports.init = function (req, res) {
 
 							getUserByUserId(userData.id).then((response) => {
 
-								const timer = 86400;
+								// 12h
+								const timer = 43200000;
 								const isHttps = process.env.NODE_ENV !== 'development' ? true : false;
 
 								if (response.length < 1) {
@@ -166,8 +167,7 @@ exports.init = function (req, res) {
 									expiresIn: timer // expires in 24 hours
 								});
 
-								res.status(201)
-									.cookie(
+								res.cookie(
 									'token', jwtToken, {
 										maxAge: timer,
 										httpOnly: true,
@@ -217,9 +217,7 @@ exports.init = function (req, res) {
 		let cookieAuth = auth.init(req);
 
 		if (!cookieAuth) {
-			res.status(400);
-			res.send('No Cookie found');
-			res.redirect('/profile');
+			res.status(400).send('No Cookie found').redirect('/profile');
 		}
 
 		const userId = cookieAuth['userId'];

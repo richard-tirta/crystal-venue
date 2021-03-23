@@ -104,10 +104,11 @@ header {
 	position: fixed;
 	top: 30%;
 	left: 50%;
+	outline: 9999px solid rgba(0,0,0,0.5);
 	text-align: center;
 	transform: translateX(-50%);
 	width: 500px;
-	z-index: 1;
+	z-index: 2;
 	.form-submit {
 		padding-bottom: 14px;
 		margin-top: 16px;
@@ -135,7 +136,21 @@ form {
 		margin-bottom: 16px;
 		padding: 6px;
 		min-height: 30px;
-		min-width: 300px;
+		min-width: 350px;
+	}
+	.form-website {
+		display: flex;
+		.form-website-http {
+			background: rgb(70,70,70);
+			border: 2px solid #797979;
+			border-radius: 2px;
+			display: block;
+			font-size: 20px;
+			height: 30px;
+			margin-top: 3px;
+			margin-right: 6px;
+			padding: 4px;
+		}
 	}
 }
 
@@ -284,4 +299,13 @@ label {
 	text-align: center;
 	transform: translateX(-50%);
 	width: 500px;
+}
+
+.remove-link-container {
+	text-align: right;
+	margin-top: -14px;
+	margin-right: 20px;
+	a {
+		font-size: 16px;
+	}
 }

@@ -4,6 +4,7 @@ import React from "react";
 import EventForm from "./EventForm";
 import EventsModule from "./EventsModule";
 import sampleImage from "./images/cva-no-venue.jpg";
+import loadingImage from "./images/icon-loading.gif";
 
 class VenueModule extends React.Component {
     constructor(props) {
@@ -12,11 +13,14 @@ class VenueModule extends React.Component {
         this.handleImageEditBtn = this.handleImageEditBtn.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleRemoveVenue = this.handleRemoveVenue.bind(this);
+        this.handleRemoveWarning = this.handleRemoveWarning.bind(this);
 
         this.state = {
             showImageUpload: false,
             isImageUploading: false,
             file: undefined,
+            showDeleteWarning: null,
             errors: {
                 imageForm: '',
             }
@@ -78,6 +82,7 @@ class VenueModule extends React.Component {
                     console.log('image uploaded', result);
                     this.setState({
                         isImageUploading: false,
+                        showImageUpload: false,
                     });
                     this.props.isFormUpdate(true);
                 },
@@ -85,6 +90,46 @@ class VenueModule extends React.Component {
                     console.log('image upload error', error);
                 }
             );
+    }
+
+    handleRemoveVenue(event, venueId) {
+        event.preventDefault();
+
+        const data = JSON.stringify({
+            venueId: venueId,
+            userId: this.props.userId,
+        });
+
+        console.log('ready to delete venue', data);
+
+        fetch('/deleteVenue', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'DELETE',
+            body: data
+        })
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    console.log('event deleted', result);
+                    this.props.isFormUpdate(true);
+                    this.setState({
+                        showDeleteWarning: null,
+                    });
+                },
+                (error) => {
+                    console.log('event delete error', error);
+                }
+            );
+    }
+
+    handleRemoveWarning(event, venueId) {
+        event.preventDefault();
+        console.log('handleRemoveWarning', event, venueId);
+        this.setState({
+            showDeleteWarning: venueId,
+        });
     }
 
     render() {
@@ -97,7 +142,7 @@ class VenueModule extends React.Component {
                     <form onSubmit={this.handleSubmit} className="image-upload-form">
                         <label>Upload Image</label>
                         <p>
-                            Image needs to be in 3:2 aspect ratio (eg: 1200x800) and not over 5MB in size.
+                            Image needs to be in 3:2 aspect ratio (eg: 1800x1200) and not over 5MB in size.
                         </p>
                         {this.state.errors.imageForm.length > 0 && <span className='form-error'>{this.state.errors.imageForm}</span>}
                         <input type="file" accept=".jpg, .jpeg, .webp" onChange={this.handleFileChange} />
@@ -109,7 +154,31 @@ class VenueModule extends React.Component {
                     <img className="loading-gif" src={loadingImage}/>
                     <h3>Uploading Image. Please Wait.</h3>
                 </div>
-        ) ;
+            );
+        
+            const deleteLightbox = (venueId, venueName,) => {
+                return (
+                    <div className="lightbox">
+                        <h3>
+                            Are you sure you want to remove <br />
+                            <span className="warning-yellow">{venueName}</span><br />
+                            from CVA listing?
+                        </h3>
+                        <p className="warning-yellow">
+                            <strong>
+                                This will also remove all events <br />
+                                associated with the venue!
+                            </strong>
+                        </p>
+                        <button onClick={e => this.handleRemoveVenue(e, venueId)} className="form-submit">
+                             Yes, remove this venue.
+                        </button>
+                        <button onClick={e => this.handleRemoveWarning(e)} className="form-submit">
+                             No, keep this venue.
+                        </button>
+                    </div>
+                )
+            }
         return (
             <div>
                 <div className="venue-module">
@@ -135,6 +204,15 @@ class VenueModule extends React.Component {
                         <a href="#" className="edit-venue-button" onClick={this.handleImageEditBtn}>Edit Venue Pic &raquo;</a>
                     </div>
                 </div>
+                <div className="remove-link-container">
+                    <a href="#" onClick={e => this.handleRemoveWarning(e, venue.id)}>Remove this venue &raquo;</a>
+                </div>
+                {
+                    this.state.showDeleteWarning
+                        ? deleteLightbox(venue.id, venue.venueName)
+                        : null
+                }
+                
 
                 <div className="event-container">
                     <h3>Event Admin:</h3>
@@ -142,7 +220,7 @@ class VenueModule extends React.Component {
                         userId={this.props.userid} venue={this.props.venue} events={this.props.events} isFormUpdate={this.props.isFormUpdate}
                     />
                     <p><strong>Add an Event</strong></p>
-                    <EventForm userId={this.props.userId} venue={this.props.venue} isFormUpdate={this.props.isFormUpdate} />
+                    <EventForm userId={this.props.userId} isUserMature={this.props.isUserMature} venue={this.props.venue} isFormUpdate={this.props.isFormUpdate} />
                 </div>
             </div>
         );
