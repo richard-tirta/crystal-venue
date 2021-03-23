@@ -39,32 +39,6 @@ exports.init = function (req, res) {
 	app.use(express.json());
 	app.use(cors());
 
-	const getAppCookies = (req) => {
-
-		const rawCookies = req.headers.cookie.split('; ');
-		const parsedCookies = {};
-		let decodedToken = undefined;
-
-		rawCookies.forEach(rawCookie => {
-			const parsedCookie = rawCookie.split('=');
-			parsedCookies[parsedCookie[0]] = parsedCookie[1];
-		});
-
-		if (parsedCookies.token) {		
-			jwt.verify(parsedCookies.token, TOKEN_SECRET, function (err, decoded) {
-				if (err) {
-					console.log('JWT Verify error', err);
-					return undefined;
-				}
-				decodedToken = decoded;
-			});
-			return decodedToken;
-		} else {
-			return undefined;
-		}
-	};
-	
-
 	const getUserByUserId = (userId) => {
 		const query = 'SELECT * FROM users WHERE userid = $1';
 

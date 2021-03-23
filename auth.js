@@ -11,7 +11,11 @@ exports.init = function (req) {
 	
 	const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
-    const getAppCookies = (req) => {
+	const getAppCookies = (req) => {
+		
+		if (!req.headers.cookie) {
+			return undefined;
+		}
 
 		const rawCookies = req.headers.cookie.split('; ');
 		const parsedCookies = {};
