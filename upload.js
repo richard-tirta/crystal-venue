@@ -66,14 +66,13 @@ exports.init = function (req, res) {
 				return response.status(500).send(error);
 			};
 			try {
+				const venueId = parseInt(fields.id);
 				const path = files.file[0].path;
 				//const buffer = fs.readFileSync(path);
 				const imgResized = await sharp(path).resize(1654).webp().toBuffer();
 				const type = await fileType.fromBuffer(imgResized);
 				const fileName = `venueImage/${venueId}_${Date.now().toString()}`;
 				const data = await uploadFile(imgResized, fileName, type);
-
-				const venueId = parseInt(fields.id);
 
 				pool.query(
 					'UPDATE venues SET image = $1 WHERE id = $2',
