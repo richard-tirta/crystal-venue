@@ -130,6 +130,7 @@ class ProfileModule extends React.Component {
             this.requestData();
             console.log('reverting isFormUpdate back to false');
             this.setState({
+                isAddVenue: false,
                 isFormUpdate: false,
             });
         }
