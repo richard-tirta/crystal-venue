@@ -135,8 +135,8 @@ exports.init = function (req, res) {
 			}
 		}
 
-		if (userId) {
-			getUserByUserId(userId).then((userInfo) => {
+		if (userIdAuth) {
+			getUserByUserId(userIdAuth).then((userInfo) => {
 				sessionData.userData.userName = userInfo[0].username;
 				sessionData.userData.isUserMature = getAge(userInfo[0].birthday) > 18 ? true : false;
 				sendData();
