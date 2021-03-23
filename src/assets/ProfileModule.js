@@ -129,10 +129,13 @@ class ProfileModule extends React.Component {
             console.log('form update detected, should check new data');
             this.requestData();
             console.log('reverting isFormUpdate back to false');
-            this.setState({
-                isAddVenue: false,
-                isFormUpdate: false,
-            });
+
+            setTimeout(
+                () => this.setState({
+                    isAddVenue: false,
+                    isFormUpdate: false,
+                }), 1000
+            );
         }
 
         ReactDOM.render(
