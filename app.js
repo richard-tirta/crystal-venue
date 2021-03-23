@@ -1,10 +1,11 @@
 const express = require("express");
+const helmet = require("helmet");
+const listings = require("./listings");
 const path = require("path");
-const listings = require('./listings');
-const profile = require('./profile');
-const venueAdmin = require('./venue-admin');
-const eventAdmin = require('./event-admin');
-const upload = require('./upload');
+const profile = require("./profile");
+const venueAdmin = require("./venue-admin");
+const eventAdmin = require("./event-admin");
+const upload = require("./upload");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -17,6 +18,7 @@ var server = app.listen(port, function () {
 	console.log('Example app listening at http://%s:%s', host, port)
 });
 
+app.use(helmet());
 app.use(express.static(__dirname + '/dist/'));
 
 app.get('/', function (req, res) {

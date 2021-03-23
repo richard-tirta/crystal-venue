@@ -142,6 +142,9 @@ exports.init = function (req, res) {
 				.then(
 					function (response) {
 						response.json().then(function (guildData) {
+							if (!guildData) {
+								return;
+							}
 							guildData.find(function (guild, index) {
 								if (parseInt(guild.id) == 758143077701124137) {
 									isMember = true;
@@ -152,6 +155,7 @@ exports.init = function (req, res) {
 							getUserByUserId(userData.id).then((response) => {
 
 								const timer = 86400;
+								const isHttps = process.env.NODE_ENV !== 'development' ? true : false;
 
 								if (response.length < 1) {
 									userData.haveVenue = false;
@@ -162,13 +166,14 @@ exports.init = function (req, res) {
 									expiresIn: timer // expires in 24 hours
 								});
 
-								res.cookie(
+								res.status(201)
+									.cookie(
 									'token', jwtToken, {
-									maxAge: timer,
-									httpOnly: true
-								});
-
-								res.redirect('/profile.html');
+										maxAge: timer,
+										httpOnly: true,
+										secure: isHttps,
+									})
+									.redirect('/profile.html');
 							})
 						});
 					}
