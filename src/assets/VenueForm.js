@@ -184,7 +184,7 @@ class VenueForm extends React.Component {
                         <select name="venueWorld" id="venue-form_world" onChange={this.handleInputChange} required>
                             <option value="">--Select World--</option>
                             <option value="Balmung">Balmung</option>
-                            <option value="Brynhild">Brynhild</option>
+                            <option value="Brynhildr">Brynhildr</option>
                             <option value="Coeurl">Coeurl</option>
                             <option value="Diabolos">Diabolos</option>
                             <option value="Goblin">Goblin</option>
