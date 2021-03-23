@@ -212,7 +212,7 @@ class VenueForm extends React.Component {
 
                         <label htmlFor="venueAetheryte">Nearby Aetheryte Shard</label>
                         <input type="text" id="venue-form_url" className="form_input" name="venueAetheryte"
-                            minLength="4" maxLength="70" placeholder="Nearby Aetheryte Shard" className="form_input" onChange={this.handleInputChange} />
+                            minLength="4" maxLength="70" placeholder="Nearby Aetheryte Shard" className="form_input" onChange={this.handleInputChange} required />
                         
                         <div className="form-checkbox-container">
                             <label htmlFor="isMature">Mature (18+)</label>

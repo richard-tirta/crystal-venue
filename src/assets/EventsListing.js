@@ -125,7 +125,7 @@ class EventsListing extends React.Component {
                     {
                         eventData
                             ? eventData.map((cvaEvent, index) => (
-                                <div key={'event' + index}>
+                                <div key={'event' + cvaEvent.id}>
                                     <div className="event-item">
                                         <div className="event-image">
                                             <img src={eventImage(cvaEvent.image)} />

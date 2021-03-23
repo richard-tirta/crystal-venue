@@ -101,6 +101,7 @@ class VenuesListing extends React.Component {
         }
 
         const findEvent = (venueId) => {
+            console.log('zzzzz', venueId)
             if (!eventsData) {
                 return null;
             }
@@ -135,12 +136,12 @@ class VenuesListing extends React.Component {
                 {
                     venueData
                         ? venueData.map((venue, index) => (
-                            <div className="venue-module" key={'venue' + index}>
+                            <div className="venue-module" key={'venue' + venue.id}>
                                 <div className="venue-description">
                                     <div className="venue-desc_about">
                                         <h3>{venue.name}</h3>
                                         <p dangerouslySetInnerHTML={{ __html: venue.description }} />
-                                        <a href={venue.website}>{venue.website} &raquo;</a>
+                                        {venue.venueWebsite ?  <a href={venue.website}>{venue.website} &raquo;</a> : null}
                                         <p className="venue-desc_type">
                                             {venue.type1} | {venue.type2} | {venue.type3}
                                         </p>
