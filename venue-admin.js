@@ -1,4 +1,3 @@
-const { json } = require('express');
 
 exports.init = function (req, res) {
 
@@ -6,83 +5,15 @@ exports.init = function (req, res) {
 	const app = require('./app.js');
 	const auth = require('./auth');
 	const cookieParser = require("cookie-parser");
+	const dbQuery = require('./db-query');
 	const doteenv = require('dotenv');
 	const express = require('express');
-	const Pool = require('pg').Pool;
 	
 	doteenv.config();
-
-	const pool = process.env.DATABASE_URL
-		? new Pool({
-			connectionString: process.env.DATABASE_URL,
-			ssl: {
-				rejectUnauthorized: false
-			}
-		})
-		: new Pool({
-			user: process.env.DB_USER,
-			host: process.env.DB_HOST,
-			database: process.env.DB_DATABASE,
-			password: process.env.DB_PASSWORD,
-			port: process.env.DB_PORT,
-		});
 
 	app.use(cookieParser());
 	app.use(express.urlencoded({ extended: true }));
 	app.use(express.json());
-
-	const addNewVenueToDb = (data) => {
-		console.log('GOING TO ADD NEW VENUE TO DB', data);
-		const { userId, venueName, venueDescription, venueWorld, venueLocation, venueWard, venuePlot, venueAetheryte, venueWebsite, venueType1, venueType2, venueType3, isMature } = data
-
-		pool.query('INSERT INTO venues (userid, name, description, world, location, ward, plot, aetheryte, website, type1, type2, type3, ismature) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)', [userId, venueName, venueDescription, venueWorld, venueLocation, venueWard, venuePlot, venueAetheryte, venueWebsite, venueType1, venueType2, venueType3, isMature], (error, results) => {
-			if (error) {
-				throw error
-			}
-			console.log('Venue added');
-		})
-
-		pool.query(
-			'UPDATE users SET haveVenue = true WHERE userid = $1',
-			[data.userId],
-			(error, results) => {
-				if (error) {
-					throw error
-				}
-				console.log('Users updated to have venue');
-			}
-		)
-	}
-
-	const deleteVenueByVenueId = (data) => {
-		console.log('GOING TO DELETE EVENT BY EVENT ID AND ALL EVENTS ASSOCIATED WITH IT', data);
-		const { venueId, userId } = data
-
-		pool.query('DELETE FROM events WHERE venueid = $1', [venueId], (error, results) => {
-			if (error) {
-				throw error
-			}
-			console.log('Events removed');
-		})
-
-		pool.query('DELETE FROM venues WHERE id = $1', [venueId], (error, results) => {
-			if (error) {
-				throw error
-			}
-			console.log('Venue removed');
-		})
-
-		pool.query(
-			'UPDATE users SET haveVenue = false WHERE userid = $1',
-			[userId],
-			(error, results) => {
-				if (error) {
-					throw error
-				}
-				console.log('Users updated to have no venue');
-			}
-		)
-	}
 
 	app.post('/addVenue', [
 		body('userId')
@@ -153,7 +84,7 @@ exports.init = function (req, res) {
 			venueType3: req.body.venueType3,
 			isMature: req.body.isMature,
 		}
-		addNewVenueToDb(venueObject);
+		dbQuery.addNewVenueToDb(venueObject);
 		res.status(200).send({ success: true })
 
 	});
@@ -182,7 +113,7 @@ exports.init = function (req, res) {
 			venueId: req.body.venueId,
 			userId: req.body.userId,
 		}
-		deleteVenueByVenueId(eventObject);
+		dbQuery.deleteVenueByVenueId(eventObject);
 		res.status(200).send({ success: true })
 	});
 

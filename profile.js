@@ -1,34 +1,18 @@
-const { json } = require('express');
 
 exports.init = function (req, res) {
 
 	const { body, validationResult } = require('express-validator');
 	const app = require('./app.js');
 	const auth = require('./auth');
+	const dbQuery = require('./db-query');
 	const cookieParser = require("cookie-parser");
 	const cors = require('cors');
 	const doteenv = require('dotenv');
 	const express = require('express');
 	const fetch = require('node-fetch');
 	const jwt = require('jsonwebtoken');
-	const Pool = require('pg').Pool;
 
 	doteenv.config();
-
-	const pool = process.env.DATABASE_URL
-		? new Pool({
-			connectionString: process.env.DATABASE_URL,
-			ssl: {
-				rejectUnauthorized: false
-			}
-		})
-		: new Pool({
-			user: process.env.DB_USER,
-			host: process.env.DB_HOST,
-			database: process.env.DB_DATABASE,
-			password: process.env.DB_PASSWORD,
-			port: process.env.DB_PORT,
-		});
 
 	const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 	const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -38,79 +22,6 @@ exports.init = function (req, res) {
 	app.use(express.urlencoded({ extended: true }));
 	app.use(express.json());
 	app.use(cors());
-
-	const getUserByUserId = (userId) => {
-		const query = 'SELECT * FROM users WHERE userid = $1';
-
-		return new Promise(function (resolve, reject) {
-			pool.query(query, [userId], (err, response) => {
-				if (err) {
-					console.log('getUserByUserId error', err)
-					reject(0);
-				} else {
-					resolve(response.rows);
-				}
-			})
-		});
-	}
-
-	const getVenueByUserId = (userId) => {
-		const query = 'SELECT * FROM venues WHERE userid = $1';
-
-		return new Promise(function (resolve, reject) {
-			pool.query(query, [userId], (err, response) => {
-				if (err) {
-					console.log('getVenueByUserId error', err)
-					reject(0);
-				} else {
-					resolve(response.rows);
-				}
-			})
-		});
-	}
-
-	const getEventsByVenueId = (venueId) => {
-		const query = 'SELECT * FROM events WHERE venueid = $1';
-
-		return new Promise(function (resolve, reject) {
-			pool.query(query, [venueId], (err, response) => {
-				if (err) {
-					console.log('getEventsByVenueId error', err)
-					reject(0);
-				} else {
-					resolve(response.rows);
-				}
-			})
-		});
-	}
-
-	const addNewUserToDb = (data) => {
-		console.log('GOING TO ADD NEW USER TO DB', data);
-		const { id, username, discriminator, avatar, isMember, haveVenue } = data
-
-		pool.query('INSERT INTO users (userid, username, discriminator, avatar, isMember, haveVenue ) VALUES ($1, $2, $3, $4, $5, $6)', [id, username, discriminator, avatar, isMember, haveVenue], (error, results) => {
-			if (error) {
-				throw error
-			}
-			console.log('User added');
-		})
-	}
-
-	const updateBday = (data) => {
-		console.log('GOING TO UPDATE BDAY TO DB', data);
-		const { userId, birthday } = data
-
-		pool.query(
-			'UPDATE users SET birthday = $1 WHERE userid = $2',
-			[birthday, userId],
-			(error, results) => {
-				if (error) {
-					throw error
-				}
-				console.log('Users bday is updated');
-			}
-		)
-	}
 
 	app.get('/profile', function (req, res) {
 		// res.status(200).send({ success: true })
@@ -152,7 +63,7 @@ exports.init = function (req, res) {
 							});
 							userData.isMember = isMember;
 
-							getUserByUserId(userData.id).then((response) => {
+							dbQuery.getUserByUserId(userData.id).then((response) => {
 
 								// 12h
 								const timer = 43200000;
@@ -160,7 +71,7 @@ exports.init = function (req, res) {
 
 								if (response.length < 1) {
 									userData.haveVenue = false;
-									addNewUserToDb(userData);
+									dbQuery.addNewUserToDb(userData);
 								}
 
 								let jwtToken = jwt.sign({ userId: userData.id }, TOKEN_SECRET, {
@@ -221,14 +132,14 @@ exports.init = function (req, res) {
 		}
 
 		const userId = cookieAuth['userId'];
-		getUserByUserId(userId).then((response) => {
+		dbQuery.getUserByUserId(userId).then((response) => {
 			if (response[0].havevenue) {
 				console.log('user have venue, fetching venue');
-				getVenueByUserId(userId).then((venue) => {
+				dbQuery.getVenueByUserId(userId).then((venue) => {
 					response[0].venue = venue;
 					if (response[0].venue[0].haveevents) {
 						console.log('venue have events, fetching events');
-						getEventsByVenueId(venue[0].id).then((events) => {
+						dbQuery.getEventsByVenueId(venue[0].id).then((events) => {
 							response[0].venue[0].events = events;
 							console.log('response', response);
 							res.send(response);
@@ -267,7 +178,7 @@ exports.init = function (req, res) {
 			userId: req.body.userId,
 			birthday: req.body.birthday,
 		}
-		updateBday(eventObject);
+		dbQuery.updateBday(eventObject);
 		res.status(200).send({ success: true })
 
 	});
