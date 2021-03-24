@@ -1,19 +1,37 @@
 var express = require('express');
-var { graphqlHTTP } = require('express-graphql');
-var { buildSchema } = require('graphql');
- 
-var schema = buildSchema(`
-  type Query {
-    hello: String
-  }
-`);
- 
-var root = { hello: () => 'Hello world!' };
- 
+const doteenv = require('dotenv');
+
+doteenv.config();
+
+// const pool = process.env.DATABASE_URL
+//     ? new Pool({
+//         connectionString: process.env.DATABASE_URL,
+//         ssl: {
+//             rejectUnauthorized: false
+//         }
+//     })
+//     : new Pool({
+//         user: process.env.DB_USER,
+//         host: process.env.DB_HOST,
+//         database: process.env.DB_DATABASE,
+//         password: process.env.DB_PASSWORD,
+//         port: process.env.DB_PORT,
+//     });
+//    postgres://process.env.DB_USER:process.env.DB_PASSWORD@process.env.DB_HOST:process.env.DB_PORT/process.env.DB_DATABASE
+
+const {
+    postgraphile
+} = require("postgraphile");
+
 var app = express();
-app.use('/graphql', graphqlHTTP({
-  schema: schema,
-  rootValue: root,
-  graphiql: true,
-}));
-app.listen(4000, () => console.log('Now browse to localhost:4000/graphql'));
+app.use(
+    postgraphile(
+        'postgres://' + process.env.DB_USER + ':' + process.env.DB_PASSWORD +'@' + process.env.DB_HOST + ':' + process.env.DB_PORT + '/' + process.env.DB_DATABASE,
+        "public", {
+            watchPg: true,
+            graphiql: true,
+            enhanceGraphiql: true,
+        }
+    )
+);
+app.listen(4000, () => console.log('go to for playground graphiql http://localhost:4000/graphiql'))

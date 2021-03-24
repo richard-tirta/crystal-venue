@@ -135,18 +135,28 @@ exports.init = function (req, res) {
 		dbQuery.getUserByUserId(userId).then((response) => {
 			if (response[0].havevenue) {
 				console.log('user have venue, fetching venue');
-				dbQuery.getVenueByUserId(userId).then((venue) => {
-					response[0].venue = venue;
-					if (response[0].venue[0].haveevents) {
-						console.log('venue have events, fetching events');
-						dbQuery.getEventsByVenueId(venue[0].id).then((events) => {
-							response[0].venue[0].events = events;
-							console.log('response', response);
-							res.send(response);
-						}).catch(err => console.log(err));
-					} else {
-						res.send(response);
+				dbQuery.getVenueByUserId(userId).then(async (venues) => {
+					//console.log('getVenueByUserId', venue);
+					response[0].venue = venues;
+					
+					// need to fetch events for every venue and add that.
+					const getEventsByVenues = async () => {
+						for (const [i, venue] of venues.entries()) {
+							venue.haveevents
+								? await dbQuery.getEventsByVenueId(venue.id).then((events) => {
+									console.log('events', venue.id, events);
+									response[0].venue[i].events = events;
+									console.log('response', response[0].venue);
+								}).catch(err => console.log(err))
+								: null;
+						}
+						return response;
 					}
+
+					getEventsByVenues().then(response => {
+						res.send(response);
+					}).catch();
+
 				}).catch(err => console.log(err));
 			} else {
 				res.send(response);

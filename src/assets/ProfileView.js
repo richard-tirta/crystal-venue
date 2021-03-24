@@ -30,24 +30,7 @@ class ProfileModule extends React.Component {
             haveVenue: false,
             isFormUpdate: false,
             showBdayForm: false,
-            venue: {
-                id: undefined,
-                venueName: undefined,
-                venueDescription: undefined,
-                venueWorld: undefined,
-                venueLocation: undefined,
-                venueWard: undefined,
-                venuePlot: undefined,
-                venueAetheryte: undefined,
-                venueWebsite: undefined,
-                venueType1: undefined,
-                venueType2: undefined,
-                venueType3: undefined,
-                isMature: false,
-                image: undefined,
-                hasEvents: false,
-            },
-            events: [],
+            venues: [],
         };
 
     }
@@ -63,7 +46,7 @@ class ProfileModule extends React.Component {
                     (result) => {
                         console.log(result);
                         const resultData = result[0];
-                        let venue = this.state.venue;
+                        let venues = this.state.venues;
                         let events = this.state.events;
 
                         const today = new Date();
@@ -75,24 +58,7 @@ class ProfileModule extends React.Component {
                         }
 
                         if (resultData.havevenue) {
-                            venue.id = resultData.venue[0].id;
-                            venue.venueName = resultData.venue[0].name;
-                            venue.venueDescription = resultData.venue[0].description;
-                            venue.venueWorld = resultData.venue[0].world;
-                            venue.venueLocation = resultData.venue[0].location;
-                            venue.venueWard = resultData.venue[0].ward;
-                            venue.venuePlot = resultData.venue[0].plot;
-                            venue.venueAetheryte = resultData.venue[0].aetheryte;
-                            venue.venueWebsite = resultData.venue[0].website;
-                            venue.venueType1 = resultData.venue[0].type1;
-                            venue.venueType2 = resultData.venue[0].type2;
-                            venue.venueType3 = resultData.venue[0].type3;
-                            venue.isMature = resultData.venue[0].ismature;
-                            venue.image = resultData.venue[0].image;
-                            venue.haveEvents = resultData.venue[0].haveEvents;
-                            if (resultData.venue[0].haveevents) {
-                                events = resultData.venue[0].events;
-                            }
+                            venues = resultData.venue;
                         }
 
                         this.setState({
@@ -105,8 +71,7 @@ class ProfileModule extends React.Component {
                             isMember: resultData.ismember,
                             isUserMature: age >  18 ? true : false,
                             haveVenue: resultData.havevenue,
-                            venue,
-                            events,
+                            venues,
                         });
                     },
                     (error) => {
@@ -267,7 +232,7 @@ class ProfileModule extends React.Component {
                     <a href="#" className="list-venue-link" onClick={(e) => this.toggleAddVenue(e)}>Add a venue to the list&raquo;</a>
                     {
                         this.state.haveVenue
-                            ? <ProfileVenueView userId={this.state.userid} isUserMature={this.state.isUserMature} venue={this.state.venue} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
+                            ? <ProfileVenueView userId={this.state.userid} isUserMature={this.state.isUserMature} venues={this.state.venues} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
                             : null
                     }
                 </div>

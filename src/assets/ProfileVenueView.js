@@ -17,20 +17,22 @@ class ProfileVenueView extends React.Component {
         this.handleRemoveWarning = this.handleRemoveWarning.bind(this);
 
         this.state = {
-            showImageUpload: false,
+            showImageUpload: null,
             isImageUploading: false,
             file: undefined,
             showDeleteWarning: null,
+            venueId: null,
             errors: {
                 imageForm: '',
             }
         }
     }
 
-    handleImageEditBtn(event) {
+    handleImageEditBtn(event, index, venueId) {
         event.preventDefault();
         this.setState({
-            showImageUpload: !this.state.showImageUpload,
+            showImageUpload: index,
+            venueId: venueId,
         })
     }
 
@@ -64,7 +66,7 @@ class ProfileVenueView extends React.Component {
 
         const formData = new FormData();
         formData.append('file', this.state.file[0]);
-        formData.append('id', this.props.venue.id);
+        formData.append('id', this.state.venueId);
 
         console.log('sending to upload', formData);
 
@@ -92,12 +94,13 @@ class ProfileVenueView extends React.Component {
             );
     }
 
-    handleRemoveVenue(event, venueId) {
+    handleRemoveVenue(event, venueId, venueCount) {
         event.preventDefault();
 
         const data = JSON.stringify({
             venueId: venueId,
             userId: this.props.userId,
+            venueCount: venueCount,
         });
 
         console.log('ready to delete venue', data);
@@ -133,8 +136,11 @@ class ProfileVenueView extends React.Component {
     }
 
     render() {
-        const venue = this.props.venue;
-        const venueImage = venue.image ? venue.image : sampleImage;
+        const venues = this.props.venues;
+
+        const venueImage = (venueImage) => {
+            return venueImage ? venueImage : sampleImage;
+        };
 
         const imageUploadEl = !this.state.isImageUploading
             ? (
@@ -156,7 +162,7 @@ class ProfileVenueView extends React.Component {
                 </div>
             );
 
-        const deleteLightbox = (venueId, venueName,) => {
+        const deleteLightbox = (venueId, venueName, venueLength, index) => {
             return (
                 <div className="lightbox">
                     <h3>
@@ -170,7 +176,7 @@ class ProfileVenueView extends React.Component {
                                 associated with the venue!
                             </strong>
                     </p>
-                    <button onClick={e => this.handleRemoveVenue(e, venueId)} className="form-submit">
+                    <button onClick={e => this.handleRemoveVenue(e, venueId, venueLength)} className="form-submit">
                         Yes, remove this venue.
                         </button>
                     <button onClick={e => this.handleRemoveWarning(e)} className="form-submit">
@@ -181,54 +187,68 @@ class ProfileVenueView extends React.Component {
         }
         return (
             <div>
-                <div className="venues-listing_container">
-                    <div className="venue-module">
-                        <div className="venue-image">
-                            {this.state.showImageUpload ? imageUploadEl : null}
-                            <img src={venueImage} />
-                            <a href="#" className="edit-venue-button" onClick={this.handleImageEditBtn}>Edit Venue Pic &raquo;</a>
-                        </div>
-                        <div className="venue-description">
-                            <div className="venue-desc_about">
-                                <h3>{venue.venueName}</h3>
-                                <p>{venue.description}</p>
-                                <p className="venue-desc_type">
-                                    {venue.venueType1}
-                                    {venue.venueType2 ? '|' : null} {venue.venueType2}
-                                    {venue.venueType3 ? '|' : null} {venue.venueType3}
-                                </p>
-                                {venue.venueWebsite ? <a href={"https://" + venue.venueWebsite}>{venue.venueWebsite} &raquo;</a> : null}
-
-                            </div>
-                            <div className="venue-desc_location">
-                                <h4>{venue.venueWorld} | {venue.venueLocation} | Ward {venue.venueWard} | Plot {venue.venuePlot}</h4>
-                                <p className="venue-desc_aetheryte">
-                                    <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
-                                    {venue.venueAetheryte}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="remove-link-container">
-                        <a href="#" onClick={e => this.handleRemoveWarning(e, venue.id)}>Remove this venue &raquo;</a>
-                    </div>
-                    </div>
-                    
-                </div>
                 {
-                    this.state.showDeleteWarning
-                        ? deleteLightbox(venue.id, venue.venueName)
-                        : null
+                    venues.map((venue, index) => (
+                        <div>
+                            <div className="venue-module" key={'venue' + venue.id}>
+                                <div className="venue-image">
+                                    {this.state.showImageUpload === index ? imageUploadEl : null}
+                                    <img src={venueImage(venue.image)} />
+                                    <a href="#" className="edit-venue-button" onClick={e => this.handleImageEditBtn(e, index, venue.id)}>
+                                        Edit Venue Pic &raquo;
+                                </a>
+                                </div>
+                                <div className="venue-description">
+                                    <div className="venue-desc_about">
+                                        <h3>{venue.name}</h3>
+                                        <p dangerouslySetInnerHTML={{ __html: venue.description }} />
+                                        <p className="venue-desc_type">
+                                            {venue.type1}
+                                            {venue.type2 ? '|' : null} {venue.type2}
+                                            {venue.type3 ? '|' : null} {venue.type3}
+                                        </p>
+                                        {venue.website ? <a href={"https://" + venue.website}>{venue.website} &raquo;</a> : null}
+
+                                    </div>
+                                    <div className="venue-desc_location">
+                                        <h4>{venue.world} | {venue.location} | Ward {venue.ward} | Plot {venue.plot}</h4>
+                                        <p className="venue-desc_aetheryte">
+                                            <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
+                                            {venue.aetheryte}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="remove-link-container">
+                                    <a href="#" onClick={e => this.handleRemoveWarning(e, venue.id)}>Remove this venue &raquo;</a>
+                                </div>
+                            </div>
+                            {
+                                this.state.showDeleteWarning == venue.id
+                                    ? deleteLightbox(venue.id, venue.name, venues.length, index)
+                                    : null
+                            }
+                            <div className="event-container">
+                                <h3>Event Admin ({venue.name}):</h3>
+                                {venue.events
+                                    ? <ProfileEventView
+                                        userId={this.props.userid}
+                                        venue={venue}
+                                        events={venue.events}
+                                        isFormUpdate={this.props.isFormUpdate}
+                                    />
+                                    : null}
+                                <p><strong>Add an Event</strong></p>
+                                <ProfileEventForm
+                                    userId={this.props.userId}
+                                    isUserMature={this.props.isUserMature}
+                                    venue={venue}
+                                    isFormUpdate={this.props.isFormUpdate}
+                                />
+                            </div>
+                            <hr/>
+                        </div>
+                    ))
                 }
-
-
-                <div className="event-container">
-                    <h3>Event Admin:</h3>
-                    <ProfileEventView
-                        userId={this.props.userid} venue={this.props.venue} events={this.props.events} isFormUpdate={this.props.isFormUpdate}
-                    />
-                    <p><strong>Add an Event</strong></p>
-                    <ProfileEventForm userId={this.props.userId} isUserMature={this.props.isUserMature} venue={this.props.venue} isFormUpdate={this.props.isFormUpdate} />
-                </div>
             </div>
         );
     };

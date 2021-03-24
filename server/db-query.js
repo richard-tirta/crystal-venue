@@ -121,7 +121,7 @@ const addNewVenueToDb = (data) => {
 
 const deleteVenueByVenueId = (data) => {
     console.log('GOING TO DELETE EVENT BY EVENT ID AND ALL EVENTS ASSOCIATED WITH IT', data);
-    const { venueId, userId } = data
+    const { venueId, userId, venueCount } = data
 
     pool.query('DELETE FROM events WHERE venueid = $1', [venueId], (error, results) => {
         if (error) {
@@ -137,16 +137,18 @@ const deleteVenueByVenueId = (data) => {
         console.log('Venue removed');
     })
 
-    pool.query(
-        'UPDATE users SET haveVenue = false WHERE userid = $1',
-        [userId],
-        (error, results) => {
-            if (error) {
-                throw error
+    if (venueCount - 1 < 1) {
+        pool.query(
+            'UPDATE users SET haveVenue = false WHERE userid = $1',
+            [userId],
+            (error, results) => {
+                if (error) {
+                    throw error
+                }
+                console.log('Users updated to have no venue');
             }
-            console.log('Users updated to have no venue');
-        }
-    )
+        )
+    }
 }
 
 
