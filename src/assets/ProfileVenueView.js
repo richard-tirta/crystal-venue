@@ -189,8 +189,8 @@ class ProfileVenueView extends React.Component {
             <div>
                 {
                     venues.map((venue, index) => (
-                        <div>
-                            <div className="venue-module" key={'venue' + venue.id}>
+                        <div key={'venue' + venue.id}>
+                            <div className="venue-module">
                                 <div className="venue-image">
                                     {this.state.showImageUpload === index ? imageUploadEl : null}
                                     <img src={venueImage(venue.image)} />

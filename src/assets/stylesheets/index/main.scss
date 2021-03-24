@@ -82,11 +82,12 @@
     position: relative;
     .venue-description {
         background: #373737;
-        border-top-left-radius: 2%;
-        border-top-right-radius: 2%;
+        border-bottom-left-radius: 2%;
+        border-bottom-right-radius: 2%;
         display: flex;
         flex-direction: column;
-        padding: 24px;
+        min-height: 230px;
+        padding: 16px 24px 24px 24px;
         justify-content: space-between;
         .venue-desc_about {
             a {
@@ -95,7 +96,6 @@
             }
         }
         .venue-desc_type {
-            margin-top: 16px;
             margin-bottom: 16px;
         }
         .venue-desc_aetheryte {

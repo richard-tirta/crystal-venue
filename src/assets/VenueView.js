@@ -105,13 +105,21 @@ class VenueView extends React.Component {
             if (!eventsData) {
                 return null;
             }
+            
             const event = eventsData.filter((venue) => {
-                return venue.venueid == parseInt(venue.venueid);
+                return venue.venueid == venueId
             })
-            event.sort((a, b) => {
+
+            event.length > 0 ? event.sort((a, b) => {
                 return a.time - b.time;
-            });
-            const eventString = <p><strong>{event[0].name} | {getTime(event[0].time)}</strong></p>
+            }) : null;
+
+            const eventString = event.length > 0
+                ? <div>
+                    <p>Next Event:</p>
+                    <p><strong>{event[0].name} | {getTime(event[0].time)}</strong></p>
+                </div>
+                : null;
             return eventString;
         }
 
@@ -149,7 +157,7 @@ class VenueView extends React.Component {
                                             {venue.type1} | {venue.type2} | {venue.type3}
                                         </p>
                                         <div>
-                                            <p>Next Event:</p>
+                                            
                                             {eventsData.length > 0 ? findEvent(venue.id) : null}
                                         </div>
                                     </div>
