@@ -1,8 +1,8 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
-import VenueForm from "./VenueForm";
-import VenueModule from "./VenueModule";
+import ProfileVenueForm from "./ProfileVenueForm";
+import ProfileVenueView from "./ProfileVenueView";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { DateTime } from "luxon";
@@ -261,13 +261,13 @@ class ProfileModule extends React.Component {
                     <h3>Venue Admin:</h3>
                     {
                         this.state.isAddVenue
-                            ? <VenueForm userId={this.state.userid} isUserMature={this.state.isUserMature} isAddVenue={this.state.isAddVenue} isFormUpdate={this.handleIsFormUpdate} />
+                            ? <ProfileVenueForm userId={this.state.userid} isUserMature={this.state.isUserMature} isAddVenue={this.state.isAddVenue} isFormUpdate={this.handleIsFormUpdate} />
                             : venueStatus
                     }
                     <a href="#" className="list-venue-link" onClick={(e) => this.toggleAddVenue(e)}>Add a venue to the list&raquo;</a>
                     {
                         this.state.haveVenue
-                            ? <VenueModule userId={this.state.userid} isUserMature={this.state.isUserMature} venue={this.state.venue} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
+                            ? <ProfileVenueView userId={this.state.userid} isUserMature={this.state.isUserMature} venue={this.state.venue} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
                             : null
                     }
                 </div>

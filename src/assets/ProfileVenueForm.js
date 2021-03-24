@@ -1,6 +1,6 @@
 import React from "react";
 
-class VenueForm extends React.Component {
+class ProfileVenueForm extends React.Component {
     constructor(props) {
         super(props);
 
@@ -230,4 +230,4 @@ class VenueForm extends React.Component {
     }
 }
 
-export default VenueForm;
+export default ProfileVenueForm;

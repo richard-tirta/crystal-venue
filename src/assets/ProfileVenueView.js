@@ -1,12 +1,12 @@
 
 import fetch from "node-fetch";
 import React from "react";
-import EventForm from "./EventForm";
-import EventsModule from "./EventsModule";
+import ProfileEventForm from "./ProfileEventForm";
+import ProfileEventView from "./ProfileEventView";
 import sampleImage from "./images/cva-no-venue.jpg";
 import loadingImage from "./images/icon-loading.gif";
 
-class VenueModule extends React.Component {
+class ProfileVenueView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -223,11 +223,11 @@ class VenueModule extends React.Component {
 
                 <div className="event-container">
                     <h3>Event Admin:</h3>
-                    <EventsModule
+                    <ProfileEventView
                         userId={this.props.userid} venue={this.props.venue} events={this.props.events} isFormUpdate={this.props.isFormUpdate}
                     />
                     <p><strong>Add an Event</strong></p>
-                    <EventForm userId={this.props.userId} isUserMature={this.props.isUserMature} venue={this.props.venue} isFormUpdate={this.props.isFormUpdate} />
+                    <ProfileEventForm userId={this.props.userId} isUserMature={this.props.isUserMature} venue={this.props.venue} isFormUpdate={this.props.isFormUpdate} />
                 </div>
             </div>
         );
@@ -236,4 +236,4 @@ class VenueModule extends React.Component {
 }
 
 
-export default VenueModule;
+export default ProfileVenueView;

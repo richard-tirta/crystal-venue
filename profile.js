@@ -128,7 +128,7 @@ exports.init = function (req, res) {
 		let cookieAuth = auth.init(req);
 
 		if (!cookieAuth) {
-			res.status(400).send('No Cookie found').redirect('/profile');
+			res.redirect('/profile');
 		}
 
 		const userId = cookieAuth['userId'];

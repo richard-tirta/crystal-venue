@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import ProfileModule from "./ProfileModule";
+import ProfileModule from "./ProfileView";
 
 
 import "./stylesheets/all.scss";

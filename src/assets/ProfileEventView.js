@@ -6,7 +6,7 @@ import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-event.jpg";
 import loadingImage from "./images/icon-loading.gif";
 
-class EventsModule extends React.Component {
+class ProfileEventView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -230,4 +230,4 @@ class EventsModule extends React.Component {
 }
 
 
-export default EventsModule;
+export default ProfileEventView;

@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import EventsListing from "./EventsListing";
+import EventView from "./EventView";
 
 
 import "./stylesheets/all.scss";
@@ -10,5 +10,5 @@ const profileNavNode = document.getElementById("profile-nav");
 
 console.log('hello world');
 
-ReactDOM.render(<EventsListing profileNavNode={profileNavNode} />, eventsNode);
+ReactDOM.render(<EventView profileNavNode={profileNavNode} />, eventsNode);
 

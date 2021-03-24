@@ -6,11 +6,8 @@ exports.init = function (req, res) {
 	const auth = require('./auth');
 	const cookieParser = require("cookie-parser");
 	const dbQuery = require('./db-query');
-	const doteenv = require('dotenv');
 	const express = require('express');
 	
-	doteenv.config();
-
 	app.use(cookieParser());
 	app.use(express.urlencoded({ extended: true }));
 	app.use(express.json());

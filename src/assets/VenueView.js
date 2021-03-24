@@ -3,11 +3,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Filter from "./form_component/Filter";
 import { DateTime } from "luxon";
-import sampleImage from "./images/cva-no-event.jpg";
+import sampleImage from "./images/cva-no-venue.jpg";
 
-const userNameContext = React.createContext('');
-
-class EventsListing extends React.Component {
+class VenueView extends React.Component {
     constructor(props) {
         super(props);
 
@@ -17,6 +15,7 @@ class EventsListing extends React.Component {
         this.state = {
             userName: undefined,
             userIsMature: undefined,
+            venues: null,
             events: null,
             filterMusic: false,
             filterFullBar: false,
@@ -29,8 +28,8 @@ class EventsListing extends React.Component {
     }
 
     componentDidMount() {
-        console.log('EventsListing componentDidMount');
-        fetch('/allEvents')
+        console.log('VenuesListing componentDidMount');
+        fetch('/allVenues')
             .then(response => {
                 if (response.status !== 200) {
                     console.log('Looks like there was a problem. Status Code: ' +
@@ -39,17 +38,12 @@ class EventsListing extends React.Component {
                 response.json().then(
                     (result) => {
                         console.log(result);
-
-                        //sort by event time
-                        const resultByEventTime = result.eventsData.slice(0);
-                        resultByEventTime.sort((a, b) => {
-                            return a.time - b.time;
-                        });
-
+                        
                         this.setState({
+                            venues: result.data.venues,
+                            events: result.data.events,
                             userName: result.userData.userName,
-                            userIsMature: result.userData.isUserMature,
-                            events: resultByEventTime,
+                            userIsMature: result.userData.userIsMature,
                         });
                     },
                     (error) => {
@@ -94,7 +88,9 @@ class EventsListing extends React.Component {
     }
 
     render() {
-        const eventData = this.state.events;
+        const venueData = this.state.venues;
+        const eventsData = this.state.events;
+
         const eventImage = (eventImage) => {
             return eventImage ? eventImage : sampleImage;
         };
@@ -102,6 +98,21 @@ class EventsListing extends React.Component {
         const getTime = (data) => {
             const newDate = DateTime.fromMillis(parseInt(data)).toFormat('EEE, MMM. dd | hh:mm a ZZZZ');
             return newDate;
+        }
+
+        const findEvent = (venueId) => {
+            console.log('zzzzz', venueId)
+            if (!eventsData) {
+                return null;
+            }
+            const event = eventsData.filter((venue) => {
+                return venue.venueid == parseInt(venue.venueid);
+            })
+            event.sort((a, b) => {
+                return a.time - b.time;
+            });
+            const eventString = <p><strong>{event[0].name} | {getTime(event[0].time)}</strong></p>
+            return eventString;
         }
 
         const ageGate = (
@@ -117,33 +128,44 @@ class EventsListing extends React.Component {
                     </p>
             </div>
         );
+
         return (
             <div>
-                <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature}/>
+                <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature} />
                 {this.state.showAgeGate ? ageGate : null}
-                <section className="events-module">
-                    {
-                        eventData
-                            ? eventData.map((cvaEvent, index) => (
-                                <div key={'event' + cvaEvent.id}>
-                                    <div className="event-item">
-                                        <div className="event-image">
-                                            <img src={eventImage(cvaEvent.image)} />
-                                        </div>
-                                        <div className="event-description">
-                                            <p>
-                                                {getTime(cvaEvent.time)}
-                                            </p>
-                                            <h3>{cvaEvent.name}</h3>
-                                            <h4>{cvaEvent.subtitle}</h4>
-                                            <p className="event-venue">{cvaEvent.venuename}</p>
+                <section className="venues-listing_container">
+                {
+                    venueData
+                        ? venueData.map((venue, index) => (
+                            <div className="venue-module" key={'venue' + venue.id}>
+                                 <div className="venue-image">
+                                    <img src={eventImage(venue.image)} />
+                                </div>
+                                <div className="venue-description">
+                                    <div className="venue-desc_about">
+                                        <h3>{venue.name}</h3>
+                                        {venue.venueWebsite ?  <a href={venue.website}>{venue.website} &raquo;</a> : null}
+                                        <p className="venue-desc_type">
+                                            {venue.type1} | {venue.type2} | {venue.type3}
+                                        </p>
+                                        <div>
+                                            <p>Next Event:</p>
+                                            {eventsData.length > 0 ? findEvent(venue.id) : null}
                                         </div>
                                     </div>
+                                    <div className="venue-desc_location">
+                                        <h4>{venue.world} | {venue.location} | Ward {venue.ward} | Plot {venue.plot}</h4>
+                                        <p className="venue-desc_aetheryte">
+                                            <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
+                                            {venue.aetheryte}
+                                        </p>
+                                    </div>
                                 </div>
-                            ))
-                            : null
+                            </div>
+                        ))
+                        : null
                     }
-                </section>
+                    </section>
             </div>
         );
 
@@ -152,4 +174,4 @@ class EventsListing extends React.Component {
 }
 
 
-export default EventsListing;
+export default VenueView;
