@@ -86,7 +86,7 @@
         border-bottom-right-radius: 2%;
         display: flex;
         flex-direction: column;
-        min-height: 230px;
+        min-height: 260px;
         padding: 16px 24px 24px 24px;
         justify-content: space-between;
         .venue-desc_about {
@@ -96,7 +96,13 @@
             }
         }
         .venue-desc_type {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
+        }
+        .venue-desc_website {
+            margin-bottom: 14px;
+        }
+        .venue-desc_next-event {
+            margin-bottom: 14px;
         }
         .venue-desc_aetheryte {
             align-items: center;
@@ -104,7 +110,7 @@
             display: flex;
             font-size: 14px;
             font-weight: 800;
-            margin-top: 16px;
+            margin-top: 14px;
         }
     }
     .venue-image {

@@ -115,9 +115,9 @@ class VenueView extends React.Component {
             }) : null;
 
             const eventString = event.length > 0
-                ? <div>
+                ? <div className="venue-desc_next-event">
                     <p>Next Event:</p>
-                    <p><strong>{event[0].name} | {getTime(event[0].time)}</strong></p>
+                    <p>{event[0].name} | {getTime(event[0].time)}</p>
                 </div>
                 : null;
             return eventString;
@@ -152,14 +152,11 @@ class VenueView extends React.Component {
                                 <div className="venue-description">
                                     <div className="venue-desc_about">
                                         <h3>{venue.name}</h3>
-                                        {venue.venueWebsite ?  <a href={venue.website}>{venue.website} &raquo;</a> : null}
                                         <p className="venue-desc_type">
                                             {venue.type1} | {venue.type2} | {venue.type3}
                                         </p>
-                                        <div>
-                                            
-                                            {eventsData.length > 0 ? findEvent(venue.id) : null}
-                                        </div>
+                                        {venue.website ?  <a href={venue.website} className="venue-desc_website">{venue.website} &raquo;</a> : null}
+                                        {eventsData.length > 0 ? findEvent(venue.id) : null}
                                     </div>
                                     <div className="venue-desc_location">
                                         <h4>{venue.world} | {venue.location} | Ward {venue.ward} | Plot {venue.plot}</h4>
