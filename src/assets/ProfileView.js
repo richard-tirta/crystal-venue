@@ -225,13 +225,17 @@ class ProfileModule extends React.Component {
                 <div className="venue-container">
                     <h3>Venue Admin:</h3>
                     {
-                        this.state.isAddVenue
+                        this.state.isAddVenue && this.state.isMember
                             ? <ProfileVenueForm userId={this.state.userid} isUserMature={this.state.isUserMature} isAddVenue={this.state.isAddVenue} isFormUpdate={this.handleIsFormUpdate} />
                             : venueStatus
                     }
-                    <a href="#" className="list-venue-link" onClick={(e) => this.toggleAddVenue(e)}>Add a venue to the list&raquo;</a>
                     {
-                        this.state.haveVenue
+                        this.state.isMember
+                            ? <a href="#" className="list-venue-link" onClick={(e) => this.toggleAddVenue(e)}>Add a venue to the list&raquo;</a>
+                            : <p>You need to be a CVA Discord member to list a venue</p>
+                    }
+                    {
+                        this.state.haveVenue && this.state.isMember
                             ? <ProfileVenueView userId={this.state.userid} isUserMature={this.state.isUserMature} venues={this.state.venues} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
                             : null
                     }
