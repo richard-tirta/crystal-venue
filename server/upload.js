@@ -2,7 +2,7 @@ const { json } = require('express');
 
 exports.init = function (req, res) {
 
-	const app = require('./app.js');
+	const app = require('../app.js');
 	const auth = require('./auth');
 	const AWS = require('aws-sdk');
 	const doteenv = require('dotenv');

@@ -1,8 +1,7 @@
 
 exports.init = function (req, res) {
 
-	const { body, validationResult } = require('express-validator');
-	const app = require('./app.js');
+	const app = require('../app.js');
 	const auth = require('./auth');
 	const cookieParser = require("cookie-parser");
 	const dbQuery = require('./db-query');
@@ -17,8 +16,6 @@ exports.init = function (req, res) {
 		data: [],
 		timeStamp: 0,
 	};
-
-	doteenv.config();
 
 	app.use(cookieParser());
 	app.use(express.urlencoded({ extended: true }));

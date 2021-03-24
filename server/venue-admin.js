@@ -2,7 +2,7 @@
 exports.init = function (req, res) {
 
 	const { body, validationResult } = require('express-validator');
-	const app = require('./app.js');
+	const app = require('../app.js');
 	const auth = require('./auth');
 	const cookieParser = require("cookie-parser");
 	const dbQuery = require('./db-query');

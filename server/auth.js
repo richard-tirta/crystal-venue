@@ -1,7 +1,7 @@
 
 exports.init = function (req) {
 
-	const app = require('./app.js');
+	const app = require('../app.js');
     const cookieParser = require("cookie-parser");
 	const express = require('express');
 	const jwt = require('jsonwebtoken');

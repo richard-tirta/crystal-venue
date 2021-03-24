@@ -1,11 +1,11 @@
 const express = require('express');
 const helmet = require('helmet');
-const listings = require('./listings');
+const listings = require('./server/listings');
 const path = require('path');
-const profile = require('./profile');
-const venueAdmin = require('./venue-admin');
-const eventAdmin = require('./event-admin');
-const upload = require('./upload');
+const profile = require('./server/profile');
+const venueAdmin = require('./server/venue-admin');
+const eventAdmin = require('./server/event-admin');
+const upload = require('./server/upload');
 
 const app = express();
 const port = process.env.PORT || 3000;
