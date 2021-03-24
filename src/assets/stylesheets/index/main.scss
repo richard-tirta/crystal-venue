@@ -5,6 +5,9 @@
 	margin-left: auto;
 	max-width: 1500px;
 	width: 100%;
+    &.profile {
+        max-width: 1200px;
+    }
 }
 
 #profile {
@@ -14,6 +17,7 @@
     }
     .profile-container {
         display: flex;
+        flex-wrap: wrap;
         margin-top: 16px;
     }
     .profile-pic {
@@ -69,6 +73,9 @@
 .venues-listing_container {
     display: flex;
     justify-content: space-between;
+    @include xsmall {
+        flex-direction: column;
+    }
 }
 
 .venue-module{
@@ -80,6 +87,10 @@
     min-width: 320px;
     width: 48%;
     position: relative;
+    @include xsmall {
+        min-width: auto;
+        width: 100%;
+    }
     .venue-description {
         background: #373737;
         border-bottom-left-radius: 2%;
@@ -163,6 +174,9 @@
         margin-right: 20px;
         margin-bottom: 20px;
         max-width: 416px;
+        @include xsmall {
+            margin-right: 0;
+        }
     }
     .event-image {
         border-top-left-radius: 2%;
@@ -171,6 +185,9 @@
         overflow: hidden;
         width: 416px;
         max-height: 234px;
+        @include xsmall {
+            width: 100%;
+        }
         img {  
             width: 100%;
         }
