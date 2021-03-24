@@ -3,8 +3,8 @@ const helmet = require('helmet');
 const listings = require('./server/listings');
 const path = require('path');
 const profile = require('./server/profile');
-const venueAdmin = require('./server/venue-admin');
-const eventAdmin = require('./server/event-admin');
+const venueAdmin = require('./server/admin-venue');
+const eventAdmin = require('./server/admin-event');
 const upload = require('./server/upload');
 
 const app = express();
