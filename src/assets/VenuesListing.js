@@ -130,17 +130,20 @@ class VenuesListing extends React.Component {
         );
 
         return (
-            <section>
+            <div>
                 <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature} />
                 {this.state.showAgeGate ? ageGate : null}
+                <section className="venues-listing_container">
                 {
                     venueData
                         ? venueData.map((venue, index) => (
                             <div className="venue-module" key={'venue' + venue.id}>
+                                 <div className="venue-image">
+                                    <img src={eventImage(venue.image)} />
+                                </div>
                                 <div className="venue-description">
                                     <div className="venue-desc_about">
                                         <h3>{venue.name}</h3>
-                                        <p dangerouslySetInnerHTML={{ __html: venue.description }} />
                                         {venue.venueWebsite ?  <a href={venue.website}>{venue.website} &raquo;</a> : null}
                                         <p className="venue-desc_type">
                                             {venue.type1} | {venue.type2} | {venue.type3}
@@ -157,16 +160,13 @@ class VenuesListing extends React.Component {
                                             {venue.aetheryte}
                                         </p>
                                     </div>
-                                    
-                                </div>
-                                <div className="venue-image">
-                                    <img src={eventImage(venue.image)} />
                                 </div>
                             </div>
                         ))
                         : null
-                }
-            </section>
+                    }
+                    </section>
+            </div>
         );
 
     };

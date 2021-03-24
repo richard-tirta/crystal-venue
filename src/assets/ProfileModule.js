@@ -206,8 +206,7 @@ class ProfileModule extends React.Component {
         const venueStatus = !this.state.haveVenue
             ? (
                 <h4>
-                    No Venue is listed under your profile.<br />
-                    <a href="#" onClick={(e) => this.toggleAddVenue(e)}>List a Venue &raquo;</a>
+                    No Venue is listed under your profile.
                 </h4>
             )
             : null;
@@ -261,14 +260,15 @@ class ProfileModule extends React.Component {
                 <div className="venue-container">
                     <h3>Venue Admin:</h3>
                     {
-                        this.state.haveVenue
-                            ? <VenueModule userId={this.state.userid} isUserMature={this.state.isUserMature} venue={this.state.venue} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
-                            : null
-                    }
-                    {
                         this.state.isAddVenue
                             ? <VenueForm userId={this.state.userid} isUserMature={this.state.isUserMature} isAddVenue={this.state.isAddVenue} isFormUpdate={this.handleIsFormUpdate} />
                             : venueStatus
+                    }
+                    <a href="#" className="list-venue-link" onClick={(e) => this.toggleAddVenue(e)}>Add a venue to the list&raquo;</a>
+                    {
+                        this.state.haveVenue
+                            ? <VenueModule userId={this.state.userid} isUserMature={this.state.isUserMature} venue={this.state.venue} events={this.state.events} isFormUpdate={this.handleIsFormUpdate} />
+                            : null
                     }
                 </div>
             </section>

@@ -223,13 +223,14 @@ exports.init = function (req, res) {
 		const userId = cookieAuth['userId'];
 		getUserByUserId(userId).then((response) => {
 			if (response[0].havevenue) {
-				//console.log('user have venue, fetching venue');
+				console.log('user have venue, fetching venue');
 				getVenueByUserId(userId).then((venue) => {
 					response[0].venue = venue;
 					if (response[0].venue[0].haveevents) {
-						//console.log('venue have events, fetching events');
+						console.log('venue have events, fetching events');
 						getEventsByVenueId(venue[0].id).then((events) => {
 							response[0].venue[0].events = events;
+							console.log('response', response);
 							res.send(response);
 						}).catch(err => console.log(err));
 					} else {

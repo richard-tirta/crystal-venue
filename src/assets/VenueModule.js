@@ -147,75 +147,79 @@ class VenueModule extends React.Component {
                         {this.state.errors.imageForm.length > 0 && <span className='form-error'>{this.state.errors.imageForm}</span>}
                         <input type="file" accept=".jpg, .jpeg, .webp" onChange={this.handleFileChange} />
                         <button type="submit" className="form-submit" >Upload</button>
-                            </form>
+                    </form>
                 </div>
             ) : (
                 <div className="image-upload-loading">
-                    <img className="loading-gif" src={loadingImage}/>
+                    <img className="loading-gif" src={loadingImage} />
                     <h3>Uploading Image. Please Wait.</h3>
                 </div>
             );
-        
-            const deleteLightbox = (venueId, venueName,) => {
-                return (
-                    <div className="lightbox">
-                        <h3>
-                            Are you sure you want to remove <br />
-                            <span className="warning-yellow">{venueName}</span><br />
+
+        const deleteLightbox = (venueId, venueName,) => {
+            return (
+                <div className="lightbox">
+                    <h3>
+                        Are you sure you want to remove <br />
+                        <span className="warning-yellow">{venueName}</span><br />
                             from CVA listing?
                         </h3>
-                        <p className="warning-yellow">
-                            <strong>
-                                This will also remove all events <br />
+                    <p className="warning-yellow">
+                        <strong>
+                            This will also remove all events <br />
                                 associated with the venue!
                             </strong>
-                        </p>
-                        <button onClick={e => this.handleRemoveVenue(e, venueId)} className="form-submit">
-                             Yes, remove this venue.
+                    </p>
+                    <button onClick={e => this.handleRemoveVenue(e, venueId)} className="form-submit">
+                        Yes, remove this venue.
                         </button>
-                        <button onClick={e => this.handleRemoveWarning(e)} className="form-submit">
-                             No, keep this venue.
+                    <button onClick={e => this.handleRemoveWarning(e)} className="form-submit">
+                        No, keep this venue.
                         </button>
-                    </div>
-                )
-            }
+                </div>
+            )
+        }
         return (
             <div>
-                <div className="venue-module">
-                    <div className="venue-description">
-                        <div className="venue-desc_about">
-                            <h3>{venue.venueName}</h3>
-                            <p dangerouslySetInnerHTML={{ __html: venue.venueDescription }} />
-                            {venue.venueWebsite ? <a href={"https://" + venue.venueWebsite}>{venue.venueWebsite} &raquo;</a> : null}
-                            <p className="venue-desc_type">
-                                {venue.venueType1}
-                                {venue.venueType2 ? '|' : null} {venue.venueType2}
-                                {venue.venueType3 ? '|' : null} {venue.venueType3}
-                            </p>
+                <div className="venues-listing_container">
+                    <div className="venue-module">
+                        <div className="venue-image">
+                            {this.state.showImageUpload ? imageUploadEl : null}
+                            <img src={venueImage} />
+                            <a href="#" className="edit-venue-button" onClick={this.handleImageEditBtn}>Edit Venue Pic &raquo;</a>
                         </div>
-                        <div className="venue-desc_location">
-                            <h4>{venue.venueWorld} | {venue.venueLocation} | Ward {venue.venueWard} | Plot {venue.venuePlot}</h4>
-                            <p className="venue-desc_aetheryte">
-                                <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
-                                {venue.venueAetheryte}
-                            </p>
+                        <div className="venue-description">
+                            <div className="venue-desc_about">
+                                <h3>{venue.venueName}</h3>
+                                <p>{venue.description}</p>
+                                <p className="venue-desc_type">
+                                    {venue.venueType1}
+                                    {venue.venueType2 ? '|' : null} {venue.venueType2}
+                                    {venue.venueType3 ? '|' : null} {venue.venueType3}
+                                </p>
+                                {venue.venueWebsite ? <a href={"https://" + venue.venueWebsite}>{venue.venueWebsite} &raquo;</a> : null}
+
+                            </div>
+                            <div className="venue-desc_location">
+                                <h4>{venue.venueWorld} | {venue.venueLocation} | Ward {venue.venueWard} | Plot {venue.venuePlot}</h4>
+                                <p className="venue-desc_aetheryte">
+                                    <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
+                                    {venue.venueAetheryte}
+                                </p>
+                            </div>
                         </div>
+                        <div className="remove-link-container">
+                        <a href="#" onClick={e => this.handleRemoveWarning(e, venue.id)}>Remove this venue &raquo;</a>
                     </div>
-                    <div className="venue-image">
-                        {this.state.showImageUpload ? imageUploadEl : null}
-                        <img src={venueImage} />
-                        <a href="#" className="edit-venue-button" onClick={this.handleImageEditBtn}>Edit Venue Pic &raquo;</a>
                     </div>
-                </div>
-                <div className="remove-link-container">
-                    <a href="#" onClick={e => this.handleRemoveWarning(e, venue.id)}>Remove this venue &raquo;</a>
+                    
                 </div>
                 {
                     this.state.showDeleteWarning
                         ? deleteLightbox(venue.id, venue.venueName)
                         : null
                 }
-                
+
 
                 <div className="event-container">
                     <h3>Event Admin:</h3>
