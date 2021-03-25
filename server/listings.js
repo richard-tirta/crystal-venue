@@ -111,7 +111,7 @@ exports.init = function (req, res) {
 					res.send(sessionData);
 				}).catch(err => console.log(err));
 			} else {
-				console.log('allEvents using cache data');
+				//console.log('allEvents using cache data');
 				sessionData.eventsData = eventsCache.data;
 				res.send(sessionData);
 			}

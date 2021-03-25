@@ -5,6 +5,7 @@ import Filter from "./form_component/Filter";
 import HelperFilter from "./HelperFilter";
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-venue.jpg";
+import { cache } from "browserslist";
 
 class VenueView extends React.Component {
     constructor(props) {
@@ -30,8 +31,22 @@ class VenueView extends React.Component {
     }
 
     componentDidMount() {
-        console.log('VenuesListing componentDidMount');
-        fetch('/allVenues')
+        const cacheData = JSON.parse(localStorage.getItem('cvaVenueData'));
+        const cacheTimeStamp = cacheData ? cacheData.timeStamp + 30000 : 0;
+        console.log('this is cache', cacheData);
+
+        const processData = (result) => {
+            this.setState({
+                venues: result.data.venues,
+                events: result.data.events,
+                userName: result.userData.userName,
+                userIsMature: result.userData.isUserMature,
+                filterMature : result.userData.isUserMature,
+            });
+        }
+
+        if (cacheTimeStamp < Date.now()) {
+            fetch('/allVenues')
             .then(response => {
                 if (response.status !== 200) {
                     console.log('Looks like there was a problem. Status Code: ' +
@@ -39,21 +54,26 @@ class VenueView extends React.Component {
                 }
                 response.json().then(
                     (result) => {
+                        const cacheData = result;
+                        cacheData.timeStamp = Date.now();
                         console.log(result);
-                        
-                        this.setState({
-                            venues: result.data.venues,
-                            events: result.data.events,
-                            userName: result.userData.userName,
-                            userIsMature: result.userData.isUserMature,
-                            filterMature : result.userData.isUserMature,
-                        });
+
+                        processData(result);
+                        // save this in local storage
+                        localStorage.removeItem('cvaVenueData');
+                        localStorage.setItem('cvaVenueData', JSON.stringify(cacheData));
                     },
                     (error) => {
                         console.log('error');
                     }
                 )
             })
+        } else {
+            console.log("let's use cache");
+            processData(cacheData);
+        }
+
+        
     }
 
     componentDidUpdate() {

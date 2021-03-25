@@ -67,7 +67,7 @@ const updateBday = (data) => {
 //=========== VENUES ===================
 
 const getAllVenues = () => {
-    const query = 'SELECT * FROM venues ORDER BY id ASC';
+    const query = 'SELECT id, name, description, world, location, ward, plot, aetheryte, website, type1, type2, type3, ismature, image, haveevents FROM venues ORDER BY id ASC';
 
     return new Promise(function (resolve, reject) {
         pool.query(query, (err, response) => {
@@ -155,7 +155,7 @@ const deleteVenueByVenueId = (data) => {
 //=========== EVENTS ===================
 
 const getAllEvents = () => {
-    const query = 'SELECT * FROM events ORDER BY id ASC';
+    const query = 'SELECT id, venueid, name, subtitle, time, ismature, image, venuename, type1, type2, type3 FROM events ORDER BY id ASC';
 
     return new Promise(function (resolve, reject) {
         pool.query(query, (err, response) => {
