@@ -127,7 +127,9 @@ class EventView extends React.Component {
 
         const ageGate = (
             <div className="lightbox age-gate">
-                <a href="#" onClick={this.handleCloseAgeGate}>[Close]</a>
+                <a href="#" onClick={this.handleCloseAgeGate} className="icon-x-wt lightbox-close">
+                    Close
+                </a>
                 <h3>
                     You need to be at least 18 years old<br />
                         to activate this filter.

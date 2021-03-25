@@ -77,3 +77,9 @@ hr {
 	width: 100px;
 }
 
+.icon-x-wt {
+	@include background-icon('icon-x-wt.png');
+	width: 24px;
+	height: 24px;
+}
+
