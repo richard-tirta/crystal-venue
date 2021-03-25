@@ -104,18 +104,19 @@ class ProfileEventForm extends React.Component {
         );
 
         return (
-            <form>
+            <form onSubmit={this.handleSubmit}>
                 {this.state.showAgeGate ? ageGate : null}
+                <p className="text-right"><span className="blue-baby">*</span> required</p>
                 <div className="column-container">
                     <div className="form-column">
-                        <label htmlFor="eventName">Event Name*</label>
+                        <label htmlFor="eventName">Event Name<span className="blue-baby">*</span></label>
                         <input type="text" id="event-form_name" className="form-input" name="eventName" minLength="3" maxLength="35" placeholder="Event Name" required onChange={this.handleInputChange} />
 
                         <label htmlFor="eventSubtitle">Event SubTitle</label>
                         <input type="text" id="event-form_subtitle" className="form-input" name="eventSubTitle" minLength="3" maxLength="35" placeholder="Event SubTitle" required onChange={this.handleInputChange} />     
                     </div>
                     <div className="form-column">
-                        <label htmlFor="eventWorld">Event Date*</label>
+                        <label htmlFor="eventWorld">Event Date<span className="blue-baby">*</span></label>
                         <DatePicker
                             showTimeSelect
                             dateFormat="EE, MMM dd yyyy. hh:mm a"
@@ -130,11 +131,9 @@ class ProfileEventForm extends React.Component {
                         </div>
                     </div>
                 </div>
-                <a href="#" id="submit-cta"
-                    className="form-submit"
-                    onClick={this.handleSubmit}>
+                <button href="#" id="submit-cta" className="form-submit">
                     Submit New Event
-                    </a>
+                </button>
             </form>
         );
     }

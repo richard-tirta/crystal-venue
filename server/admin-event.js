@@ -55,6 +55,19 @@ exports.init = function (req, res) {
 			return;
 		}
 
+		// make sure following is not empty
+		if (
+			!req.body.userId
+			&& !req.body.venueid
+			&& !req.body.venueName
+			&& !req.body.eventName
+			&& !req.body.eventTime
+			&& !req.body.eventType1
+		) {
+			res.status(400).send({ success: false });
+			return;
+		}
+
 		const eventObject = {
 			userId: req.body.userId,
 			venueId: req.body.venueId,
@@ -93,6 +106,12 @@ exports.init = function (req, res) {
 
 		if (!userIdAuth) {
 			res.redirect('/profile');
+			return;
+		}
+
+		// make sure following is not empty
+		if (!req.body.eventId && !req.body.venueid) {
+			res.status(400).send({ success: false });
 			return;
 		}
 

@@ -66,6 +66,20 @@ exports.init = function (req, res) {
 			return;
 		}
 
+		// make sure following is not empty
+		if (
+			!req.body.userId
+			&& !req.body.venueName
+			&& !req.body.venueWorld
+			&& !req.body.venueLocation
+			&& !req.body.venueWard
+			&& !req.body.venuePlot
+			&& !req.body.venueType1
+		) {
+			res.status(400).send({ success: false });
+			return;
+		}
+
 		const venueObject = {
 			userId: req.body.userId,
 			venueName: req.body.venueName,
@@ -82,7 +96,7 @@ exports.init = function (req, res) {
 			isMature: req.body.isMature,
 		}
 		dbQuery.addNewVenueToDb(venueObject);
-		res.status(200).send({ success: true })
+		res.status(200).send({ success: true });
 
 	});
 
@@ -103,6 +117,12 @@ exports.init = function (req, res) {
 
 		if (userIdAuth !== req.body.userId) {
 			res.redirect('/profile');
+			return;
+		}
+
+		// make sure following is not empty
+		if (!req.body.userId && !req.body.venueid) {
+			res.status(400).send({ success: false });
 			return;
 		}
 

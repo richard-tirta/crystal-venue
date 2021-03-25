@@ -252,8 +252,10 @@ label {
 	margin-top: 30px;
 	margin-bottom: 16px;
 	padding: 8px 6px 4px 6px;
+	max-width: 1000px;
 	min-height: 30px;
 	min-width: 280px;
+	width: 100%;
 	text-align: center;
 	&:hover {
 		background: #797979;

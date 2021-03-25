@@ -76,6 +76,7 @@ class ProfileVenueForm extends React.Component {
         if (errors.venueWard || errors.venuePlot) {
             return;
         }
+        
 
         const data = JSON.stringify({
             userId: this.props.userId,
@@ -129,13 +130,14 @@ class ProfileVenueForm extends React.Component {
             </div>
         );
         return (
-            <form>
+            <form onSubmit={this.handleSubmit}>
                 {this.state.showAgeGate ? ageGate : null}
+                <p className="text-right"><span className="blue-baby">*</span> required</p>
                 <div className="column-container">
                     <div className="form-column">
-                        <label htmlFor="venueName">Venue Name*</label>
+                        <label htmlFor="venueName">Venue Name<span className="blue-baby">*</span></label>
                         <input type="text" id="venue-form_name" className="form-input" name="venueName" minLength="3" maxLength="50" placeholder="Venue Name" required onChange={this.handleInputChange} />
-                        <label htmlFor="venueDescription">Venue Description*</label>
+                        <label htmlFor="venueDescription">Venue Description<span className="blue-baby">*</span></label>
                         <textarea id="venue-form_description" name="venueDescription" rows="3" cols="50" minLength="10" maxLength="280" className="form_textarea" placeholder="Venue Description" onChange={this.handleInputChange} required />
 
                         <label htmlFor="venueWebsite">Venue Website</label>
@@ -145,7 +147,7 @@ class ProfileVenueForm extends React.Component {
                             minLength="4" maxLength="50" placeholder="Venue Website (eg: rp-venue.carrd.co)" className="form_input" onChange={this.handleInputChange} />
                         </div>
                        
-                        <label htmlFor="venueType1">Venue Main Type*</label>
+                        <label htmlFor="venueType1">Venue Main Type<span className="blue-baby">*</span></label>
                         <select name="venueType1" id="venue-form_type1" onChange={this.handleInputChange} required>
                             <option value="">--Select Venue Main Type--</option>
                             <option value="Music Performance">Music Performance</option>
@@ -180,7 +182,7 @@ class ProfileVenueForm extends React.Component {
 
                     </div>
                     <div className="form-column">
-                        <label htmlFor="venueWorld">Venue World*</label>
+                        <label htmlFor="venueWorld">Venue World<span className="blue-baby">*</span></label>
                         <select name="venueWorld" id="venue-form_world" onChange={this.handleInputChange} required>
                             <option value="">--Select World--</option>
                             <option value="Balmung">Balmung</option>
@@ -193,7 +195,7 @@ class ProfileVenueForm extends React.Component {
                             <option value="Zalera">Zalera</option>
                         </select>
 
-                        <label htmlFor="venueLocation">Venue Location*</label>
+                        <label htmlFor="venueLocation">Venue Location<span className="blue-baby">*</span></label>
                         <select name="venueLocation" id="venue-form_location" onChange={this.handleInputChange} required>
                             <option value="">--Select Location--</option>
                             <option value="Lavender Bed">Lavender Bed</option>
@@ -202,15 +204,15 @@ class ProfileVenueForm extends React.Component {
                             <option value="Shirogane">Shirogane</option>
                         </select>
 
-                        <label htmlFor="venueWard">Venue Ward*</label>
+                        <label htmlFor="venueWard">Venue Ward<span className="blue-baby">*</span></label>
                         {this.state.errors.venueWard.length > 0 && <span className='form-error'>{this.state.errors.venueWard}</span>}
                         <input type="text" id="venue-form_ward" className="form-input" name="venueWard" minLength="1" maxLength="2" placeholder="Ward" required onChange={this.handleInputChange} />
 
-                        <label htmlFor="venuePlot">Venue Plot*</label>
+                        <label htmlFor="venuePlot">Venue Plot<span className="blue-baby">*</span></label>
                         {this.state.errors.venuePlot.length > 0 && <span className='form-error'>{this.state.errors.venuePlot}</span>}
                         <input type="text" id="venue-form_plot" className="form-input" name="venuePlot" minLength="1" maxLength="2" placeholder="Plot" required onChange={this.handleInputChange} />
 
-                        <label htmlFor="venueAetheryte">Nearby Aetheryte Shard</label>
+                        <label htmlFor="venueAetheryte">Nearby Aetheryte Shard<span className="blue-baby">*</span></label>
                         <input type="text" id="venue-form_url" className="form_input" name="venueAetheryte"
                             minLength="4" maxLength="70" placeholder="Nearby Aetheryte Shard" className="form_input" onChange={this.handleInputChange} required />
                         
@@ -220,11 +222,10 @@ class ProfileVenueForm extends React.Component {
                         </div>
                     </div>
                 </div>
-                <a href="#" id="submit-cta"
-                    className="form-submit"
-                    onClick={this.handleSubmit}>
+                <button href="#" id="submit-cta"
+                    className="form-submit">
                     Submit
-                    </a>
+                </button>
             </form>
         );
     }
