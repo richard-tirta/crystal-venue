@@ -73,6 +73,7 @@
 .venues-listing_container {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     @include xsmall {
         flex-direction: column;
     }

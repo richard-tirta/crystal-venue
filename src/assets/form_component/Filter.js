@@ -14,7 +14,7 @@ const EventTime = ((props) => (
                     <input className="form-checkbox" type="checkbox" id="filter-bar" name="filterFullBar" onChange={props.onChange} />
                 </div>
                 <div className="form-checkbox-container">
-                    <label htmlFor="food">Live Music</label>
+                    <label htmlFor="food">Food</label>
                     <input className="form-checkbox" type="checkbox" id="filter-food" name="filterFood" onChange={props.onChange} />
                 </div>
                 <div className="form-checkbox-container">

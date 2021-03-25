@@ -47,6 +47,7 @@ class EventView extends React.Component {
                         this.setState({
                             userName: result.userData.userName,
                             userIsMature: result.userData.isUserMature,
+                            filterMature : result.userData.isUserMature,
                             events: resultByEventTime,
                         });
                     },

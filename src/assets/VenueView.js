@@ -2,6 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Filter from "./form_component/Filter";
+import HelperFilter from "./HelperFilter";
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-venue.jpg";
 
@@ -19,8 +20,9 @@ class VenueView extends React.Component {
             events: null,
             filterMusic: false,
             filterFullBar: false,
-            filterMusic: false,
+            filterFood: false,
             filterNovelties: false,
+            filterSports: false,
             filterLgbtq: false,
             filterMature: false,
             showAgeGate: false,
@@ -43,7 +45,8 @@ class VenueView extends React.Component {
                             venues: result.data.venues,
                             events: result.data.events,
                             userName: result.userData.userName,
-                            userIsMature: result.userData.userIsMature,
+                            userIsMature: result.userData.isUserMature,
+                            filterMature : result.userData.isUserMature,
                         });
                     },
                     (error) => {
@@ -101,7 +104,6 @@ class VenueView extends React.Component {
         }
 
         const findEvent = (venueId) => {
-            console.log('zzzzz', venueId)
             if (!eventsData) {
                 return null;
             }
@@ -137,6 +139,33 @@ class VenueView extends React.Component {
             </div>
         );
 
+        const venueModule = (venue) => {
+            return (
+                <div className="venue-module" key={'venue' + venue.id}>
+                    <div className="venue-image">
+                    <img src={eventImage(venue.image)} />
+                </div>
+                <div className="venue-description">
+                    <div className="venue-desc_about">
+                        <h3>{venue.name}</h3>
+                        <p className="venue-desc_type">
+                            {venue.type1} | {venue.type2} | {venue.type3}
+                        </p>
+                        {venue.website ?  <a href={venue.website} className="venue-desc_website">{venue.website} &raquo;</a> : null}
+                        {eventsData.length > 0 ? findEvent(venue.id) : null}
+                    </div>
+                    <div className="venue-desc_location">
+                        <h4>{venue.world} | {venue.location} | Ward {venue.ward} | Plot {venue.plot}</h4>
+                        <p className="venue-desc_aetheryte">
+                            <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
+                            {venue.aetheryte}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            )
+        }
+
         return (
             <div>
                 <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature} />
@@ -145,28 +174,7 @@ class VenueView extends React.Component {
                 {
                     venueData
                         ? venueData.map((venue, index) => (
-                            <div className="venue-module" key={'venue' + venue.id}>
-                                 <div className="venue-image">
-                                    <img src={eventImage(venue.image)} />
-                                </div>
-                                <div className="venue-description">
-                                    <div className="venue-desc_about">
-                                        <h3>{venue.name}</h3>
-                                        <p className="venue-desc_type">
-                                            {venue.type1} | {venue.type2} | {venue.type3}
-                                        </p>
-                                        {venue.website ?  <a href={venue.website} className="venue-desc_website">{venue.website} &raquo;</a> : null}
-                                        {eventsData.length > 0 ? findEvent(venue.id) : null}
-                                    </div>
-                                    <div className="venue-desc_location">
-                                        <h4>{venue.world} | {venue.location} | Ward {venue.ward} | Plot {venue.plot}</h4>
-                                        <p className="venue-desc_aetheryte">
-                                            <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
-                                            {venue.aetheryte}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            HelperFilter(this.state, venue) ? venueModule(venue) : null
                         ))
                         : null
                     }
