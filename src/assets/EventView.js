@@ -2,6 +2,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Filter from "./form_component/Filter";
+import HelperFilter from "./HelperFilter";
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-event.jpg";
 
@@ -18,8 +19,9 @@ class EventView extends React.Component {
             events: null,
             filterMusic: false,
             filterFullBar: false,
-            filterMusic: false,
+            filterFood: false,
             filterNovelties: false,
+            filterSports: false,
             filterLgbtq: false,
             filterMature: false,
             showAgeGate: false,
@@ -47,7 +49,7 @@ class EventView extends React.Component {
                         this.setState({
                             userName: result.userData.userName,
                             userIsMature: result.userData.isUserMature,
-                            filterMature : result.userData.isUserMature,
+                            filterMature: result.userData.isUserMature,
                             events: resultByEventTime,
                         });
                     },
@@ -60,7 +62,7 @@ class EventView extends React.Component {
 
     componentDidUpdate() {
         ReactDOM.render(
-            <a href={this.state.userName ? '/profile.html' : '/profile' }>
+            <a href={this.state.userName ? '/profile.html' : '/profile'}>
                 {this.state.userName ? 'Profile (' + this.state.userName + ')' : 'Login'}
             </a>,
             this.props.profileNavNode
@@ -68,7 +70,7 @@ class EventView extends React.Component {
     }
 
     handleInputChange(event) {
-       
+
         const target = event.target;
         const name = target.name;
         const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -107,38 +109,44 @@ class EventView extends React.Component {
             <div className="lightbox age-gate">
                 <a href="#" onClick={this.handleCloseAgeGate}>[Close]</a>
                 <h3>
-                        You need to be at least 18 years old<br />
+                    You need to be at least 18 years old<br />
                         to activate this filter.
                      </h3>
-                    <p>
-                        Go to <a href="/profile">Profile Page &raquo;</a><br/>
+                <p>
+                    Go to <a href="/profile">Profile Page &raquo;</a><br />
                         to make sure your birth date is set.
                     </p>
             </div>
         );
+
+        const eventModule = (cvaEvent) => {
+            return (
+                <div key={'event' + cvaEvent.id}>
+                    <div className="event-item">
+                        <div className="event-image">
+                            <img src={eventImage(cvaEvent.image)} />
+                        </div>
+                        <div className="event-description">
+                            <p>
+                                {getTime(cvaEvent.time)}
+                            </p>
+                            <h3>{cvaEvent.name}</h3>
+                            <h4>{cvaEvent.subtitle}</h4>
+                            <p className="event-venue">{cvaEvent.venuename}</p>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
         return (
             <div>
-                <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature}/>
+                <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature} />
                 {this.state.showAgeGate ? ageGate : null}
                 <section className="events-module">
                     {
                         eventData
                             ? eventData.map((cvaEvent, index) => (
-                                <div key={'event' + cvaEvent.id}>
-                                    <div className="event-item">
-                                        <div className="event-image">
-                                            <img src={eventImage(cvaEvent.image)} />
-                                        </div>
-                                        <div className="event-description">
-                                            <p>
-                                                {getTime(cvaEvent.time)}
-                                            </p>
-                                            <h3>{cvaEvent.name}</h3>
-                                            <h4>{cvaEvent.subtitle}</h4>
-                                            <p className="event-venue">{cvaEvent.venuename}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                HelperFilter(this.state, cvaEvent) ?  eventModule(cvaEvent) : null
                             ))
                             : null
                     }

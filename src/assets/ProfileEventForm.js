@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 
 
 
-class EventForm extends React.Component {
+class ProfileEventForm extends React.Component {
     constructor(props) {
         super(props);
 
@@ -51,9 +51,9 @@ class EventForm extends React.Component {
             eventSubTitle: this.state.eventSubTitle,
             eventTime: eventTimeUTC,
             eventIsMature: this.state.eventIsMature,
-            eventType1: this.props.venue.venueType1,
-            eventType2: this.props.venue.venueType2,
-            eventType3: this.props.venue.venueType3,
+            eventType1: this.props.venue.type1,
+            eventType2: this.props.venue.type2,
+            eventType3: this.props.venue.type3,
         });
 
         console.log('WE ARE READY TO SHIP', data);
@@ -140,4 +140,4 @@ class EventForm extends React.Component {
     }
 }
 
-export default EventForm;
+export default ProfileEventForm;

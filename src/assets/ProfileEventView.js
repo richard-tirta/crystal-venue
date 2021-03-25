@@ -104,6 +104,8 @@ class ProfileEventView extends React.Component {
             eventsCount: eventsCount,
         });
 
+        console.log('about to do DeleteEvent', data);
+
         fetch('/deleteEvent', {
             headers: {
                 'Content-Type': 'application/json'
@@ -187,7 +189,7 @@ class ProfileEventView extends React.Component {
             <div className="events-module">
                 {
                     this.props.events.length > 0
-                        ? this.props.events.map((event, index) => {
+                        ? this.props.events.sort((a, b) => {return a.id - b.id}).map((event, index) => {
                             const eventId = event.id;
                             const eventname = event.name;
                             return (
@@ -215,7 +217,7 @@ class ProfileEventView extends React.Component {
                                     </div>
                                     {
                                         this.state.showDeleteWarning == index
-                                            ? deleteLightbox(eventId, eventname, event.venueId, this.props.events.length, index)
+                                            ? deleteLightbox(eventId, eventname, event.venueid, this.props.events.length, index)
                                             : null
                                     }
                                 </div>

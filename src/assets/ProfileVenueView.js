@@ -188,7 +188,7 @@ class ProfileVenueView extends React.Component {
         return (
             <div>
                 {
-                    venues.map((venue, index) => (
+                    venues.sort((a, b) => {return a.id - b.id}).map((venue, index) => (
                         <div key={'venue' + venue.id}>
                             <div className="venue-module">
                                 <div className="venue-image">
@@ -231,7 +231,7 @@ class ProfileVenueView extends React.Component {
                                 <h3>Event Admin ({venue.name}):</h3>
                                 {venue.events
                                     ? <ProfileEventView
-                                        userId={this.props.userid}
+                                        userId={this.props.userId}
                                         venue={venue}
                                         events={venue.events}
                                         isFormUpdate={this.props.isFormUpdate}
