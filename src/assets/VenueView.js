@@ -13,6 +13,7 @@ class VenueView extends React.Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleCloseAgeGate = this.handleCloseAgeGate.bind(this);
+        this.handleShowDescription = this.handleShowDescription.bind(this);
 
         this.state = {
             userName: undefined,
@@ -27,6 +28,7 @@ class VenueView extends React.Component {
             filterLgbtq: false,
             filterMature: false,
             showAgeGate: false,
+            showDescription: null,
         }
     }
 
@@ -110,6 +112,13 @@ class VenueView extends React.Component {
         });
     }
 
+    handleShowDescription(event, venueId) {
+        event.preventDefault();
+        this.setState({
+            showDescription: this.state.showDescription ? null : venueId,
+        });
+    }
+
     render() {
         const venueData = this.state.venues;
         const eventsData = this.state.events;
@@ -170,10 +179,16 @@ class VenueView extends React.Component {
                 <div className="venue-description">
                     <div className="venue-desc_about">
                         <h3>{venue.name}</h3>
+                        <a href="#" className="venue-desc_description-link" onClick={e => this.handleShowDescription(e, venue.id)}>
+                                Description
+                            <span className={this.state.showDescription === venue.id ? "icon-arrow-r-wt is-active" : "icon-arrow-r-wt" }>
+                                    &rsaquo;
+                            </span>
+                        </a>
                         <p className="venue-desc_type">
                             {venue.type1} | {venue.type2} | {venue.type3}
                         </p>
-                        {venue.website ?  <a href={venue.website} className="venue-desc_website" target="_blank">{venue.website} &raquo;</a> : null}
+                        {venue.website ?  <a href={'https://' + venue.website} className="venue-desc_website" target="_blank">{venue.website} &raquo;</a> : null}
                         {eventsData.length > 0 ? findEvent(venue.id) : null}
                     </div>
                     <div className="venue-desc_location">
@@ -182,7 +197,10 @@ class VenueView extends React.Component {
                             <span className="icon-aetheryte">Nearby Aetheryte Shard:</span>
                             {venue.aetheryte}
                         </p>
-                    </div>
+                        </div>
+                        <div className={this.state.showDescription === venue.id ? "venue-description_text is-active" : "venue-description_text" }>
+                            <p dangerouslySetInnerHTML={{ __html: venue.description }}/>
+                        </div>
                 </div>
             </div>
             )

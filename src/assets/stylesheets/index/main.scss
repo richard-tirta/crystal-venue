@@ -104,12 +104,34 @@
         display: flex;
         flex-direction: column;
         min-height: 260px;
+        overflow-x: hidden;
         padding: 16px 24px 24px 24px;
+        position: relative;
         justify-content: space-between;
-        .venue-desc_about {
-            a {
-                display: block;
-                margin-top: 8px;
+        .venue-desc_description-link {
+            align-items: center;
+            display: flex;
+            padding: 4px 10px;
+            position: absolute;
+            margin-top: 4px;
+            right: 20px;
+            top: 14px;
+            @include xsmall {
+                padding: 8px 0;
+                position: relative;
+                top: auto;
+                right: auto;
+            }
+            &:hover {
+                color: rgb(250,250,250);
+            }
+            .icon-arrow-r-wt{
+                margin-left: 6px;
+                transform: rotate(0deg);
+                transition: transform 0.3s ease-in-out;
+                &.is-active {
+                    transform: rotate(90deg);
+                }
             }
         }
         .venue-desc_type {
@@ -120,6 +142,32 @@
         }
         .venue-desc_next-event {
             margin-bottom: 14px;
+        }
+        .venue-description_text {
+            background: #373737;
+            border-left: 1px solid #797979;
+            height: 0;
+            overflow: hidden;
+            padding: 0 24px;
+            position: absolute;
+            top: 54px;
+            right:0;
+            transition: all 0.5s ease-in;
+            width: calc(100% - 48px);
+            @include xsmall {
+                top: 104px;
+            }
+            &.is-active {
+                border-bottom: 1px solid #797979;
+                height: calc(100% - 75px);
+                padding: 10px 24px;
+                @include xsmall {
+                    height: calc(100% - 125px);
+                }
+            }
+            p {
+                line-height: 1.5;
+            }
         }
         
     }
@@ -270,6 +318,7 @@
     }
     .event-item_lightbox{
         background: #373737;
+        border-top-left-radius: 4%;
         border-bottom-left-radius: 4%;
         border-bottom-right-radius: 4%;
         left: 50%;

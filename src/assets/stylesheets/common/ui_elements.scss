@@ -83,6 +83,12 @@ hr {
 	height: 24px;
 }
 
+.icon-arrow-r-wt {
+	@include background-icon('icon-arrow-r-wt.svg');
+	width: 16px;
+	height: 16px;
+}
+
 .venue-desc_aetheryte {
 	align-items: center;
 	color: #CCCCCC;
