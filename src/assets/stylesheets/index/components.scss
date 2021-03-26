@@ -269,6 +269,9 @@ label {
 	display: flex;
 	justify-content: flex-start;
 	flex-wrap: wrap;
+	@include xsmall {
+		width: 100%;
+	}
 }
 
 .form-column {
