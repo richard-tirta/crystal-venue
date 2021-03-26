@@ -135,6 +135,20 @@ const addNewVenueToDb = (data) => {
     )
 }
 
+const updateVenueByVenueId = (data) => {
+    console.log('GOING TO UPDATE VENUE BY VENUE ID', data);
+    const { venueId, venueDescription, venueWorld, venueLocation, venueWard, venuePlot, venueAetheryte, venueWebsite, venueType1, venueType2, venueType3, isMature } = data;
+
+    const query = 'UPDATE venues SET description = $2, world = $3, location = $4, ward = $5, plot = $6, aetheryte = $7, website = $8, type1 = $9, type2 = $10, type3 = $11, ismature = $12  WHERE id = $1';
+
+    pool.query(query, [venueId, venueDescription, venueWorld, venueLocation, venueWard, venuePlot, venueAetheryte, venueWebsite, venueType1, venueType2, venueType3, isMature], (error, results) => {
+        if (error) {
+            throw error
+        }
+        console.log('Venue Updated');
+    })
+}
+
 const deleteVenueByVenueId = (data) => {
     console.log('GOING TO DELETE EVENT BY EVENT ID AND ALL EVENTS ASSOCIATED WITH IT', data);
     const { venueId, userId, venueCount } = data
@@ -257,6 +271,7 @@ module.exports = {
     getVenueByVenueId,
     getVenueByUserId,
     addNewVenueToDb,
+    updateVenueByVenueId,
     deleteVenueByVenueId,
     getAllEvents,
     getEventsByVenueId,

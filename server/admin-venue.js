@@ -100,6 +100,93 @@ exports.init = function (req, res) {
 
 	});
 
+	app.post('/updateVenue', [
+		body('userId')
+			.escape()
+			.not()
+			.isString(),
+		body('venueId')
+			.escape()
+			.not()
+			.isString(),
+		body('venueDescription')
+			.escape()
+			.isString(),
+		body('venueWorld')
+			.escape()
+			.isString(),
+		body('venueLocation')
+			.escape()
+			.isString(),
+		body('venueWard')
+			.escape()
+			.not()
+			.isString(),
+		body('venuePlot')
+			.escape()
+			.not()
+			.isString(),
+		body('venueAetheryte')
+			.escape()
+			.isString(),
+		body('venueWebsite')
+			.escape()
+			.isString(),
+		body('venueType1')
+			.escape()
+			.isString(),
+		body('venueType2')
+			.escape()
+			.isString(),
+		body('venueType3')
+			.escape()
+			.isString(),
+		body('isMature')
+			.escape()
+			.isBoolean()
+	], function (req, res) {
+		console.log('updateVenue POST received', req.body);
+
+		const cookieAuth = auth.init(req);
+		const userIdAuth =  cookieAuth ? cookieAuth['userId'] : null;
+
+		if (userIdAuth !== req.body.userId) {
+			res.redirect('/profile');
+			return;
+		}
+
+		// make sure following is not empty
+		if (
+			!req.body.venueId
+			&& !req.body.venueWorld
+			&& !req.body.venueLocation
+			&& !req.body.venueWard
+			&& !req.body.venuePlot
+			&& !req.body.venueType1
+		) {
+			res.status(400).send({ success: false });
+			return;
+		}
+
+		const venueObject = {
+			venueId: req.body.venueId,
+			venueDescription: req.body.venueDescription,
+			venueWorld: req.body.venueWorld,
+			venueLocation: req.body.venueLocation,
+			venueWard: req.body.venueWard,
+			venuePlot: req.body.venuePlot,
+			venueAetheryte: req.body.venueAetheryte,
+			venueWebsite: req.body.venueWebsite,
+			venueType1: req.body.venueType1,
+			venueType2: req.body.venueType2,
+			venueType3: req.body.venueType3,
+			isMature: req.body.isMature,
+		}
+		dbQuery.updateVenueByVenueId (venueObject);
+		res.status(200).send({ success: true });
+
+	});
+
 	app.delete('/deleteVenue', [
 		body('venueId')
 			.escape()

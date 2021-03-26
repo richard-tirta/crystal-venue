@@ -1,6 +1,7 @@
 
 import fetch from "node-fetch";
 import React from "react";
+import ProfileVenueUpdateForm from "./ProfileVenueUpdateForm";
 import ProfileEventForm from "./ProfileEventForm";
 import ProfileEventView from "./ProfileEventView";
 import sampleImage from "./images/cva-no-venue.jpg";
@@ -15,12 +16,14 @@ class ProfileVenueView extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleRemoveVenue = this.handleRemoveVenue.bind(this);
         this.handleRemoveWarning = this.handleRemoveWarning.bind(this);
+        this.handleEditVenue = this.handleEditVenue.bind(this);
 
         this.state = {
             showImageUpload: null,
             isImageUploading: false,
             file: undefined,
             showDeleteWarning: null,
+            showEditVenue: null,
             venueId: null,
             errors: {
                 imageForm: '',
@@ -135,6 +138,13 @@ class ProfileVenueView extends React.Component {
         });
     }
 
+    handleEditVenue(event, venueId) {
+        event ? event.preventDefault() : null;
+        this.setState({
+            showEditVenue: venueId,
+        });
+    }
+
     render() {
         const venues = this.props.venues;
 
@@ -219,12 +229,25 @@ class ProfileVenueView extends React.Component {
                                     </div>
                                 </div>
                                 <div className="remove-link-container">
+                                    <a href="#" onClick={e => this.handleEditVenue(e, venue.id)}>Edit this venue &raquo;</a>
                                     <a href="#" onClick={e => this.handleRemoveWarning(e, venue.id)}>Remove this venue &raquo;</a>
                                 </div>
                             </div>
                             {
                                 this.state.showDeleteWarning == venue.id
                                     ? deleteLightbox(venue.id, venue.name, venues.length, index)
+                                    : null
+                            }
+                            {
+                                this.state.showEditVenue == venue.id
+                                    ? <ProfileVenueUpdateForm
+                                        userId={this.props.userId}
+                                        venueId={venue.id}
+                                        isUserMature={this.props.isUserMature}
+                                        venue={venue}
+                                        isFormUpdate={this.props.isFormUpdate}
+                                        onFormSubmitted={e => this.handleEditVenue(e, null)}
+                                    />
                                     : null
                             }
                             <div className="event-container">

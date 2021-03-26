@@ -144,9 +144,9 @@ exports.init = function (req, res) {
 						for (const [i, venue] of venues.entries()) {
 							venue.haveevents
 								? await dbQuery.getEventsByVenueId(venue.id).then((events) => {
-									console.log('events', venue.id, events);
+									//console.log('events', venue.id, events);
 									response[0].venue[i].events = events;
-									console.log('response', response[0].venue);
+									//console.log('response', response[0].venue);
 								}).catch(err => console.log(err))
 								: null;
 						}
