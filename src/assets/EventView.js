@@ -1,10 +1,13 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
+import MainNav from "./MainNav";
 import Filter from "./form_component/Filter";
 import HelperFilter from "./HelperFilter";
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-event.jpg";
+
+export const UserContext = React.createContext(undefined);
 
 class EventView extends React.Component {
     constructor(props) {
@@ -29,64 +32,23 @@ class EventView extends React.Component {
     }
 
     componentDidMount() {
-        const cacheData = JSON.parse(localStorage.getItem('cvaEventsData'));
-        const cacheTimeStamp = cacheData ? cacheData.timeStamp + 30000 : 0;
-        console.log('this is cache', cacheData);
+        const result = this.props.data;
+        //sort by event time
+        const resultByEventTime = result.eventsData.slice(0);
+        resultByEventTime.sort((a, b) => {
+            return a.time - b.time;
+        });
 
-        const processData = (result) => {
-            //sort by event time
-            const resultByEventTime = result.eventsData.slice(0);
-            resultByEventTime.sort((a, b) => {
-                return a.time - b.time;
-            });
+        this.setState({
+            userName: result.userData.userName,
+            userIsMature: result.userData.isUserMature,
+            filterMature: result.userData.isUserMature,
+            events: resultByEventTime,
+        });
 
-            this.setState({
-                userName: result.userData.userName,
-                userIsMature: result.userData.isUserMature,
-                filterMature: result.userData.isUserMature,
-                events: resultByEventTime,
-            });
-        }
+        this.context = result.userData.userName;
 
-        if (cacheTimeStamp < Date.now()) {
-            console.log('grab new data');
-            fetch('/allEvents')
-                .then(response => {
-                    if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' +
-                            response.status);
-                    }
-                    response.json().then(
-                        (result) => {
-                            console.log(result);
-                            const cacheData = result;
-                            cacheData.timeStamp = Date.now();
-
-                            processData(result);
-                            // save this in local storage
-                            localStorage.removeItem('cvaEventsData');
-                            localStorage.setItem('cvaEventsData', JSON.stringify(cacheData));
-                        },
-                        (error) => {
-                            console.log('error');
-                        }
-                    )
-                })
-        } else {
-            console.log("let's use cache");
-            processData(cacheData);
-        }
-
-
-    }
-
-    componentDidUpdate() {
-        ReactDOM.render(
-            <a href={this.state.userName ? '/profile.html' : '/profile'}>
-                {this.state.userName ? 'Profile (' + this.state.userName + ')' : 'Login'}
-            </a>,
-            this.props.profileNavNode
-        );
+        console.log('eventview this context', this.context);
     }
 
     handleInputChange(event) {
@@ -179,6 +141,8 @@ class EventView extends React.Component {
     };
 
 }
+
+EventView.contextType = UserContext;
 
 
 export default EventView;

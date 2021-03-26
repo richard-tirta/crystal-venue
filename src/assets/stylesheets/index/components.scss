@@ -6,8 +6,8 @@ body {
 	padding-left: 80px;
 	padding-right: 80px;
 	@include xsmall {
-		padding-left: 16px;
-		padding-right: 16px;
+		padding-left: 0;
+		padding-right: 0;
 	}
 }
 
@@ -18,7 +18,8 @@ header {
 	margin-bottom: 16px;
 	margin-top: 16px;
 	@include xsmall {
-		flex-direction: column;
+		display: block;
+		width: 100%;
 	}
 	.logo-container {
 		height: 150px;
@@ -47,13 +48,47 @@ header {
 		@include xsmall {
 			display: block;
 			min-width: auto;
+			position: relative;
 			text-align: right;
-			width: 100%;
+			width: auto;
 		}
+		.hamburger-container {
+			@include xsmall {
+				padding: 24px 20px 0 20px;
+				position: absolute;
+				right: 0;
+				top: 0;
+				margin-right: 0;
+				min-width: auto;
+				text-align: right;
+				width: calc(100% - 40px);
+				z-index: 9;
+			}
+		}
+		$profile-top: 0;
+		$nav-top: $profile-top + 44px;
 		.profile-nav {
 			margin-right: 60px;
 			@include xsmall {
+				background: #373737;
+				border-top: 1px solid #797979;
+				border-left: 1px solid #797979;
+				border-bottom: 1px solid #797979;
+				border-top-left-radius: 6%;
+				position: absolute;
 				margin-right: 0;
+				padding: 10px 20px 10px 20px;
+				top: $profile-top;
+				right: 0;
+				width: calc(70% - 40px);
+				transition: all 1s;
+				transform: translateX(100%);
+				z-index: 9;
+			}
+			&.is-active {
+				@include xsmall {
+					transform: translateX(0);
+				}
 			}
 		}
 		nav {
@@ -63,10 +98,31 @@ header {
 			margin-right: 30px;
 			min-width: 360px;
 			@include xsmall {
+				background: #373737;
+				border-bottom: 1px solid #797979;
+				border-left: 1px solid #797979;
+				border-bottom-left-radius: 6%;
 				flex-direction: column;
+				padding: 10px 20px 10px 20px;
+				position: absolute;
+				right: 0;
+				top: $nav-top;
 				margin-right: 0;
-				text-align: right;
 				min-width: auto;
+				text-align: right;
+				transition: all 1s;
+				transform: translateX(100%);
+				width: calc(70% - 40px);
+				z-index: 9;
+			}
+			&.is-active {
+				@include xsmall {
+					transform: translateX(0);
+				}
+			}
+			.nav-link {
+				font-size: 20px;
+				margin-bottom: 10px;
 			}
 			.selected {
 				font-weight: 700;;
@@ -86,6 +142,7 @@ header {
 		display: flex;
 		@include xsmall {
 			flex-wrap: wrap;
+			justify-content: space-between;
 		}
 		.form-checkbox-container {
 			
@@ -246,6 +303,10 @@ label {
 	display: flex;
 	padding-top: 4px;
 	position: relative;
+	@include xsmall {
+		justify-content: flex-start;
+		width: 50%;
+	}
 }
 
 .form-submit {
