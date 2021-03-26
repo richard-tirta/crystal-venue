@@ -6,8 +6,8 @@ body {
 	padding-left: 80px;
 	padding-right: 80px;
 	@include xsmall {
-		padding-left: 16px;
-		padding-right: 16px;
+		padding-left: 0;
+		padding-right: 0;
 	}
 }
 
@@ -19,10 +19,12 @@ header {
 	margin-top: 16px;
 	@include xsmall {
 		flex-direction: column;
+		margin-top: 0;
 	}
 	.logo-container {
 		height: 150px;
 		@include xsmall {
+			margin-top: 54px;
 			height: 100px;
 		}
 		#logo-cva{
@@ -31,6 +33,10 @@ header {
 			img {
 				display: block;
 				height: 100%;
+				@include xsmall {
+					margin-left: auto;
+					margin-right: auto;
+				}
 			}
 		}
 	}
@@ -46,6 +52,7 @@ header {
 		width: 75%;
 		@include xsmall {
 			display: block;
+			margin-bottom: 0;
 			min-width: auto;
 			text-align: right;
 			width: 100%;
@@ -53,7 +60,13 @@ header {
 		.profile-nav {
 			margin-right: 60px;
 			@include xsmall {
+				background: #373737;
 				margin-right: 0;
+				right: 0;
+				padding: 12px 16px;
+				position: absolute;
+				top:0;
+				width: calc(100% - 32px);
 			}
 		}
 		nav {
@@ -63,9 +76,13 @@ header {
 			margin-right: 30px;
 			min-width: 360px;
 			@include xsmall {
-				flex-direction: column;
+				align-items: baseline;
+				border-top: 1px solid #C4C4C4;
 				margin-right: 0;
-				text-align: right;
+				padding-top: 6px;
+				position: sticky;
+				top: 0;
+				text-align: center;
 				min-width: auto;
 			}
 			.selected {
@@ -80,7 +97,12 @@ header {
 	justify-content: space-between;
 	margin-bottom: 30px;
 	@include xsmall {
+		border-bottom: 1px solid #797979;
 		flex-wrap: wrap;
+		position: sticky;
+		top: 50px;
+		padding-bottom: 14px;
+		margin-bottom: 20px;
 	}
 	.main-filters, .secondary-filters {
 		display: flex;
@@ -97,7 +119,6 @@ header {
 				cursor: pointer;
 				display: inline-block;
 				height: 20px;
-				margin-left: 10px;
 				padding: 4px;
 				position: relative;
 				width: 20px;
@@ -121,8 +142,21 @@ header {
 		}
 	}
 	.main-filters {
+		@include xsmall {
+			flex-direction: column;
+		}
 		.form-checkbox-container {
 			margin-right: 30px;
+			.form-checkbox  {
+				margin-right: 10px;
+			}
+		}
+	}
+	.secondary-filters {
+		.form-checkbox-container {
+			.form-checkbox {
+				margin-left: 10px;
+			}
 		}
 	}
 }
