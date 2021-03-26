@@ -327,6 +327,9 @@
         text-align: left;
         transform: translateX(-50%) translateY(-50%);
         max-width: 800px;
+        @include xsmall {
+            width: 90%;
+        }
         .lightbox-close {
             background: rgba(0,0,0,0.9);
             border: 1px solid #373737;
@@ -334,6 +337,10 @@
             top:0;
             right:-44px;
             z-index: 10;
+            @include xsmall {
+                top: -46px;
+                right: 0;
+            }
             &:hover {
                 background: rgba(80,80,80,0.9);
             }
@@ -346,10 +353,16 @@
         .event-info-container {
             display: flex;
             justify-content: flex-start;
+            @include xsmall {
+                flex-direction: column;
+            }
         }
         .event-description {
             min-width: 40%;
             padding: 16px 24px;
+            @include xsmall {
+                width: 100%;
+            }
         }
         .venue-description {
             padding: 16px 24px;
