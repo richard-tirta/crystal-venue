@@ -76,8 +76,9 @@ header {
 			margin-right: 30px;
 			min-width: 360px;
 			@include xsmall {
-				align-items: baseline;
+				align-items: flex-start;
 				border-top: 1px solid #C4C4C4;
+				height: 22px;
 				margin-right: 0;
 				padding-top: 6px;
 				position: sticky;
