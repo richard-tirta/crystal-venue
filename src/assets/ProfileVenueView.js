@@ -207,7 +207,7 @@ class ProfileVenueView extends React.Component {
                                             {venue.type2 ? '|' : null} {venue.type2}
                                             {venue.type3 ? '|' : null} {venue.type3}
                                         </p>
-                                        {venue.website ? <a href={"https://" + venue.website}>{venue.website} &raquo;</a> : null}
+                                        {venue.website ? <a href={"https://" + venue.website} target="_blank">{venue.website} &raquo;</a> : null}
 
                                     </div>
                                     <div className="venue-desc_location">

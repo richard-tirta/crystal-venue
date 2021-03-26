@@ -80,8 +80,23 @@ exports.init = function (req, res) {
 		} else {
 			sendData();
 		}
+	});
+	
+	app.get('/venueById', (req, res) => {
+		if (!req.query.venueId) {
+			res.status(400).send({ success: false });
+			return;
+		}
 
-		
+		const dataObject = {
+			venueId: req.query.venueId,
+		}
+
+		dbQuery.getVenueByVenueId(dataObject).then((venue) => {
+			console.log('venueById', venue)
+			res.status(200).send(venue);
+		}).catch(err => console.log(err));
+
     });
     
 	app.get('/allEvents', (req, res) => {

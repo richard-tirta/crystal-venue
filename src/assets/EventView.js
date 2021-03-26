@@ -1,6 +1,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
+import EventLightboxView from "./EventLightboxView";
 import Filter from "./form_component/Filter";
 import HelperFilter from "./HelperFilter";
 import { DateTime } from "luxon";
@@ -12,6 +13,7 @@ class EventView extends React.Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleCloseAgeGate = this.handleCloseAgeGate.bind(this);
+        this.handleEventElClick = this.handleEventElClick.bind(this);
 
         this.state = {
             userName: undefined,
@@ -25,12 +27,13 @@ class EventView extends React.Component {
             filterLgbtq: false,
             filterMature: false,
             showAgeGate: false,
+            showEventLightbox: null,
         }
     }
 
     componentDidMount() {
         const cacheData = JSON.parse(localStorage.getItem('cvaEventsData'));
-        const cacheTimeStamp = cacheData ? cacheData.timeStamp + 30000 : 0;
+        const cacheTimeStamp = cacheData ? cacheData.timeStamp + 300000 : 0;
         console.log('this is cache', cacheData);
 
         const processData = (result) => {
@@ -114,6 +117,13 @@ class EventView extends React.Component {
         });
     }
 
+    handleEventElClick(event, eventId) {
+        event.preventDefault();
+        this.setState({
+            showEventLightbox: eventId,
+        })
+    }
+
     render() {
         const eventData = this.state.events;
         const eventImage = (eventImage) => {
@@ -144,6 +154,8 @@ class EventView extends React.Component {
         const eventModule = (cvaEvent) => {
             return (
                 <div key={'event' + cvaEvent.id}>
+                    {this.state.showEventLightbox === cvaEvent.id ? <EventLightboxView eventData={cvaEvent} onCloseClick={e => this.handleEventElClick(e, null)} /> : null}
+                <a onClick={e => this.handleEventElClick(e, cvaEvent.id)} className="event-item-container">
                     <div className="event-item">
                         <div className="event-image">
                             <img src={eventImage(cvaEvent.image)} />
@@ -157,6 +169,7 @@ class EventView extends React.Component {
                             <p className="event-venue">{cvaEvent.venuename}</p>
                         </div>
                     </div>
+                </a>
                 </div>
             )
         }

@@ -32,7 +32,7 @@ class VenueView extends React.Component {
 
     componentDidMount() {
         const cacheData = JSON.parse(localStorage.getItem('cvaVenueData'));
-        const cacheTimeStamp = cacheData ? cacheData.timeStamp + 30000 : 0;
+        const cacheTimeStamp = cacheData ? cacheData.timeStamp + 300000 : 0;
         console.log('this is cache', cacheData);
 
         const processData = (result) => {
@@ -173,7 +173,7 @@ class VenueView extends React.Component {
                         <p className="venue-desc_type">
                             {venue.type1} | {venue.type2} | {venue.type3}
                         </p>
-                        {venue.website ?  <a href={venue.website} className="venue-desc_website">{venue.website} &raquo;</a> : null}
+                        {venue.website ?  <a href={venue.website} className="venue-desc_website" target="_blank">{venue.website} &raquo;</a> : null}
                         {eventsData.length > 0 ? findEvent(venue.id) : null}
                     </div>
                     <div className="venue-desc_location">
