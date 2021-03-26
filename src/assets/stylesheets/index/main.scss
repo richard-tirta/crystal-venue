@@ -3,7 +3,7 @@
 .main-container {
 	margin-right: auto;
 	margin-left: auto;
-	max-width: 1500px;
+	max-width: 1310px;
 	width: 100%;
     @include xsmall {
         padding-left: 16px;
@@ -89,7 +89,7 @@
     flex-direction: column;
     margin-bottom: 24px;
     min-height: 260px;
-    max-height: 670px;
+    max-height: 654px;
     min-width: 320px;
     width: 48%;
     position: relative;
@@ -172,7 +172,7 @@
 .events-module{
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     margin-bottom: 50px;
     .event-item {
         background: #373737;
