@@ -82,7 +82,7 @@ const getAllVenues = () => {
 }
 
 const getVenueByUserId = (userId) => {
-    const query = 'SELECT id, name, description, world, location, ward, plot, aetheryte, website, type1, type2, type3, image  FROM venues WHERE userid = $1';
+    const query = 'SELECT id, name, description, world, location, ward, plot, aetheryte, website, type1, type2, type3, image, haveevents  FROM venues WHERE userid = $1';
 
     return new Promise(function (resolve, reject) {
         pool.query(query, [userId], (err, response) => {
@@ -101,13 +101,11 @@ const getVenueByVenueId = (data) => {
     const { venueId } = data
 
     return new Promise(function (resolve, reject) {
-        console.log('ur kidding?', venueId);
         pool.query('SELECT * FROM venues WHERE id = $1', [venueId], (err, response) => {
             if (err) {
                 console.log('getVenueByVenueId error', err)
                 reject(0);
             } else {
-                console.log('huh?', response.rows);
                 resolve(response.rows);
             }
         })

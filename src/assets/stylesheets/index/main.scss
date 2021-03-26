@@ -19,6 +19,12 @@
     .profile-section {
         margin-bottom: 100px;
         margin-top: 16px;
+        .venue-module {
+            max-height: 716px;
+        }
+        .venue-description {
+            min-height: 320px;
+        }
     }
     .profile-container {
         display: flex;
