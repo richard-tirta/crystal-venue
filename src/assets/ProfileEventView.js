@@ -209,7 +209,7 @@ class ProfileEventView extends React.Component {
                                             </p>
                                             <h3>{event.name}</h3>
                                             <h4>{event.subtitle}</h4>
-                                            <p className="event-venue">{this.props.venue.venueName}</p>
+                                            <p className="event-venue">{this.props.venue.name}</p>
                                         </div>
                                     </div>
                                     <div className="remove-link-container">
