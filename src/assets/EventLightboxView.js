@@ -75,15 +75,15 @@ class EventLightboxView extends React.Component {
                     <div className="event-info-container">
                         <div className="event-description">
                             <p>{getTime(eventData.time)}</p>
-                            <h3>{eventData.name}</h3>
-                            <h4>{eventData.subtitle}</h4>
-                            <p className="event-venue">{eventData.venuename}</p>
+                            <h3 dangerouslySetInnerHTML={{ __html: eventData.name}}/>
+                            <h4 dangerouslySetInnerHTML={{ __html: eventData.subtitle}}/>
+                            <p className="event-venue" dangerouslySetInnerHTML={{ __html: eventData.venuename}}/>
                         </div>
                         {
                             this.state.venue
                                 ? (
                                     <div className="venue-description">
-                                        <h4>{venueData.name}</h4>
+                                        <h4 dangerouslySetInnerHTML={{ __html: venueData.name}}/>
                                         <a href={'https://' + venueData.website} target="_blank">{venueData.website}</a>
                                         <p>{venueData.world} | {venueData.location} | Ward {venueData.ward} | Plot {venueData.plot}</p>
                                         <p className="venue-desc_aetheryte">
