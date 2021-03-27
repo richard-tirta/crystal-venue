@@ -148,7 +148,7 @@ class VenueView extends React.Component {
             const eventString = event.length > 0
                 ? <div className="venue-desc_next-event">
                     <p>Next Event:</p>
-                    <p>{event[0].name} | {getTime(event[0].time)}</p>
+                    <p><span dangerouslySetInnerHTML={{ __html: event[0].name}}/>| {getTime(event[0].time)}</p>
                 </div>
                 : null;
             return eventString;
