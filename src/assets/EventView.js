@@ -14,6 +14,7 @@ class EventView extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleCloseAgeGate = this.handleCloseAgeGate.bind(this);
         this.handleEventElClick = this.handleEventElClick.bind(this);
+        this.handlePopularityClick = this.handlePopularityClick.bind(this);
 
         this.state = {
             userName: undefined,
@@ -34,7 +35,10 @@ class EventView extends React.Component {
     componentDidMount() {
         const cacheData = JSON.parse(localStorage.getItem('cvaEventsData'));
         const cacheTimeStamp = cacheData ? cacheData.timeStamp + 300000 : 0;
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlEventId = urlParams.get('eid');
         console.log('this is cache', cacheData);
+        //console.log('eid is', myParam);
 
         const processData = (result) => {
             //sort by event time
@@ -48,6 +52,7 @@ class EventView extends React.Component {
                 userIsMature: result.userData.isUserMature,
                 filterMature: result.userData.isUserMature,
                 events: resultByEventTime,
+                showEventLightbox: urlEventId ? parseInt(urlEventId) : null,
             });
         }
 
@@ -124,6 +129,10 @@ class EventView extends React.Component {
         })
     }
 
+    handlePopularityClick(event, eventId) {
+        event.preventDefault();
+    }
+
     render() {
         const eventData = this.state.events;
         const eventImage = (eventImage) => {
@@ -155,21 +164,24 @@ class EventView extends React.Component {
             return (
                 <div key={'event' + cvaEvent.id}>
                     {this.state.showEventLightbox === cvaEvent.id ? <EventLightboxView eventData={cvaEvent} onCloseClick={e => this.handleEventElClick(e, null)} /> : null}
-                <a onClick={e => this.handleEventElClick(e, cvaEvent.id)} className="event-item-container">
-                    <div className="event-item">
+                    <article role="article" className="event-item" onClick={e => this.handleEventElClick(e, cvaEvent.id)} >
                         <div className="event-image">
                             <img src={eventImage(cvaEvent.image)} />
+                            </div>
+                        <div className="event-info-container">
+                            <div className="event-description">
+                                <p>
+                                    {getTime(cvaEvent.time)}
+                                </p>
+                                <h3 dangerouslySetInnerHTML={{ __html: cvaEvent.name }}/>
+                                <h4 dangerouslySetInnerHTML={{ __html: cvaEvent.subtitle }}/>
+                                <p className="event-venue" dangerouslySetInnerHTML={{ __html: cvaEvent.venuename}}/>
+                                </div>
+                            <div className="event-star">
+                                {/* <span className="icon-star-stroke icon-star">Star</span> */}
+                            </div>
                         </div>
-                        <div className="event-description">
-                            <p>
-                                {getTime(cvaEvent.time)}
-                            </p>
-                            <h3 dangerouslySetInnerHTML={{ __html: cvaEvent.name }}/>
-                            <h4 dangerouslySetInnerHTML={{ __html: cvaEvent.subtitle }}/>
-                            <p className="event-venue" dangerouslySetInnerHTML={{ __html: cvaEvent.venuename}}/>
-                        </div>
-                    </div>
-                </a>
+                    </article>
                 </div>
             )
         }

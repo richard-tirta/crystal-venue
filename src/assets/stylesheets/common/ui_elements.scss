@@ -89,12 +89,29 @@ hr {
 	height: 16px;
 }
 
+.icon-star-stroke {
+	@include background-icon('icon-star-stroke.svg');
+	width: 40px;
+	height: 40px;
+}
+
+.icon-star-grey {
+	@include background-icon('icon-star-grey.svg');
+	width: 40px;
+	height: 40px;
+}
+
+.icon-star-blue {
+	@include background-icon('icon-star-blue.svg');
+	width: 40px;
+	height: 40px;
+}
+
 .venue-desc_aetheryte {
 	align-items: center;
 	color: #CCCCCC;
 	display: flex;
 	font-size: 14px;
-	font-weight: 800;
 	margin-top: 14px;
 }
 

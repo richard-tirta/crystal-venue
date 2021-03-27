@@ -263,6 +263,18 @@ const deleteEventByEventId = (data) => {
     }
 }
 
+const addNewLikeToDb = (data) => {
+    console.log('GOING TO ADD NEW LIKETO DB', data);
+    const { userId, eventId } = data
+
+    pool.query('INSERT INTO eventlike (userid, eventid) VALUES ($1, $2)', [userId, eventId], (error, results) => {
+        if (error) {
+            throw error
+        }
+        console.log('Like added');
+    })
+}
+
 module.exports = {
     getUserByUserId,
     addNewUserToDb,
