@@ -1,6 +1,4 @@
 
-import { Firehose } from "aws-sdk";
-import fetch from "node-fetch";
 import React from "react";
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-event.jpg";
@@ -207,9 +205,9 @@ class ProfileEventView extends React.Component {
                                                 <span className={Date.now() - 3600000 > event.time ? 'event-ended' : null}>
                                                     {getTime(event.time)}</span> {Date.now() - 3600000 > event.time ? <small>Completed</small> : null}
                                             </p>
-                                            <h3>{event.name}</h3>
-                                            <h4>{event.subtitle}</h4>
-                                            <p className="event-venue">{this.props.venue.name}</p>
+                                            <h3 dangerouslySetInnerHTML={{ __html: event.name }}/>
+                                            <h4 dangerouslySetInnerHTML={{ __html: event.subtitle }}/>
+                                            <p className="event-venue" dangerouslySetInnerHTML={{ __html: this.props.venue.name }}/>
                                         </div>
                                     </div>
                                     <div className="remove-link-container">

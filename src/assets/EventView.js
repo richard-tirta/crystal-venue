@@ -164,9 +164,9 @@ class EventView extends React.Component {
                             <p>
                                 {getTime(cvaEvent.time)}
                             </p>
-                            <h3>{cvaEvent.name}</h3>
-                            <h4>{cvaEvent.subtitle}</h4>
-                            <p className="event-venue">{cvaEvent.venuename}</p>
+                            <h3 dangerouslySetInnerHTML={{ __html: cvaEvent.name }}/>
+                            <h4 dangerouslySetInnerHTML={{ __html: cvaEvent.subtitle }}/>
+                            <p className="event-venue" dangerouslySetInnerHTML={{ __html: cvaEvent.venuename}}/>
                         </div>
                     </div>
                 </a>

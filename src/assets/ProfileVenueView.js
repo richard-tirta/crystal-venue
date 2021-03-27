@@ -210,7 +210,7 @@ class ProfileVenueView extends React.Component {
                                 </div>
                                 <div className="venue-description">
                                     <div className="venue-desc_about">
-                                        <h3>{venue.name}</h3>
+                                        <h3 dangerouslySetInnerHTML={{ __html: venue.name }}/>
                                         <p dangerouslySetInnerHTML={{ __html: venue.description }} />
                                         <p className="venue-desc_type">
                                             {venue.type1}

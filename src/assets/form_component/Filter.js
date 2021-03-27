@@ -1,7 +1,7 @@
 
 import React from "react";
 
-const EventTime = ((props) => (
+const Filter = ((props) => (
     <div>
         <div className="listing-filters">
             <div className="main-filters">
@@ -37,4 +37,4 @@ const EventTime = ((props) => (
 ));
 
 
-export default EventTime;
+export default Filter;
