@@ -186,7 +186,7 @@ class VenueView extends React.Component {
                             </span>
                         </a>
                         <p className="venue-desc_type">
-                            {venue.type1} | {venue.type2} | {venue.type3}
+                                {venue.type1} {venue.type2 ? '|' : null} {venue.type2} {venue.type3 ? '|' : null} {venue.type3}
                         </p>
                         {venue.website ?  <a href={'https://' + venue.website} className="venue-desc_website" target="_blank">{venue.website} &raquo;</a> : null}
                         {eventsData.length > 0 ? findEvent(venue.id) : null}
