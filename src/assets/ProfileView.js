@@ -47,7 +47,9 @@ class ProfileModule extends React.Component {
                         console.log(result);
                         const resultData = result[0];
                         let venues = this.state.venues;
-                        let events = this.state.events;
+
+                        // clear any local storage since we're pulling fresh user info.
+                        localStorage.clear();
 
                         const today = new Date();
                         const birthDate = new Date(parseInt(resultData.birthday));

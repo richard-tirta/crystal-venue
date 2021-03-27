@@ -47,7 +47,7 @@ class ProfileVenueForm extends React.Component {
         }
 
         if (name == 'venueWebsite' && value) {
-            value = value.replace(/(^\w+:|^)\/\//, '');
+            value = value.replace(/^\/\/|^.*?:(\/\/)?/, '');
         }
 
         if (name === "isMature" && value && !this.props.isUserMature) {

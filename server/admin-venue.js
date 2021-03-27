@@ -15,36 +15,45 @@ exports.init = function (req, res) {
 	app.post('/addVenue', [
 		body('userId')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venueName')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueDescription')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueWorld')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueLocation')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueWard')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venuePlot')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venueAetheryte')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueWebsite')
 			.escape()
 			.isString(),
 		body('venueType1')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueType2')
 			.escape()
@@ -103,37 +112,46 @@ exports.init = function (req, res) {
 	app.post('/updateVenue', [
 		body('userId')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venueId')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venueDescription')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueWorld')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueLocation')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueWard')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venuePlot')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venueAetheryte')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueWebsite')
 			.escape()
 			.isString(),
 		body('venueType1')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueType2')
 			.escape()

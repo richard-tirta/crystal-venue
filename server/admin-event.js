@@ -13,23 +13,28 @@ exports.init = function (req, res) {
 	app.post('/addEvent', [
 		body('userId')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venueId')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venueName')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('eventName')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('venueSubTitle')
 			.escape()
 			.isString(),
 		body('eventTime')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('eventIsMature')
@@ -37,6 +42,7 @@ exports.init = function (req, res) {
 			.isBoolean(),
 		body('eventType1')
 			.escape()
+			.notEmpty()
 			.isString(),
 		body('eventType2')
 			.escape()
@@ -88,14 +94,17 @@ exports.init = function (req, res) {
 	app.delete('/deleteEvent', [
 		body('eventId')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('venueId')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString(),
 		body('eventsCount')
 			.escape()
+			.notEmpty()
 			.not()
 			.isString()
 	], (req, res) => {
