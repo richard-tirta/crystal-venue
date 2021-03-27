@@ -1,5 +1,7 @@
 
 import React from "react";
+import Aetheryte from "./Aetheryte";
+import Aetheryt from "./Aetheryte";
 
 const VenueForm = ((props) => (
     <div className="column-container">
@@ -77,7 +79,7 @@ const VenueForm = ((props) => (
             <label htmlFor="venueLocation">Venue Location<span className="blue-baby">*</span></label>
             <select name="venueLocation" id="venue-form_location" onChange={props.onChange} required>
                 <option value="">--Select Location--</option>
-                <option value="Lavender Bed">Lavender Beds</option>
+                <option value="Lavender Beds">Lavender Beds</option>
                 <option value="Goblet">Goblet</option>
                 <option value="Mist">Mist</option>
                 <option value="Shirogane">Shirogane</option>
@@ -92,8 +94,7 @@ const VenueForm = ((props) => (
             <input type="text" id="venue-form_plot" className="form-input" name="venuePlot" minLength="1" maxLength="2" placeholder="Plot" required onChange={props.onChange} />
 
             <label htmlFor="venueAetheryte">Nearby Aetheryte Shard<span className="blue-baby">*</span></label>
-            <input type="text" id="venue-form_url" className="form_input" name="venueAetheryte"
-                minLength="4" maxLength="70" placeholder="Nearby Aetheryte Shard" className="form_input" onChange={props.onChange} required />
+            <Aetheryte onChange={props.onChange} errors={props.errors} venueLocation={props.venueLocation}/>
 
             <div className="form-checkbox-container">
                 <label htmlFor="isMature">Mature (18+)</label>

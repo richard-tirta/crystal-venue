@@ -137,7 +137,7 @@ class ProfileVenueUpdateForm extends React.Component {
             <form onSubmit={this.handleSubmit}>
                 {this.state.showAgeGate ? ageGate : null}
                 <p className="text-right"><span className="blue-baby">*</span> required</p>
-                <VenueForm onChange={this.handleInputChange} errors={this.state.errors} askName={false} />
+                <VenueForm onChange={this.handleInputChange} errors={this.state.errors} askName={false} venueLocation={this.state.venueLocation}/>
                 <button href="#" id="submit-cta"
                     className="form-submit">
                     Submit
