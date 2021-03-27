@@ -178,7 +178,7 @@ class VenueView extends React.Component {
                 </div>
                 <div className="venue-description">
                     <div className="venue-desc_about">
-                        <h3>{venue.name}</h3>
+                        <h3 dangerouslySetInnerHTML={{ __html: venue.name}}/>
                         <a href="#" className="venue-desc_description-link" onClick={e => this.handleShowDescription(e, venue.id)}>
                                 Description
                             <span className={this.state.showDescription === venue.id ? "icon-arrow-r-wt is-active" : "icon-arrow-r-wt" }>
