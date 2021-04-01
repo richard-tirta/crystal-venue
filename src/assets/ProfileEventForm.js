@@ -1,4 +1,5 @@
 import React from "react";
+import parse from 'html-react-parser';
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 
@@ -42,11 +43,12 @@ class ProfileEventForm extends React.Component {
         event.preventDefault();
 
         const eventTimeUTC = this.state.eventTime.getTime();
+        const venueName = parse(this.props.venue.name);
 
         const data = JSON.stringify({
             userId: this.props.userId,
             venueId: this.props.venue.id,
-            venueName: this.props.venue.name,
+            venueName: venueName,
             eventName: this.state.eventName,
             eventSubTitle: this.state.eventSubTitle,
             eventTime: eventTimeUTC,
