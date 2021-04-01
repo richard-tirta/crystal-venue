@@ -1,6 +1,7 @@
 
 import React from "react";
 import { DateTime } from "luxon";
+import parse from 'html-react-parser';
 import sampleImage from "./images/cva-no-event.jpg";
 import loadingImage from "./images/icon-loading.gif";
 
@@ -205,9 +206,9 @@ class ProfileEventView extends React.Component {
                                                 <span className={Date.now() - 3600000 > event.time ? 'event-ended' : null}>
                                                     {getTime(event.time)}</span> {Date.now() - 3600000 > event.time ? <small>Completed</small> : null}
                                             </p>
-                                            <h3 dangerouslySetInnerHTML={{ __html: event.name }}/>
-                                            <h4 dangerouslySetInnerHTML={{ __html: event.subtitle }}/>
-                                            <p className="event-venue" dangerouslySetInnerHTML={{ __html: this.props.venue.name }}/>
+                                            <h3>{parse(event.name)}</h3>
+                                            <h4>{parse(event.subtitle)}</h4>
+                                            <p className="event-venue">{parse(this.props.venue.name)}</p>
                                         </div>
                                     </div>
                                     <div className="remove-link-container">

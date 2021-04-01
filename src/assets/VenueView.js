@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Filter from "./form_component/Filter";
 import HelperFilter from "./HelperFilter";
+import parse from 'html-react-parser';
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-venue.jpg";
 import { cache } from "browserslist";
@@ -148,7 +149,7 @@ class VenueView extends React.Component {
             const eventString = event.length > 0
                 ? <div className="venue-desc_next-event">
                     <p>Next Event:</p>
-                    <p><span dangerouslySetInnerHTML={{ __html: event[0].name}}/>| {getTime(event[0].time)}</p>
+                    <p><span>{parse(event[0].name)}</span> | {getTime(event[0].time)}</p>
                 </div>
                 : null;
             return eventString;
@@ -178,7 +179,7 @@ class VenueView extends React.Component {
                 </div>
                 <div className="venue-description">
                     <div className="venue-desc_about">
-                        <h3 dangerouslySetInnerHTML={{ __html: venue.name}}/>
+                        <h3>{parse(venue.name)}</h3>
                         <a href="#" className="venue-desc_description-link" onClick={e => this.handleShowDescription(e, venue.id)}>
                                 Description
                             <span className={this.state.showDescription === venue.id ? "icon-arrow-r-wt is-active" : "icon-arrow-r-wt" }>
@@ -188,7 +189,7 @@ class VenueView extends React.Component {
                         <p className="venue-desc_type">
                             {venue.type1} {venue.type2 ? '|' : null} {venue.type2} {venue.type3 ? '|' : null} {venue.type3}
                         </p>
-                        {venue.website ?  <a href={'https://' + venue.website} className="venue-desc_website" target="_blank">{venue.website} &raquo;</a> : null}
+                        {venue.website ?  <a href={'https://' + parse(venue.website)} className="venue-desc_website" target="_blank">{parse(venue.website)} &raquo;</a> : null}
                         {eventsData.length > 0 ? findEvent(venue.id) : null}
                     </div>
                     <div className="venue-desc_location">
@@ -199,7 +200,7 @@ class VenueView extends React.Component {
                         </p>
                         </div>
                         <div className={this.state.showDescription === venue.id ? "venue-description_text is-active" : "venue-description_text" }>
-                            <p dangerouslySetInnerHTML={{ __html: venue.description }}/>
+                            <p>{parse(venue.description)}</p>
                         </div>
                 </div>
             </div>

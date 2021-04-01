@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import EventLightboxView from "./EventLightboxView";
 import Filter from "./form_component/Filter";
 import HelperFilter from "./HelperFilter";
+import parse from 'html-react-parser';
 import { DateTime } from "luxon";
 import sampleImage from "./images/cva-no-event.jpg";
 
@@ -173,9 +174,9 @@ class EventView extends React.Component {
                                 <p>
                                     {getTime(cvaEvent.time)}
                                 </p>
-                                <h3 dangerouslySetInnerHTML={{ __html: cvaEvent.name }}/>
-                                <h4 dangerouslySetInnerHTML={{ __html: cvaEvent.subtitle }}/>
-                                <p className="event-venue" dangerouslySetInnerHTML={{ __html: cvaEvent.venuename}}/>
+                                <h3>{parse(cvaEvent.name)}</h3>
+                                <h4>{parse(cvaEvent.subtitle)}</h4>
+                                <p className="event-venue">{parse(cvaEvent.venuename)}</p>
                                 </div>
                             <div className="event-star">
                                 {/* <span className="icon-star-stroke icon-star">Star</span> */}
