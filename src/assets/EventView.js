@@ -194,7 +194,7 @@ class EventView extends React.Component {
                     {
                         eventData
                             ? eventData.map((cvaEvent, index) => (
-                                HelperFilter(this.state, cvaEvent) ? eventModule(cvaEvent) : null
+                                HelperFilter(this.state, cvaEvent) && Date.now() - 3600000 < cvaEvent.time ? eventModule(cvaEvent) : null
                             ))
                             : null
                     }

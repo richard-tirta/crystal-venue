@@ -138,15 +138,21 @@ class VenueView extends React.Component {
                 return null;
             }
             
-            const event = eventsData.filter((venue) => {
+            let event = eventsData.filter((venue) => {
                 return venue.venueid == venueId
             })
 
+
             event.length > 0 ? event.sort((a, b) => {
-                return a.time - b.time;
+                if (a.time > b.time && Date.now() - 3600000 < b.time ) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }) : null;
 
-            const eventString = event.length > 0
+
+            const eventString = event.length > 0 && Date.now() - 3600000 < event[0].time 
                 ? <div className="venue-desc_next-event">
                     <p>Next Event:</p>
                     <p><span>{parse(event[0].name)}</span> | {getTime(event[0].time)}</p>
