@@ -11,7 +11,8 @@ import sampleImage from "./images/cva-no-event.jpg";
 import { EventContext } from './EventContext';
 
 export default function EventView(props) {
-    const data = useContext(EventContext)[0];
+    //const contextData= useContext(EventContext);
+    const [data, setData] = useContext(EventContext);
     console.log('hmmm', data);
     const [filters, setFilters] = useState({
         filterMusic: false,
@@ -25,10 +26,59 @@ export default function EventView(props) {
     const [showEventLightbox, setEventLightbox] = useState(null);
 
     useEffect(() => {
+        const cacheData = JSON.parse(localStorage.getItem('cvaEventsData'));
+        const cacheTimeStamp = cacheData ? cacheData.timeStamp + 300000 : 0;
         const urlParams = new URLSearchParams(window.location.search);
         const urlEventId = urlParams.get('eid');
         setEventLightbox(urlEventId ? parseInt(urlEventId) : null);
-    });
+
+        //console.log('EVENTVIEW USE EFFECTS');
+
+        const processData = (result) => {
+            //sort by event time
+            const resultByEventTime = result.eventsData.slice(0);
+            resultByEventTime.sort((a, b) => {
+                return a.time - b.time;
+            });
+            console.log('hello from eventview useffect', result);
+
+            setData({
+                userName: result.userData.userName,
+                userIsMature: result.userData.isUserMature,
+                filterMature: result.userData.isUserMature,
+                events: resultByEventTime,
+            });
+        }
+
+        if (cacheTimeStamp < Date.now()) {
+            console.log('grab new data');
+            fetch('/allEvents')
+                .then(response => {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ' +
+                            response.status);
+                    }
+                    response.json().then(
+                        (result) => {
+                            console.log(result);
+                            const cacheData = result;
+                            cacheData.timeStamp = Date.now();
+
+                            processData(result);
+                            // save this in local storage
+                            localStorage.removeItem('cvaEventsData');
+                            localStorage.setItem('cvaEventsData', JSON.stringify(cacheData));
+                        },
+                        (error) => {
+                            console.log('error');
+                        }
+                    )
+                })
+        } else {
+            console.log("let's use cache");
+            processData(cacheData);
+        }
+    },[]);
 
     const handleInputChange = (event) => {
 
