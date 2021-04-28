@@ -7,19 +7,23 @@ Empty project.
 First install dependencies:
 
 ```sh
-npm install
+yarn install
 ```
 
-To run in hot module reloading mode:
+To run local server
 
 ```sh
-npm start
+yarn start
+```
+Then on separate terminal run
+```sh
+node app.js
 ```
 
 To create a production build:
 
 ```sh
-npm run build-prod
+yarn build
 ```
 
 ## Running
