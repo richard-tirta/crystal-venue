@@ -1,4 +1,4 @@
-# sutterfield2
+# Venue Listing App
 
 Empty project.
 
