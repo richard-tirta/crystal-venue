@@ -20,7 +20,7 @@ Then on separate terminal run
 node app.js
 ```
 
-To create a production build:
+To build static asset (for first time and pre-production)
 
 ```sh
 yarn build
