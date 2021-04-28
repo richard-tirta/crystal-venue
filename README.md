@@ -26,14 +26,3 @@ To build static asset (for first time and pre-production)
 yarn build
 ```
 
-## Running
-
-Open the file `dist/index.html` in your browser
-
-## Credits
-
-Made with [createapp.dev](https://createapp.dev/)
-
-## Richard's Todo:
-Wishlist prettify, save in database?
-
