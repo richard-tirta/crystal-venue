@@ -27,6 +27,11 @@ const Filter = ((props) => (
                 </div>
             </div>
             <div className="secondary-filters">
+            <div className="form-checkbox-container">
+                    <label htmlFor="show-previous">Previous Events</label>
+                    <input className="form-checkbox" type="checkbox" id="show-previous" name="showPrevious" onChange={props.onChange} />
+                </div>
+
                 <div className="form-checkbox-container">
                     <label htmlFor="mature">Mature (18+)</label>
                     <input className="form-checkbox" type="checkbox" id="filter-mature" name="filterMature" checked={props.filterMature} onChange={props.onChange} />

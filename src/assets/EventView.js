@@ -28,6 +28,7 @@ class EventView extends React.Component {
             filterSports: false,
             filterLgbtq: false,
             filterMature: false,
+            showPrevious: false,
             showAgeGate: false,
             showEventLightbox: null,
         }
@@ -152,12 +153,12 @@ class EventView extends React.Component {
                 </a>
                 <h3>
                     You need to be at least 18 years old<br />
-                        to activate this filter.
-                     </h3>
+                    to activate this filter.
+                </h3>
                 <p>
                     Go to <a href="/profile">Profile Page &raquo;</a><br />
-                        to make sure your birth date is set.
-                    </p>
+                    to make sure your birth date is set.
+                </p>
             </div>
         );
 
@@ -168,7 +169,7 @@ class EventView extends React.Component {
                     <article role="article" className="event-item" onClick={e => this.handleEventElClick(e, cvaEvent.id)} >
                         <div className="event-image">
                             <img src={eventImage(cvaEvent.image)} />
-                            </div>
+                        </div>
                         <div className="event-info-container">
                             <div className="event-description">
                                 <p>
@@ -177,7 +178,7 @@ class EventView extends React.Component {
                                 <h3>{parse(cvaEvent.name)}</h3>
                                 <h4>{parse(cvaEvent.subtitle)}</h4>
                                 <p className="event-venue">{parse(cvaEvent.venuename)}</p>
-                                </div>
+                            </div>
                             <div className="event-star">
                                 {/* <span className="icon-star-stroke icon-star">Star</span> */}
                             </div>
@@ -186,18 +187,29 @@ class EventView extends React.Component {
                 </div>
             )
         }
+
+        let eventsEl = eventData
+            ? eventData.map((cvaEvent, index) => (
+                this.state.showPrevious
+                    ? HelperFilter(this.state, cvaEvent) ? eventModule(cvaEvent) : null
+                    : HelperFilter(this.state, cvaEvent) && Date.now() - 3600000 < cvaEvent.time ? eventModule(cvaEvent) : null
+            ))
+            : null
+               
+        if (eventsEl) {
+            if (eventsEl.every(element => element === null)) {
+                eventsEl = (
+                    <div><h2>There is no upcoming event, please check back later or see previous events.</h2></div>
+                );
+            }
+        }
+
         return (
             <div>
                 <Filter onChange={this.handleInputChange} filterMature={this.state.filterMature} />
                 {this.state.showAgeGate ? ageGate : null}
                 <section className="events-module">
-                    {
-                        eventData
-                            ? eventData.map((cvaEvent, index) => (
-                                HelperFilter(this.state, cvaEvent) && Date.now() - 3600000 < cvaEvent.time ? eventModule(cvaEvent) : null
-                            ))
-                            : null
-                    }
+                    {eventsEl}
                 </section>
             </div>
         );
