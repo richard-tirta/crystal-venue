@@ -5,7 +5,7 @@ doteenv.config();
 
 const pool = process.env.DATABASE_URL
     ? new Pool({
-        connectionString: process.env.DATABASE_URL,
+        connectionString: process.env.DATABASE_URL + "?sslmode=require",
         ssl: {
             rejectUnauthorized: false
         }

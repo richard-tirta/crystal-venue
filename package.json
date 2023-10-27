@@ -12,6 +12,7 @@
     "build": "parcel build src/*.html"
   },
   "dependencies": {
+    "@vercel/postgres": "^0.5.0",
     "aws-sdk": "^2.863.0",
     "browserslist": "^4.14.7",
     "cookie-parser": "^1.4.5",
