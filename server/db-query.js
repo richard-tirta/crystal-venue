@@ -3,9 +3,9 @@ const Pool = require('pg').Pool;
 
 doteenv.config();
 
-const pool = process.env.DATABASE_URL + "?sslmode=require"
+const pool = process.env.POSTGRES_URL + "?sslmode=require"
     ? new Pool({
-        connectionString: process.env.DATABASE_URL + "?sslmode=require",
+        connectionString: process.env.POSTGRES_URL + "?sslmode=require",
         ssl: {
             rejectUnauthorized: false
         }
