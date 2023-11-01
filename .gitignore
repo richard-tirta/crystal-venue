@@ -15,3 +15,11 @@ node_modules/
 ehthumbs.db
 Thumbs.db
 .vercel
+
+
+# local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
